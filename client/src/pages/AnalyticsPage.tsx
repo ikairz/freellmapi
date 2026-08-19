@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -21,6 +21,7 @@ import {
   Layers,
   List,
   Network,
+  RefreshCw,
   Server,
   TriangleAlert,
   Zap,
@@ -40,9 +41,9 @@ import { formatSqliteUtcToLocalTime } from '@/lib/utils'
 import { platformColors } from '@/lib/routing'
 import { useI18n } from '@/i18n'
 
-type TimeRange = '24h' | '7d' | '30d' | '90d'
+type TimeRange = '1h' | '24h' | '7d' | '30d' | '90d'
 
-const TIME_RANGES: TimeRange[] = ['24h', '7d', '30d', '90d']
+const TIME_RANGES: TimeRange[] = ['1h', '24h', '7d', '30d', '90d']
 
 // The range toggle sticks: whichever window you last looked at is the one the
 // tab opens with next time, instead of always snapping back to 7d (#711).
@@ -441,14 +442,12 @@ export default function AnalyticsPage() {
     setRange(r)
     try { localStorage.setItem(RANGE_KEY, r) } catch { /* ignore */ }
   }
-  // Capture "now" once at mount so the savings extrapolation below stays a pure
-  // render (calling Date.now() during render is impure and non-deterministic).
-  const [now] = useState(() => Date.now())
 
   const { data: summary, isLoading: summaryLoading } = useQuery({
     queryKey: ['analytics', 'summary', range],
     queryFn: () => apiFetch<SummaryResponse>(`/api/analytics/summary?range=${range}`),
   })
+
 
   const { data: byPlatform = [] } = useQuery({
     queryKey: ['analytics', 'by-platform', range],
@@ -504,39 +503,56 @@ export default function AnalyticsPage() {
       if (platformFilter !== 'all') params.set('platform', platformFilter)
       return apiFetch<RecentCallsResponse>(`/api/analytics/requests?${params}`)
     },
+    refetchInterval: 5000,
   })
 
-  // Savings card shows ONE stable monthly figure regardless of the selected
-  // range: the last-30-days data projected to a full month from its actual
-  // span (a young install with 2 days of data shows 15x its 2-day total).
-  // Once 30 days of history exist the real total shows as-is. The hover
-  // hint carries the selected period's actual amount and the projection
-  // basis. Querying 30d separately is free: react-query shares the cache
-  // with the 30d tab.
-  const { data: summary30 } = useQuery({
-    queryKey: ['analytics', 'summary', '30d'],
-    queryFn: () => apiFetch<SummaryResponse>(`/api/analytics/summary?range=30d`),
-  })
+  // Track new rows to highlight them with a fade-in animation.
+  // Persist maxSeenId to localStorage so it survives page reloads, tab switches,
+  // and filter changes. Only rows with ID > stored max are genuinely new.
+  const MAX_SEEN_KEY = 'analytics.recentCalls.maxSeenId'
+  const getStoredMax = () => { try { return Number(localStorage.getItem(MAX_SEEN_KEY)) || 0 } catch { return 0 } }
+  const maxSeenIdRef = useRef<number>(getStoredMax())
+  const [highlightedIds, setHighlightedIds] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    if (!recentCalls?.rows || recentCalls.rows.length === 0) return
+    const rows = recentCalls.rows
+    // rows come from server ordered DESC (newest first), so the first row has the highest ID
+    const currentMaxId = rows[0].id
+    const prevMax = maxSeenIdRef.current
+
+    // New rows are those with ID > prevMax
+    const newIds = rows.filter(r => r.id > prevMax).map(r => r.id)
+
+    if (newIds.length > 0) {
+      setHighlightedIds(prev => new Set([...prev, ...newIds]))
+      maxSeenIdRef.current = Math.max(prevMax, currentMaxId)
+      try { localStorage.setItem(MAX_SEEN_KEY, String(currentMaxId)) } catch { /* ignore */ }
+    }
+  }, [recentCalls?.rows])
+
+  // Clear highlights after 2.5s
+  useEffect(() => {
+    if (highlightedIds.size === 0) return
+    const timer = setTimeout(() => {
+      setHighlightedIds(prev => {
+        const next = new Set(prev)
+        highlightedIds.forEach(id => next.delete(id))
+        return next
+      })
+    }, 2500)
+    return () => clearTimeout(timer)
+  }, [highlightedIds])
+
+  // Savings card shows the actual estimated cost savings for the selected time range.
+  // No projection/extrapolation — the value matches the chosen window.
   const actualSavings = summary?.estimatedCostSavings ?? 0
-  const baseSavings = summary30?.estimatedCostSavings ?? 0
-  const spanDays = (() => {
-    if (!summary30?.firstRequestAt) return 30
-    // SQLite stores UTC "YYYY-MM-DD HH:MM:SS"
-    const first = new Date(summary30.firstRequestAt.replace(' ', 'T') + 'Z').getTime()
-    const days = (now - first) / 86_400_000
-    if (!Number.isFinite(days)) return 30
-    return Math.min(Math.max(days, 1 / 24), 30)
-  })()
-  const extrapolated = spanDays < 29.5
-  const savings30d = extrapolated ? baseSavings * (30 / spanDays) : baseSavings
-  const rangeLabel = range === '24h' ? t('analytics.rangeLabel24h')
+  const rangeLabel = range === '1h' ? t('analytics.rangeLabel1h')
+    : range === '24h' ? t('analytics.rangeLabel24h')
     : range === '7d' ? t('analytics.rangeLabel7d')
     : range === '30d' ? t('analytics.rangeLabel30d')
     : t('analytics.rangeLabel90d')
-  const spanLabel = spanDays >= 2 ? t('analytics.spanDays', { count: Math.round(spanDays) }) : t('analytics.spanHours', { count: Math.max(1, Math.round(spanDays * 24)) })
-  const savingsHint = extrapolated
-    ? t('analytics.savingsHint', { actual: actualSavings.toFixed(2), range: rangeLabel, span: spanLabel })
-    : t('analytics.savingsHintExact', { actual: actualSavings.toFixed(2), range: rangeLabel })
+  const savingsHint = t('analytics.savingsHint', { actual: actualSavings.toFixed(2), range: rangeLabel })
 
   // Pinned = the client named a specific model instead of auto-routing.
   // Honored = that model actually served it (the rest failed over).
@@ -576,7 +592,7 @@ export default function AnalyticsPage() {
             onValueChange={updateRange}
             options={TIME_RANGES.map(r => ({
               value: r,
-              label: t(r === '24h' ? 'analytics.range24h' : r === '7d' ? 'analytics.range7d' : r === '30d' ? 'analytics.range30d' : 'analytics.range90d'),
+              label: t(r === '1h' ? 'analytics.range1h' : r === '24h' ? 'analytics.range24h' : r === '7d' ? 'analytics.range7d' : r === '30d' ? 'analytics.range30d' : 'analytics.range90d'),
             }))}
             ariaLabel={t('analytics.title')}
           />
@@ -599,11 +615,128 @@ export default function AnalyticsPage() {
               <Stat icon={Zap} label={t('analytics.avgTtft')} value={ttftValue} />
               {/* Priced per request at the served model's paid-API equivalent
                   rate (not a flat frontier-model rate) — see db/model-pricing.ts.
-                  The value is a 30-day projection; the hover hint tells the whole
-                  story (actual period amount + whether it was extrapolated). */}
-              <Stat icon={CircleDollarSign} label={t('analytics.estSavings')} value={`$${savings30d.toFixed(2)}`} hint={savingsHint} />
+                  The value shows the actual savings for the selected range.
+                  The hover hint shows the 30-day projection and extrapolation info. */}
+              <Stat icon={CircleDollarSign} label={t('analytics.estSavings')} value={`$${actualSavings.toFixed(2)}`} hint={savingsHint} />
             </>
           )}
+        </div>
+
+        {/* Recent calls: one line per proxied request with the caller's IP +
+            user agent. All local clients share the unified key, so this is
+            the only view that answers "who is hitting the router". Rows open
+            the failover-ladder drill-down; the header hosts status/provider
+            filters (server-side, so total reflects the filtered set).
+            Auto-refreshes every 5 seconds so the list stays live. */}
+        <div className="lg:col-span-2">
+          <Panel
+            icon={List}
+            title={t('analytics.recentCalls')}
+            actions={
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <RefreshCw className="size-3 animate-spin-slow" aria-hidden="true" />
+                  5s
+                </span>
+                <SegmentedControl
+                  value={statusFilter}
+                  onValueChange={setStatusFilter}
+                  options={[
+                    { value: 'all', label: t('analytics.filterAll') },
+                    { value: 'success', label: t('common.success') },
+                    { value: 'error', label: t('analytics.errors') },
+                    { value: 'canceled', label: t('analytics.filterCanceled') },
+                  ]}
+                  ariaLabel={t('common.status')}
+                />
+                <Select value={platformFilter} onValueChange={(v) => setPlatformFilter(v ?? 'all')}>
+                  <SelectTrigger size="sm" aria-label={t('common.provider')}>
+                    <SelectValue>
+                      {(v: string) => (!v || v === 'all' ? t('analytics.allProviders') : v)}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('analytics.allProviders')}</SelectItem>
+                    {byPlatform.map((p) => (
+                      <SelectItem key={p.platform} value={p.platform}>
+                        <span className="flex items-center gap-2">
+                          <PlatformDot platform={p.platform} />
+                          <span>{p.platform}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            }
+          >
+            {!recentCalls?.rows?.length ? (
+              <p className="text-sm text-muted-foreground text-center py-8">{t('common.noData')}</p>
+            ) : (
+              <div className="max-h-[420px] overflow-y-auto -mx-4">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="pl-4">{t('analytics.time')}</TableHead>
+                      <TableHead>{t('analytics.clientIp')}</TableHead>
+                      <TableHead>{t('analytics.clientAgent')}</TableHead>
+                      <TableHead>{t('common.model')}</TableHead>
+                      <TableHead>{t('common.provider')}</TableHead>
+                      <TableHead>{t('common.status')}</TableHead>
+                      <TableHead className="text-right">{t('analytics.attempts')}</TableHead>
+                      <TableHead className="text-right">{t('analytics.inTokens')}</TableHead>
+                      <TableHead className="text-right">{t('analytics.outTokens')}</TableHead>
+                      <TableHead className="text-right pr-4">{t('analytics.latency')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentCalls.rows.map((r) => {
+                      const isHighlighted = highlightedIds.has(r.id)
+                      const isError = r.status === 'error'
+                      const highlightClass = isHighlighted
+                        ? isError
+                          ? 'bg-red-500/20 dark:bg-red-500/30 border-l-4 border-l-red-500'
+                          : 'bg-blue-500/20 dark:bg-blue-500/30 border-l-4 border-l-blue-500'
+                        : ''
+                      return (
+                      <TableRow
+                        key={r.id}
+                        onClick={() => setDetailId(r.id)}
+                        className={`cursor-pointer transition-all duration-700 ${highlightClass}`}
+                      >
+                        <TableCell className={`pl-4 text-xs tabular-nums whitespace-nowrap transition-colors ${highlightedIds.has(r.id) ? 'text-foreground font-bold' : 'text-muted-foreground'}`}>
+                          {formatSqliteUtcToLocalTime(r.createdAt, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                        </TableCell>
+                        <TableCell className="text-xs font-medium tabular-nums">{r.clientIp ?? '—'}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground" title={r.clientUserAgent ?? undefined}>
+                          {shortUserAgent(r.clientUserAgent)}
+                        </TableCell>
+                        <TableCell className="text-xs max-w-[220px] truncate" title={r.requestedModel && r.requestedModel !== r.modelId ? t('analytics.requestedModelHint', { model: r.requestedModel }) : undefined}>
+                          {r.modelId}
+                          {r.requestedModel && r.requestedModel !== r.modelId ? ' *' : ''}
+                        </TableCell>
+                        <TableCell className="text-xs text-muted-foreground">
+                          {r.platform === 'custom' && r.keyLabel ? r.keyLabel : r.platform}
+                        </TableCell>
+                        <TableCell className={`text-xs ${statusTextClass(r.status)}`} title={r.error ?? undefined}>
+                          {r.status}
+                        </TableCell>
+                        {/* >1 = the request burned failover hops; that is the
+                            row worth drilling into, so give it weight. */}
+                        <TableCell className={`text-right text-xs tabular-nums ${r.attemptCount > 1 ? 'font-medium' : 'text-muted-foreground'}`}>
+                          {r.attemptCount > 0 ? r.attemptCount : '—'}
+                        </TableCell>
+                        <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.inputTokens)}</TableCell>
+                        <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.outputTokens)}</TableCell>
+                        <TableCell className="text-right text-xs tabular-nums pr-4">{r.latencyMs} ms</TableCell>
+                      </TableRow>
+                    )
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </Panel>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -779,109 +912,6 @@ export default function AnalyticsPage() {
               </div>
             )}
           </Panel>
-
-          {/* Recent calls: one line per proxied request with the caller's IP +
-              user agent. All local clients share the unified key, so this is
-              the only view that answers "who is hitting the router". Rows open
-              the failover-ladder drill-down; the header hosts status/provider
-              filters (server-side, so total reflects the filtered set). */}
-          <div className="lg:col-span-2">
-            <Panel
-              icon={List}
-              title={t('analytics.recentCalls')}
-              actions={
-                <div className="flex flex-wrap items-center gap-2">
-                  <SegmentedControl
-                    value={statusFilter}
-                    onValueChange={setStatusFilter}
-                    options={[
-                      { value: 'all', label: t('analytics.filterAll') },
-                      { value: 'success', label: t('common.success') },
-                      { value: 'error', label: t('analytics.errors') },
-                      { value: 'canceled', label: t('analytics.filterCanceled') },
-                    ]}
-                    ariaLabel={t('common.status')}
-                  />
-                  <Select value={platformFilter} onValueChange={(v) => setPlatformFilter(v ?? 'all')}>
-                    <SelectTrigger size="sm" aria-label={t('common.provider')}>
-                      <SelectValue>
-                        {(v: string) => (!v || v === 'all' ? t('analytics.allProviders') : v)}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">{t('analytics.allProviders')}</SelectItem>
-                      {byPlatform.map((p) => (
-                        <SelectItem key={p.platform} value={p.platform}>
-                          <span className="flex items-center gap-2">
-                            <PlatformDot platform={p.platform} />
-                            <span>{p.platform}</span>
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              }
-            >
-              {!recentCalls?.rows?.length ? (
-                <p className="text-sm text-muted-foreground text-center py-8">{t('common.noData')}</p>
-              ) : (
-                <div className="max-h-[420px] overflow-y-auto -mx-4">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="pl-4">{t('analytics.time')}</TableHead>
-                        <TableHead>{t('analytics.clientIp')}</TableHead>
-                        <TableHead>{t('analytics.clientAgent')}</TableHead>
-                        <TableHead>{t('common.model')}</TableHead>
-                        <TableHead>{t('common.provider')}</TableHead>
-                        <TableHead>{t('common.status')}</TableHead>
-                        <TableHead className="text-right">{t('analytics.attempts')}</TableHead>
-                        <TableHead className="text-right">{t('analytics.inTokens')}</TableHead>
-                        <TableHead className="text-right">{t('analytics.outTokens')}</TableHead>
-                        <TableHead className="text-right pr-4">{t('analytics.latency')}</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {recentCalls.rows.map((r) => (
-                        <TableRow
-                          key={r.id}
-                          onClick={() => setDetailId(r.id)}
-                          className="cursor-pointer"
-                        >
-                          <TableCell className="pl-4 text-xs text-muted-foreground tabular-nums whitespace-nowrap">
-                            {formatSqliteUtcToLocalTime(r.createdAt, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                          </TableCell>
-                          <TableCell className="text-xs font-medium tabular-nums">{r.clientIp ?? '—'}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground" title={r.clientUserAgent ?? undefined}>
-                            {shortUserAgent(r.clientUserAgent)}
-                          </TableCell>
-                          <TableCell className="text-xs max-w-[220px] truncate" title={r.requestedModel && r.requestedModel !== r.modelId ? t('analytics.requestedModelHint', { model: r.requestedModel }) : undefined}>
-                            {r.modelId}
-                            {r.requestedModel && r.requestedModel !== r.modelId ? ' *' : ''}
-                          </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
-                            {r.platform === 'custom' && r.keyLabel ? r.keyLabel : r.platform}
-                          </TableCell>
-                          <TableCell className={`text-xs ${statusTextClass(r.status)}`} title={r.error ?? undefined}>
-                            {r.status}
-                          </TableCell>
-                          {/* >1 = the request burned failover hops; that is the
-                              row worth drilling into, so give it weight. */}
-                          <TableCell className={`text-right text-xs tabular-nums ${r.attemptCount > 1 ? 'font-medium' : 'text-muted-foreground'}`}>
-                            {r.attemptCount > 0 ? r.attemptCount : '—'}
-                          </TableCell>
-                          <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.inputTokens)}</TableCell>
-                          <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.outputTokens)}</TableCell>
-                          <TableCell className="text-right text-xs tabular-nums pr-4">{r.latencyMs} ms</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </Panel>
-          </div>
 
           {/* Per-provider breakdown: the tabular face of the by-platform data —
               the charts above show volume/latency, this row surfaces the
