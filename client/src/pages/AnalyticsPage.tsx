@@ -446,17 +446,19 @@ export default function AnalyticsPage() {
   const { data: summary, isLoading: summaryLoading } = useQuery({
     queryKey: ['analytics', 'summary', range],
     queryFn: () => apiFetch<SummaryResponse>(`/api/analytics/summary?range=${range}`),
+    refetchInterval: 5000,
   })
-
 
   const { data: byPlatform = [] } = useQuery({
     queryKey: ['analytics', 'by-platform', range],
     queryFn: () => apiFetch<ByPlatformRow[]>(`/api/analytics/by-platform?range=${range}`),
+    refetchInterval: 5000,
   })
 
   const { data: byClient = [] } = useQuery({
     queryKey: ['analytics', 'by-client', range],
     queryFn: () => apiFetch<ByClientRow[]>(`/api/analytics/by-client?range=${range}`),
+    refetchInterval: 5000,
   })
 
   // Browser's offset from UTC in minutes (480 = UTC+8), so the server buckets
@@ -466,26 +468,31 @@ export default function AnalyticsPage() {
   const { data: timeline = [] } = useQuery({
     queryKey: ['analytics', 'timeline', range, tzOffset],
     queryFn: () => apiFetch<TimelineBucket[]>(`/api/analytics/timeline?range=${range}&tzOffset=${tzOffset}`),
+    refetchInterval: 5000,
   })
 
   const { data: byModel = [] } = useQuery({
     queryKey: ['analytics', 'by-model', range],
     queryFn: () => apiFetch<ByModelRow[]>(`/api/analytics/by-model?range=${range}`),
+    refetchInterval: 5000,
   })
 
   const { data: byKey = [] } = useQuery({
     queryKey: ['analytics', 'by-key', range],
     queryFn: () => apiFetch<ByKeyRow[]>(`/api/analytics/by-key?range=${range}`),
+    refetchInterval: 5000,
   })
 
   const { data: errors = [] } = useQuery({
     queryKey: ['analytics', 'errors', range],
     queryFn: () => apiFetch<RecentErrorRow[]>(`/api/analytics/errors?range=${range}`),
+    refetchInterval: 5000,
   })
 
   const { data: errorDist } = useQuery({
     queryKey: ['analytics', 'error-distribution', range],
     queryFn: () => apiFetch<ErrorDistribution>(`/api/analytics/error-distribution?range=${range}`),
+    refetchInterval: 5000,
   })
 
   // Recent-calls list filters (status/platform) + the row opened in the
