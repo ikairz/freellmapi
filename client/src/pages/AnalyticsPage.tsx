@@ -43,7 +43,7 @@ import { useI18n } from '@/i18n'
 
 type TimeRange = '1h' | '24h' | '7d' | '30d' | '90d' | 'today'
 
-const TIME_RANGES: TimeRange[] = ['1h', '24h', '7d', '30d', '90d', 'today']
+const TIME_RANGES: TimeRange[] = ['today', '1h', '24h', '7d', '30d', '90d']
 
 // The range toggle sticks: whichever window you last looked at is the one the
 // tab opens with next time, instead of always snapping back to 7d (#711).
