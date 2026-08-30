@@ -261,7 +261,11 @@
     "limitHint": "Оставьте пустым, чтобы не было ограничения.",
     "usageThisMonth": "Расход за месяц",
     "usageEmpty": "В этом месяце запросов пока нет.",
-    "usageRequestsMonth": "{count} запр. за месяц"
+    "usageRequestsMonth": "{count} запр. за месяц",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Исследовать неизмеренные модели",
@@ -529,7 +533,11 @@
     "bulkDelete": "Удалить все",
     "bulkDeleteConfirm": "Удалить {count}?",
     "bulkResult": "Обновлено {done}; не удалось {failed}.",
-    "bulkDeleteResult": "Удалено {done}; не удалось {failed}."
+    "bulkDeleteResult": "Удалено {done}; не удалось {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "здоровый",
@@ -694,7 +702,11 @@
     "howToUse": "Как использовать",
     "howToUseHelp": "Отправьте обычный запрос в чат с моделью «fusion». Эти настройки установлены по умолчанию; любой запрос может переопределить их с помощью поля «fusion».",
     "unsavedChanges": "Несохраненные изменения",
-    "save": "Сохранить"
+    "save": "Сохранить",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Премиум",

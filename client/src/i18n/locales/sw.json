@@ -261,7 +261,11 @@
     "limitHint": "Acha wazi ili kusiwe na kikomo.",
     "usageThisMonth": "Matumizi ya kila mwezi",
     "usageEmpty": "Bado hakuna maombi mwezi huu.",
-    "usageRequestsMonth": "maombi {count} mwezi huu"
+    "usageRequestsMonth": "maombi {count} mwezi huu",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Chunguza mifano isiyopimwa",
@@ -529,7 +533,11 @@
     "bulkDelete": "Futa zote",
     "bulkDeleteConfirm": "Futa {count}?",
     "bulkResult": "Zimesasishwa {done}; zimeshindwa {failed}.",
-    "bulkDeleteResult": "Zimefutwa {done}; zimeshindwa {failed}."
+    "bulkDeleteResult": "Zimefutwa {done}; zimeshindwa {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "afya",
@@ -694,7 +702,11 @@
     "howToUse": "Jinsi ya kutumia",
     "howToUseHelp": "Tuma ombi la kawaida la gumzo na muundo wa \"fusion\". Mipangilio hii ndiyo chaguo-msingi; ombi lolote linaweza kuzibatilisha kwa uga wa \"fusion\".",
     "unsavedChanges": "Mabadiliko ambayo hayajahifadhiwa",
-    "save": "Hifadhi"
+    "save": "Hifadhi",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Premium",

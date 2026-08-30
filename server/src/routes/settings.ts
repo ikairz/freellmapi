@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { getUnifiedApiKey, regenerateUnifiedKey, getSetting, setSetting } from '../db/index.js';
-import { applyProxyUrl, applyProxyEnabled, applyProxyBypass, isProxyActive, getProxyUrl, isProxyEnabled, getProxyBypassPlatforms, PROXY_SCHEMES } from '../lib/proxy.js';
+import { getUnifiedApiKey, regenerateUnifiedKey, getSetting, setSetting, getDb } from '../db/index.js';
+import { applyProxyUrl, applyProxyEnabled, applyProxyBypass, isProxyActive, getProxyUrl, isProxyEnabled, getProxyBypassPlatforms, probeProxyUrl, DEFAULT_PROXY_PROBE_TARGET, PROXY_SCHEMES } from '../lib/proxy.js';
+import { getProvider } from '../providers/index.js';
+import type { Platform } from '@freellmapi/shared/types.js';
 import { getSavedFusionConfig, setSavedFusionConfig, savedFusionConfigSchema, getFusionMaxK } from '../services/fusion.js';
 import { isUnifyEnabled, setUnifyEnabled, getUnifyOverrides, setUnifyOverrides, unifyOverridesSchema } from '../services/model-groups.js';
 import { getClaudeModelMap, setClaudeModelMap } from '../services/anthropic-map.js';
@@ -375,4 +377,53 @@ settingsRouter.put('/proxy', (req: Request, res: Response) => {
     bypassPlatforms: getProxyBypassPlatforms(),
     active: isProxyActive(),
   });
+});
+
+// Test proxy connectivity WITHOUT saving (#863). The dashboard's "Test" button
+// sends the DRAFT value; an empty body falls back to the saved proxy URL. The
+// probe never persists anything — it only builds a throwaway dispatcher and
+// measures a round trip through the (draft or saved) proxy.
+/**
+ * What the proxy probe should call.
+ *
+ * The question the Test button answers is "can outbound traffic from THIS
+ * install reach the upstreams it routes to", so the target is the /models
+ * endpoint of a provider the operator actually holds an enabled key for —
+ * preferring one that is not bypassing the proxy, since a bypassed platform
+ * would not exercise the proxy at all. PROXY_TEST_URL overrides everything for
+ * air-gapped or mirror-only deployments. With no keys at all there is no
+ * upstream to name, and only then does the neutral fallback apply.
+ */
+function proxyProbeTarget(): string {
+  const override = (process.env.PROXY_TEST_URL ?? '').trim();
+  if (override) return override;
+
+  let platforms: { platform: string }[] = [];
+  try {
+    platforms = getDb().prepare(
+      `SELECT DISTINCT platform FROM api_keys WHERE enabled = 1 ORDER BY platform`,
+    ).all() as { platform: string }[];
+  } catch {
+    return DEFAULT_PROXY_PROBE_TARGET;
+  }
+
+  const bypassed = new Set(getProxyBypassPlatforms());
+  const candidates = [
+    ...platforms.filter(row => !bypassed.has(row.platform)),
+    ...platforms.filter(row => bypassed.has(row.platform)),
+  ];
+  for (const row of candidates) {
+    // 'custom' has no single registered base URL, and a provider may expose no
+    // OpenAI-style catalog route at all; skip rather than invent one.
+    if (row.platform === 'custom') continue;
+    const url = (getProvider(row.platform as Platform) as { modelsUrl?: string } | undefined)?.modelsUrl;
+    if (typeof url === 'string' && /^https?:\/\//i.test(url)) return url;
+  }
+  return DEFAULT_PROXY_PROBE_TARGET;
+}
+
+settingsRouter.post('/proxy/test', async (req: Request, res: Response) => {
+  const { proxyUrl } = (req.body ?? {}) as { proxyUrl?: string };
+  const result = await probeProxyUrl(proxyUrl, { targetUrl: proxyProbeTarget() });
+  res.json(result);
 });

@@ -261,7 +261,11 @@
     "limitHint": "ကန့်သတ်ချက်မလိုပါက ကွက်လပ်ထားပါ။",
     "usageThisMonth": "လစဉ်အသုံးပြုမှု",
     "usageEmpty": "ဤလတွင် တောင်းဆိုမှု မရှိသေးပါ။",
-    "usageRequestsMonth": "ဤလတွင် တောင်းဆိုမှု {count} ခု"
+    "usageRequestsMonth": "ဤလတွင် တောင်းဆိုမှု {count} ခု",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "မတိုင်းတာရသေးသော မော်ဒယ်များကို စူးစမ်းရန်",
@@ -529,7 +533,11 @@
     "bulkDelete": "အားလုံး ဖျက်ပါ",
     "bulkDeleteConfirm": "{count} ခု ဖျက်မလား?",
     "bulkResult": "{done} ခု အပ်ဒိတ်လုပ်ပြီး၊ {failed} ခု မအောင်မြင်ပါ။",
-    "bulkDeleteResult": "{done} ခု ဖျက်ပြီး၊ {failed} ခု မအောင်မြင်ပါ။"
+    "bulkDeleteResult": "{done} ခု ဖျက်ပြီး၊ {failed} ခု မအောင်မြင်ပါ။",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "ကျန်းမာသော",
@@ -694,7 +702,11 @@
     "howToUse": "အသုံးပြုနည်း",
     "howToUseHelp": "\"fusion\" မော်ဒယ်ဖြင့် ပုံမှန် စကားပြောတောင်းဆိုမှု ပို့ပါ။ ဤဆက်တင်များသည် ပုံမှန်ဖြစ်သည်။ မည်သည့် တောင်းဆိုမှုမဆို \"fusion\" ကွက်လပ်ဖြင့် အစားထိုးနိုင်သည်။",
     "unsavedChanges": "မသိမ်းဆည်းထားသော ပြင်ဆင်မှုများ",
-    "save": "သိမ်းဆည်းပါ"
+    "save": "သိမ်းဆည်းပါ",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "ပရီးမီယံ",

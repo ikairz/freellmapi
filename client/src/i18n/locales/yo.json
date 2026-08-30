@@ -261,7 +261,11 @@
     "limitHint": "Fi sílẹ̀ ní òfìfo fún àìní ààlà.",
     "usageThisMonth": "Ìlò oṣooṣù",
     "usageEmpty": "Kò sí ìbéèrè kankan ní oṣù yìí.",
-    "usageRequestsMonth": "ìbéèrè {count} ní oṣù yìí"
+    "usageRequestsMonth": "ìbéèrè {count} ní oṣù yìí",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Ṣawari awọn awoṣe ti a ko ti wọn",
@@ -529,7 +533,11 @@
     "bulkDelete": "Paarẹ gbogbo rẹ",
     "bulkDeleteConfirm": "Paarẹ {count}?",
     "bulkResult": "Ṣe imudojuiwọn {done}; kuna {failed}.",
-    "bulkDeleteResult": "Paarẹ {done}; kuna {failed}."
+    "bulkDeleteResult": "Paarẹ {done}; kuna {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "ni ilera",
@@ -694,7 +702,11 @@
     "howToUse": "Bawo ni lati lo",
     "howToUseHelp": "Firanṣẹ ibeere iwiregbe deede pẹlu awoṣe “Fusion”. Awọn eto wọnyi jẹ aiyipada; eyikeyi ìbéèrè le idojuk wọn pẹlu kan \"fusion\" aaye.",
     "unsavedChanges": "Awọn iyipada ti ko ni fipamọ",
-    "save": "Fipamọ"
+    "save": "Fipamọ",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Ere",

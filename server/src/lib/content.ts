@@ -57,6 +57,20 @@ export function messageHasImage(messages: ChatMessage[]): boolean {
   return messages.some((m) => contentHasImage(m.content));
 }
 
+// Drop image blocks from every message so a text-only model (e.g. the fusion
+// judge, which synthesizes from panel text answers) never receives pixels.
+export function stripImagesFromMessages(messages: ChatMessage[]): ChatMessage[] {
+  return messages.map((m) => {
+    if (!Array.isArray(m.content)) return m;
+    const kept = m.content.filter((block) => {
+      const type = (block as { type?: string })?.type;
+      return type !== 'image_url' && type !== 'image';
+    });
+    if (kept.length === m.content.length) return m;
+    return { ...m, content: kept.length > 0 ? kept : '' };
+  });
+}
+
 // Harden the OUTBOUND envelope so strict OpenAI clients don't choke on the
 // shape variations free-tier providers emit. Complements normalizeOutboundContent
 // (which fixes array content) by fixing the *frame* fields, not the content:

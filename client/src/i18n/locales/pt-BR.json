@@ -261,7 +261,11 @@
     "limitHint": "Deixe em branco para não ter limite.",
     "usageThisMonth": "Uso mensal",
     "usageEmpty": "Ainda não há solicitações neste mês.",
-    "usageRequestsMonth": "{count} sol. neste mês"
+    "usageRequestsMonth": "{count} sol. neste mês",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Explorar modelos sem medições",
@@ -529,7 +533,11 @@
     "bulkDelete": "Excluir todas",
     "bulkDeleteConfirm": "Excluir {count}?",
     "bulkResult": "Atualizadas {done}; falharam {failed}.",
-    "bulkDeleteResult": "Excluídas {done}; falharam {failed}."
+    "bulkDeleteResult": "Excluídas {done}; falharam {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "saudável",
@@ -694,7 +702,11 @@
     "howToUse": "Como usar",
     "howToUseHelp": "Envie uma requisição de chat normal com o modelo \"fusion\". Estas configurações são o padrão; qualquer requisição pode sobrescrevê-las com um campo \"fusion\".",
     "unsavedChanges": "Alterações não salvas",
-    "save": "Salvar"
+    "save": "Salvar",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Premium",

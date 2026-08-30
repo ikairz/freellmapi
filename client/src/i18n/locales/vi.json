@@ -261,7 +261,11 @@
     "limitHint": "Để trống nếu không giới hạn.",
     "usageThisMonth": "Mức dùng hằng tháng",
     "usageEmpty": "Chưa có yêu cầu nào trong tháng này.",
-    "usageRequestsMonth": "{count} yêu cầu tháng này"
+    "usageRequestsMonth": "{count} yêu cầu tháng này",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Khám phá các mô hình chưa được đo",
@@ -529,7 +533,11 @@
     "bulkDelete": "Xóa tất cả",
     "bulkDeleteConfirm": "Xóa {count}?",
     "bulkResult": "Đã cập nhật {done}; {failed} không thành công.",
-    "bulkDeleteResult": "Đã xóa {done}; {failed} không thành công."
+    "bulkDeleteResult": "Đã xóa {done}; {failed} không thành công.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "khỏe mạnh",
@@ -694,7 +702,11 @@
     "howToUse": "Cách sử dụng",
     "howToUseHelp": "Gửi yêu cầu trò chuyện bình thường với mô hình \"fusion\". Các cài đặt này là mặc định; mọi yêu cầu đều có thể ghi đè chúng bằng trường \"kết hợp\".",
     "unsavedChanges": "Những thay đổi chưa được lưu",
-    "save": "Lưu"
+    "save": "Lưu",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Cao cấp",

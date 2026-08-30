@@ -261,7 +261,11 @@
     "limitHint": "Jätä tyhjäksi, jos ei rajaa.",
     "usageThisMonth": "Kuukausikäyttö",
     "usageEmpty": "Ei vielä pyyntöjä tässä kuussa.",
-    "usageRequestsMonth": "{count} pyyntöä tässä kuussa"
+    "usageRequestsMonth": "{count} pyyntöä tässä kuussa",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Tutki mittaamattomia malleja",
@@ -529,7 +533,11 @@
     "bulkDelete": "Poista kaikki",
     "bulkDeleteConfirm": "Poistetaanko {count}?",
     "bulkResult": "Päivitetty {done}; epäonnistui {failed}.",
-    "bulkDeleteResult": "Poistettu {done}; epäonnistui {failed}."
+    "bulkDeleteResult": "Poistettu {done}; epäonnistui {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "terve",
@@ -694,7 +702,11 @@
     "howToUse": "Käyttöohje",
     "howToUseHelp": "Lähetä tavallinen chat-pyyntö mallin \"fusion\" kanssa. Nämä asetukset ovat oletusasetukset; Mikä tahansa pyyntö voi ohittaa ne \"fuusio\"-kentällä.",
     "unsavedChanges": "Tallentamattomat muutokset",
-    "save": "Tallenna"
+    "save": "Tallenna",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Premium",

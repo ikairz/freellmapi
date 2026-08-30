@@ -115,6 +115,7 @@ function inferPoolForPlatform(platform: Platform, modelId?: string | null): stri
   if (platform === 'google') return 'google::project';
   if (platform === 'groq') return 'groq::account';
   if (platform === 'cerebras') return 'cerebras::shared';
+  if (platform === 'bai') return 'bai::promo';
   if (platform === 'sambanova') return 'sambanova::shared';
   if (platform === 'nvidia') return 'nvidia::credit-pool';
   if (platform === 'mistral') return 'mistral::experiment-pool';
@@ -153,7 +154,7 @@ function inferPoolForPlatform(platform: Platform, modelId?: string | null): stri
 }
 
 function isSharedPool(platform: Platform): boolean {
-  return ['openrouter', 'google', 'groq', 'cerebras', 'sambanova', 'nvidia', 'mistral', 'github', 'cohere', 'cloudflare', 'zhipu', 'ollama', 'kilo', 'pollinations', 'llm7', 'huggingface', 'opencode', 'routeway', 'bazaarlink', 'ainative', 'aion', 'requesty', 'navy', 'nara', 'sealion', 'orcarouter', 'anyapi', 'modelscope', 'aihorde'].includes(platform);
+  return ['openrouter', 'google', 'groq', 'cerebras', 'bai', 'sambanova', 'nvidia', 'mistral', 'github', 'cohere', 'cloudflare', 'zhipu', 'ollama', 'kilo', 'pollinations', 'llm7', 'huggingface', 'opencode', 'routeway', 'bazaarlink', 'ainative', 'aion', 'requesty', 'navy', 'nara', 'sealion', 'orcarouter', 'anyapi', 'modelscope', 'aihorde'].includes(platform);
 }
 
 type HeaderSpec = { metric: QuotaMetric; limit: string; remaining?: string; reset?: string; strategy?: QuotaResetStrategy };

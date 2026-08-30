@@ -261,7 +261,11 @@
     "limitHint": "Lämna tomt för ingen gräns.",
     "usageThisMonth": "Månatlig användning",
     "usageEmpty": "Inga förfrågningar denna månad än.",
-    "usageRequestsMonth": "{count} förfr. denna månad"
+    "usageRequestsMonth": "{count} förfr. denna månad",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Utforska omätta modeller",
@@ -529,7 +533,11 @@
     "bulkDelete": "Radera alla",
     "bulkDeleteConfirm": "Radera {count}?",
     "bulkResult": "Uppdaterade {done}; misslyckades {failed}.",
-    "bulkDeleteResult": "Raderade {done}; misslyckades {failed}."
+    "bulkDeleteResult": "Raderade {done}; misslyckades {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "Hälsosamt",
@@ -694,7 +702,11 @@
     "howToUse": "Hur man använder",
     "howToUseHelp": "Skicka en vanlig chattförfrågan med modellen \"fusion\". Dessa inställningar är standard; Vilken begäran som helst kan åsidosätta dem med ett \"fusion\"-fält.",
     "unsavedChanges": "Osparade ändringar",
-    "save": "Spara"
+    "save": "Spara",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Premium",

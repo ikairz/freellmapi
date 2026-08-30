@@ -261,7 +261,11 @@
     "limitHint": "Ponechajte prázdne pre žiadny limit.",
     "usageThisMonth": "Mesačná spotreba",
     "usageEmpty": "Tento mesiac zatiaľ žiadne požiadavky.",
-    "usageRequestsMonth": "{count} pož. tento mesiac"
+    "usageRequestsMonth": "{count} pož. tento mesiac",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Preskúmavať nezmerané modely",
@@ -529,7 +533,11 @@
     "bulkDelete": "Vymazať všetky",
     "bulkDeleteConfirm": "Vymazať {count}?",
     "bulkResult": "Aktualizované {done}; zlyhalo {failed}.",
-    "bulkDeleteResult": "Vymazané {done}; zlyhalo {failed}."
+    "bulkDeleteResult": "Vymazané {done}; zlyhalo {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "zdravé",
@@ -694,7 +702,11 @@
     "howToUse": "Ako používať",
     "howToUseHelp": "Pošli bežnú chatovú požiadavku s modelom \"fusion\". Tieto nastavenia sú predvolené; Akákoľvek požiadavka ich môže prepísať pomocou poľa \"fúzia\".",
     "unsavedChanges": "Neuložené zmeny",
-    "save": "Uložiť"
+    "save": "Uložiť",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Prémiové",

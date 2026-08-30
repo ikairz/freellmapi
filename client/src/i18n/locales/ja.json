@@ -261,7 +261,11 @@
     "limitHint": "制限なしにするには空欄にします。",
     "usageThisMonth": "月間使用量",
     "usageEmpty": "今月はまだリクエストがありません。",
-    "usageRequestsMonth": "今月 {count} 件"
+    "usageRequestsMonth": "今月 {count} 件",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "未計測のモデルを探索",
@@ -529,7 +533,11 @@
     "bulkDelete": "すべて削除",
     "bulkDeleteConfirm": "{count} 件を削除しますか？",
     "bulkResult": "{done} 件を更新しました。{failed} 件が失敗しました。",
-    "bulkDeleteResult": "{done} 件を削除しました。{failed} 件が失敗しました。"
+    "bulkDeleteResult": "{done} 件を削除しました。{failed} 件が失敗しました。",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "健康な",
@@ -694,7 +702,11 @@
     "howToUse": "使用方法",
     "howToUseHelp": "モデル「fusion」を使用して通常のチャット リクエストを送信します。これらの設定はデフォルトです。どのリクエストでも「fusion」フィールドでそれらをオーバーライドできます。",
     "unsavedChanges": "未保存の変更",
-    "save": "保存"
+    "save": "保存",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "プレミアム",

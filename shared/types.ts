@@ -60,6 +60,9 @@ export type Platform =
   | 'google'
   | 'groq'
   | 'cerebras'
+  // B.AI — OpenAI-compatible gateway. Its catalog row is a live-tested,
+  // limited-time 0-credit promotion, not a recurring free allowance.
+  | 'bai'
   // AnyAPI — OpenAI-compatible gateway. Free tier is $0/no card/recurring but
   // capped at 100K tokens/day over "free and basic" models only; no RPM/RPD is
   // published. Catalog rows live in the hosted catalog (premium now, free after

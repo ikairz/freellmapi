@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { ChevronLeft, Merge, Save, Split, Trash2 } from 'lucide-react'
 import { useI18n } from '@/i18n'
 import { apiFetch } from '@/lib/api'
+import { addAlias, aliasesFor, removeAlias } from '@/lib/alias-merge'
 import { Button } from '@/components/ui/button'
 import { ConfirmButton } from '@/components/confirm-button'
 import { Input } from '@/components/ui/input'
@@ -122,6 +123,25 @@ export default function ModelDetailPage() {
     },
   })
 
+  // #790: merge a custom provider's model alias into THIS unified model, so a
+  // request for the primary model id is served through the alias too. Same
+  // whole-overrides PUT as splits; only the merges list changes.
+  const [aliasInput, setAliasInput] = useState('')
+  const mergeMutation = useMutation({
+    mutationFn: (merges: UnifyOverrides['merges']) =>
+      apiFetch('/api/settings/unify', {
+        method: 'PUT',
+        body: JSON.stringify({ overrides: { merges, splits: unify?.overrides.splits ?? [] } }),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['unify'] })
+      queryClient.invalidateQueries({ queryKey: ['fallback'] })
+      queryClient.invalidateQueries({ queryKey: ['fallback', 'routing'] })
+      queryClient.invalidateQueries({ queryKey: ['models'] })
+      setAliasInput('')
+    },
+  })
+
   const splits = unify?.overrides.splits ?? []
   // New splits are written against ONE row: an unqualified "platform:modelId"
   // matches every relay that serves the id, so splitting one relay's card used
@@ -174,6 +194,16 @@ export default function ModelDetailPage() {
   const vision = members.some(m => m.supportsVision)
   const tools = members.some(m => m.supportsTools)
 
+  // #790: the aliases merged INTO this group. Every edit is expressed against
+  // the full overrides list (see lib/alias-merge) — the visible rows are only
+  // this group's slice, so editing by row position would hit other groups.
+  const merges = useMemo(() => unify?.overrides.merges ?? [], [unify])
+  const groupAliases = useMemo(() => aliasesFor(merges, label), [merges, label])
+  const submitAlias = () => {
+    if (!aliasInput.trim()) return
+    mergeMutation.mutate(addAlias(merges, label, aliasInput))
+  }
+
   // A ready-to-run request referencing this model by its unified id, so it fails
   // over across every provider above. Same base-URL derivation as the Keys page.
   const baseUrl = import.meta.env.DEV
@@ -206,8 +236,15 @@ export default function ModelDetailPage() {
           </div>
         ) : (
           <>
-            {/* Summary badges */}
+            {/* Summary badges. The canonical (unified) model id leads: it is the
+                id callers actually put in a request body, and it was previously
+                only reachable via the hover copy button in the Models table
+                (#725, #708). */}
             <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex min-w-0 items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] text-foreground">
+                <code className="min-w-0 truncate font-mono">{canonicalId}</code>
+                <CopyButton text={canonicalId} label={t('models.copyModelId')} className="size-4 shrink-0 border-0 bg-transparent" />
+              </span>
               <span className="text-[11px] rounded-full px-2 py-0.5 bg-muted text-muted-foreground">{t('models.providerCount', { count: members.length })}</span>
               {quota && <span title={quota.title} className="text-[11px] rounded-full px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">{quota.text}</span>}
               {vision && <span title={t('models.visionTitle')} className="text-[11px] rounded-full px-2 py-0.5 bg-cyan-600/15 text-cyan-700 dark:bg-cyan-400/15 dark:text-cyan-400">{t('models.vision')}</span>}
@@ -267,6 +304,46 @@ export default function ModelDetailPage() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* #790: merge a custom provider's model alias into this unified
+                model, so requests for the primary model id are served through
+                the alias too. Same overrides store as the split control. */}
+            <div className="rounded-2xl border bg-card p-4">
+              <h2 className="text-sm font-medium">{t('models.aliasMergeHeading')}</h2>
+              <p className="mt-0.5 mb-3 text-xs text-muted-foreground">{t('models.aliasMergeHint')}</p>
+              <div className="flex items-center gap-2">
+                <Input
+                  value={aliasInput}
+                  onChange={e => setAliasInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); submitAlias() } }}
+                  placeholder="custom:my-alias"
+                  className="font-mono text-xs"
+                  aria-label={t('models.aliasMergeHeading')}
+                />
+                <Button type="button" size="sm" disabled={mergeMutation.isPending || !aliasInput.trim()} onClick={submitAlias}>
+                  {t('models.aliasMergeAdd')}
+                </Button>
+              </div>
+              {groupAliases.length > 0 && (
+                <div className="mt-3 space-y-1.5">
+                  {groupAliases.map(alias => (
+                    <div key={alias} className="flex items-center gap-2 text-xs">
+                      <code className="min-w-0 flex-1 truncate font-mono text-[11px] text-muted-foreground">{alias}</code>
+                      <Button
+                        type="button"
+                        size="xs"
+                        variant="ghost"
+                        className="text-muted-foreground"
+                        disabled={mergeMutation.isPending}
+                        onClick={() => mergeMutation.mutate(removeAlias(merges, label, alias))}
+                      >
+                        {t('models.aliasMergeRemove')}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Ready-to-run snippet that references this model by its unified id. */}
@@ -340,7 +417,8 @@ function ProviderSettingsRow({
     <div className="rounded-xl border bg-background/60 p-3">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <span className="text-xs font-medium" title={endpointTitle}>{endpointLabel}</span>
-        <code className="min-w-0 truncate font-mono text-[11px] text-muted-foreground">{model.modelId}</code>
+        <code className="min-w-0 truncate rounded-full bg-muted px-1.5 py-0.5 font-mono text-[10px] text-foreground">{model.modelId}</code>
+        <CopyButton text={model.modelId} label={t('models.copyModelId')} className="size-6 shrink-0" />
         <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">{sourceLabel}</span>
         {model.hasOverrides && (
           <span className="rounded-full bg-emerald-600/15 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:text-emerald-400">

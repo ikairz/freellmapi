@@ -261,7 +261,11 @@
     "limitHint": "কোনো সীমা না রাখতে ফাঁকা রাখুন।",
     "usageThisMonth": "মাসিক ব্যবহার",
     "usageEmpty": "এই মাসে এখনও কোনো অনুরোধ নেই।",
-    "usageRequestsMonth": "এই মাসে {count}টি অনুরোধ"
+    "usageRequestsMonth": "এই মাসে {count}টি অনুরোধ",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "অপরিমাপিত মডেল অন্বেষণ করুন",
@@ -529,7 +533,11 @@
     "bulkDelete": "সব মুছে দিন",
     "bulkDeleteConfirm": "{count}টি মুছবেন?",
     "bulkResult": "{done}টি হালনাগাদ হয়েছে; {failed}টি ব্যর্থ।",
-    "bulkDeleteResult": "{done}টি মুছে ফেলা হয়েছে; {failed}টি ব্যর্থ।"
+    "bulkDeleteResult": "{done}টি মুছে ফেলা হয়েছে; {failed}টি ব্যর্থ।",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "সুস্থ",
@@ -694,7 +702,11 @@
     "howToUse": "কিভাবে ব্যবহার করবেন",
     "howToUseHelp": "মডেল \"ফিউশন\" সহ একটি সাধারণ চ্যাট অনুরোধ পাঠান। এই সেটিংস ডিফল্ট; যেকোনো অনুরোধ একটি \"ফিউশন\" ফিল্ড দিয়ে তাদের ওভাররাইড করতে পারে।",
     "unsavedChanges": "অসংরক্ষিত পরিবর্তন",
-    "save": "সংরক্ষণ করুন"
+    "save": "সংরক্ষণ করুন",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "প্রিমিয়াম",

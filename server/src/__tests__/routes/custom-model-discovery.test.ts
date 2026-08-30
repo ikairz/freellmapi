@@ -3,6 +3,7 @@ import type { Express } from 'express';
 import { createApp } from '../../app.js';
 import { initDb, getDb } from '../../db/index.js';
 import { setCooldown, isOnCooldown } from '../../services/ratelimit.js';
+import { PROBE_MAX_TOKENS } from '../../services/model-discovery.js';
 import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 
 // #488: a relay's model list changes weekly, so the endpoint's own /models
@@ -337,7 +338,7 @@ describe('median seeding for custom models (#488)', () => {
     expect(chatCall).toBeTruthy();
     expect((chatCall[1] as RequestInit).method).toBe('POST');
     const chatBody = JSON.parse(String((chatCall[1] as RequestInit).body)) as any;
-    expect(chatBody.max_tokens).toBe(1);
+    expect(chatBody.max_tokens).toBe(PROBE_MAX_TOKENS);
     expect(chatBody.model).toBe('relay-a');
 
     // The successful probe wrote a request row the stats cache can fold in,
@@ -351,6 +352,37 @@ describe('median seeding for custom models (#488)', () => {
 
     // A real completion outranks a health ping: the cooldown is lifted.
     expect(isOnCooldown('custom', 'relay-a', keyId)).toBe(false);
+  });
+
+  // #903: relays that enforce `max_tokens > 2` rejected the old probe with a
+  // 400 before it could measure anything, so the endpoint looked broken when
+  // only the probe's own cap was wrong.
+  it('probe clears the max_tokens floor relays enforce (#903)', async () => {
+    expect(PROBE_MAX_TOKENS).toBeGreaterThan(2);
+
+    await post(app, '/api/keys/custom', { baseUrl: ENDPOINT, model: 'relay-a', apiKey: 'relay-secret' });
+    const keyId = customKeyIds()[0]!;
+
+    const mock = vi.fn(async (url: string, init?: RequestInit) => {
+      const body = init?.body ? JSON.parse(String(init.body)) as { max_tokens?: number } : {};
+      // Mirror the upstream that reported #903.
+      if ((body.max_tokens ?? 0) <= 2) {
+        return jsonResponse({ error: { message: 'max_tokens must be greater than 2' } }, 400);
+      }
+      return jsonResponse({
+        id: 'chatcmpl-probe',
+        object: 'chat.completion',
+        created: 0,
+        model: 'relay-a',
+        choices: [{ index: 0, message: { role: 'assistant', content: 'pong' }, finish_reason: 'stop' }],
+        usage: { prompt_tokens: 3, completion_tokens: 1, total_tokens: 4 },
+      });
+    });
+    globalThis.fetch = mock as any;
+
+    const { status, body } = await post(app, '/api/keys/custom/probe', { keyId });
+    expect(status).toBe(200);
+    expect(body.modelId).toBe('relay-a');
   });
 
   it('probe falls back to discovery when the endpoint has no registered model (#685 follow-up)', async () => {

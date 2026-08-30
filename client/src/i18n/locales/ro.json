@@ -261,7 +261,11 @@
     "limitHint": "Lăsați gol pentru nicio limită.",
     "usageThisMonth": "Utilizare lunară",
     "usageEmpty": "Nicio cerere luna aceasta.",
-    "usageRequestsMonth": "{count} cereri luna aceasta"
+    "usageRequestsMonth": "{count} cereri luna aceasta",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Explorează modelele nemăsurate",
@@ -529,7 +533,11 @@
     "bulkDelete": "Șterge toate",
     "bulkDeleteConfirm": "Ștergi {count}?",
     "bulkResult": "Actualizate {done}; eșuate {failed}.",
-    "bulkDeleteResult": "Șterse {done}; eșuate {failed}."
+    "bulkDeleteResult": "Șterse {done}; eșuate {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "Sănătos",
@@ -694,7 +702,11 @@
     "howToUse": "Cum să folosești",
     "howToUseHelp": "Trimite o cerere normală de chat cu modelul \"fusion\". Aceste setări sunt cele implicite; Orice cerere le poate suprascrie cu un câmp \"fuziune\".",
     "unsavedChanges": "Modificări nesalvate",
-    "save": "Salvează"
+    "save": "Salvează",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Premium",

@@ -261,7 +261,11 @@
     "limitHint": "සීමාවක් නොමැති නම් හිස්ව තබන්න.",
     "usageThisMonth": "මාසික භාවිතය",
     "usageEmpty": "මෙම මාසයේ තවම ඉල්ලීම් නැත.",
-    "usageRequestsMonth": "මෙම මාසයේ ඉල්ලීම් {count}"
+    "usageRequestsMonth": "මෙම මාසයේ ඉල්ලීම් {count}",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "නොමැනූ ආකෘති ගවේෂණය කරන්න",
@@ -529,7 +533,11 @@
     "bulkDelete": "සියල්ල මකන්න",
     "bulkDeleteConfirm": "{count} මකන්නද?",
     "bulkResult": "{done} යාවත්කාලීන කළා; {failed} අසාර්ථකයි.",
-    "bulkDeleteResult": "{done} මකා දැමුවා; {failed} අසාර්ථකයි."
+    "bulkDeleteResult": "{done} මකා දැමුවා; {failed} අසාර්ථකයි.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "සෞඛ්ය සම්පන්න",
@@ -694,7 +702,11 @@
     "howToUse": "භාවිතා කරන ආකාරය",
     "howToUseHelp": "මාදිලිය \"විලයන\" සමඟ සාමාන්‍ය කතාබස් ඉල්ලීමක් යවන්න. මෙම සැකසුම් පෙරනිමි වේ; ඕනෑම ඉල්ලීමක් \"විලයන\" ක්ෂේත්‍රයකින් ඒවා අභිබවා යා හැක.",
     "unsavedChanges": "නොසුරකින ලද වෙනස්කම්",
-    "save": "සුරකින්න"
+    "save": "සුරකින්න",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "වාරික",

@@ -261,7 +261,11 @@
     "limitHint": "Laat leeg voor geen limiet.",
     "usageThisMonth": "Maandelijks gebruik",
     "usageEmpty": "Nog geen verzoeken deze maand.",
-    "usageRequestsMonth": "{count} verz. deze maand"
+    "usageRequestsMonth": "{count} verz. deze maand",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Ongemeten modellen verkennen",
@@ -529,7 +533,11 @@
     "bulkDelete": "Alles verwijderen",
     "bulkDeleteConfirm": "{count} verwijderen?",
     "bulkResult": "Bijgewerkt {done}; mislukt {failed}.",
-    "bulkDeleteResult": "Verwijderd {done}; mislukt {failed}."
+    "bulkDeleteResult": "Verwijderd {done}; mislukt {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "Gezond",
@@ -694,7 +702,11 @@
     "howToUse": "Hoe te gebruiken",
     "howToUseHelp": "Stuur een normaal chatverzoek met model \"fusion\". Deze instellingen zijn standaard; elk verzoek kan ze overschrijven met een \"fusie\"-veld.",
     "unsavedChanges": "Wijzigingen die niet opgeslagen zijn",
-    "save": "Sla op"
+    "save": "Sla op",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Premie",

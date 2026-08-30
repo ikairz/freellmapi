@@ -261,7 +261,11 @@
     "limitHint": "留空表示不限制。",
     "usageThisMonth": "每月用量",
     "usageEmpty": "本月还没有请求。",
-    "usageRequestsMonth": "本月 {count} 次请求"
+    "usageRequestsMonth": "本月 {count} 次请求",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "探索未测模型",
@@ -377,6 +381,10 @@
     "proxyUrl": "代理地址",
     "saveProxy": "保存",
     "savingProxy": "保存中…",
+    "testProxy": "测试",
+    "testingProxy": "测试中…",
+    "proxyTestOk": "代理可用 — 往返耗时 {ms}ms",
+    "proxyTestFail": "代理测试失败：{reason}",
     "proxyLoadFailed": "无法加载代理设置。",
     "addCustom": "添加自定义 OpenAI 兼容模型",
     "addCustomDescription": "指向任意 OpenAI 兼容的端点：llama.cpp、LM Studio、vLLM、本地 Ollama 或远程网关。API 密钥是可选的（大多数本地服务器不需要）。",
@@ -697,7 +705,11 @@
     "howToUse": "如何使用",
     "howToUseHelp": "发送普通的对话请求，并将 model 设为 “fusion”。这些设置为默认值；任何请求都可以通过 “fusion” 字段覆盖它们。",
     "unsavedChanges": "有未保存的更改",
-    "save": "保存"
+    "save": "保存",
+    "searchPlaceholder": "搜索模型…",
+    "providerFilterLabel": "按提供商筛选",
+    "providerAll": "全部提供商",
+    "noMatch": "没有匹配搜索条件的模型。"
   },
   "premium": {
     "title": "高级版",

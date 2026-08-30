@@ -261,7 +261,11 @@
     "limitHint": "Hagyja üresen, ha nincs korlát.",
     "usageThisMonth": "Havi felhasználás",
     "usageEmpty": "Ebben a hónapban még nincs kérés.",
-    "usageRequestsMonth": "{count} kérés e hónapban"
+    "usageRequestsMonth": "{count} kérés e hónapban",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Nem mért modellek felfedezése",
@@ -529,7 +533,11 @@
     "bulkDelete": "Összes törlése",
     "bulkDeleteConfirm": "{count} törlése?",
     "bulkResult": "Frissítve {done}; {failed} sikertelen.",
-    "bulkDeleteResult": "Törölve {done}; {failed} sikertelen."
+    "bulkDeleteResult": "Törölve {done}; {failed} sikertelen.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "egészséges",
@@ -694,7 +702,11 @@
     "howToUse": "Hogyan kell használni",
     "howToUseHelp": "Küldj egy normál chatkérést a modell \"fusion\"-val. Ezek az alapbeállítások; bármilyen kérés felülírhatja őket egy \"fúziós\" mezővel.",
     "unsavedChanges": "Mentetlen változtatások",
-    "save": "Mentés"
+    "save": "Mentés",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Prémium",

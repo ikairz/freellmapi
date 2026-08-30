@@ -261,7 +261,11 @@
     "limitHint": "പരിധി വേണ്ടെങ്കിൽ ശൂന്യമായി വിടുക.",
     "usageThisMonth": "പ്രതിമാസ ഉപയോഗം",
     "usageEmpty": "ഈ മാസം ഇതുവരെ അഭ്യർത്ഥനകളില്ല.",
-    "usageRequestsMonth": "ഈ മാസം {count} അഭ്യർത്ഥനകൾ"
+    "usageRequestsMonth": "ഈ മാസം {count} അഭ്യർത്ഥനകൾ",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "അളക്കാത്ത മോഡലുകൾ പര്യവേക്ഷണം ചെയ്യുക",
@@ -529,7 +533,11 @@
     "bulkDelete": "എല്ലാം ഇല്ലാതാക്കുക",
     "bulkDeleteConfirm": "{count} ഇല്ലാതാക്കണോ?",
     "bulkResult": "{done} അപ്‌ഡേറ്റ് ചെയ്തു; {failed} പരാജയപ്പെട്ടു.",
-    "bulkDeleteResult": "{done} ഇല്ലാതാക്കി; {failed} പരാജയപ്പെട്ടു."
+    "bulkDeleteResult": "{done} ഇല്ലാതാക്കി; {failed} പരാജയപ്പെട്ടു.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "ആരോഗ്യമുള്ള",
@@ -694,7 +702,11 @@
     "howToUse": "എങ്ങനെ ഉപയോഗിക്കാം",
     "howToUseHelp": "മോഡൽ \"ഫ്യൂഷൻ\" ഉപയോഗിച്ച് ഒരു സാധാരണ ചാറ്റ് അഭ്യർത്ഥന അയയ്ക്കുക. ഈ ക്രമീകരണങ്ങൾ സ്ഥിരസ്ഥിതിയാണ്; ഏതൊരു അഭ്യർത്ഥനയ്ക്കും ഒരു \"ഫ്യൂഷൻ\" ഫീൽഡ് ഉപയോഗിച്ച് അവയെ മറികടക്കാൻ കഴിയും.",
     "unsavedChanges": "സംരക്ഷിക്കാത്ത മാറ്റങ്ങൾ",
-    "save": "സംരക്ഷിക്കുക"
+    "save": "സംരക്ഷിക്കുക",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "പ്രീമിയം",

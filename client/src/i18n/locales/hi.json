@@ -261,7 +261,11 @@
     "limitHint": "कोई सीमा न रखने के लिए खाली छोड़ें।",
     "usageThisMonth": "मासिक उपयोग",
     "usageEmpty": "इस महीने अभी कोई अनुरोध नहीं।",
-    "usageRequestsMonth": "इस महीने {count} अनुरोध"
+    "usageRequestsMonth": "इस महीने {count} अनुरोध",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "बिना मापे गए मॉडल एक्सप्लोर करें",
@@ -529,7 +533,11 @@
     "bulkDelete": "सभी हटाएँ",
     "bulkDeleteConfirm": "{count} हटाएँ?",
     "bulkResult": "{done} अपडेट हुए; {failed} विफल।",
-    "bulkDeleteResult": "{done} हटाए गए; {failed} विफल।"
+    "bulkDeleteResult": "{done} हटाए गए; {failed} विफल।",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "स्वस्थ",
@@ -694,7 +702,11 @@
     "howToUse": "कैसे उपयोग करें",
     "howToUseHelp": "मॉडल \"फ़्यूज़न\" के साथ एक सामान्य चैट अनुरोध भेजें। ये सेटिंग्स डिफ़ॉल्ट हैं; कोई भी अनुरोध उन्हें \"फ़्यूज़न\" फ़ील्ड से ओवरराइड कर सकता है।",
     "unsavedChanges": "सहेजे न गए परिवर्तन",
-    "save": "सहेजें"
+    "save": "सहेजें",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "प्रीमियम",

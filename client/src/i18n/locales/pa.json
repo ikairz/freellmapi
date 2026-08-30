@@ -261,7 +261,11 @@
     "limitHint": "ਕੋਈ ਹੱਦ ਨਾ ਰੱਖਣ ਲਈ ਖਾਲੀ ਛੱਡੋ।",
     "usageThisMonth": "ਮਹੀਨਾਵਾਰ ਵਰਤੋਂ",
     "usageEmpty": "ਇਸ ਮਹੀਨੇ ਹਾਲੇ ਕੋਈ ਬੇਨਤੀ ਨਹੀਂ।",
-    "usageRequestsMonth": "ਇਸ ਮਹੀਨੇ {count} ਬੇਨਤੀਆਂ"
+    "usageRequestsMonth": "ਇਸ ਮਹੀਨੇ {count} ਬੇਨਤੀਆਂ",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "ਬਿਨਾਂ ਮਾਪੇ ਮਾਡਲਾਂ ਦੀ ਖੋਜ ਕਰੋ",
@@ -529,7 +533,11 @@
     "bulkDelete": "ਸਾਰੇ ਮਿਟਾਓ",
     "bulkDeleteConfirm": "{count} ਮਿਟਾਉਣੇ ਹਨ?",
     "bulkResult": "{done} ਅੱਪਡੇਟ ਹੋਏ; {failed} ਅਸਫਲ।",
-    "bulkDeleteResult": "{done} ਮਿਟਾਏ ਗਏ; {failed} ਅਸਫਲ।"
+    "bulkDeleteResult": "{done} ਮਿਟਾਏ ਗਏ; {failed} ਅਸਫਲ।",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "ਸਿਹਤਮੰਦ",
@@ -694,7 +702,11 @@
     "howToUse": "ਕਿਵੇਂ ਵਰਤਣਾ ਹੈ",
     "howToUseHelp": "ਮਾਡਲ \"ਫਿਊਜ਼ਨ\" ਦੇ ਨਾਲ ਇੱਕ ਆਮ ਚੈਟ ਬੇਨਤੀ ਭੇਜੋ। ਇਹ ਸੈਟਿੰਗਾਂ ਡਿਫੌਲਟ ਹਨ; ਕੋਈ ਵੀ ਬੇਨਤੀ ਉਹਨਾਂ ਨੂੰ \"ਫਿਊਜ਼ਨ\" ਖੇਤਰ ਨਾਲ ਓਵਰਰਾਈਡ ਕਰ ਸਕਦੀ ਹੈ।",
     "unsavedChanges": "ਅਣਰੱਖਿਅਤ ਤਬਦੀਲੀਆਂ",
-    "save": "ਸੇਵ ਕਰੋ"
+    "save": "ਸੇਵ ਕਰੋ",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "ਪ੍ਰੀਮੀਅਮ",

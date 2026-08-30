@@ -1481,13 +1481,9 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
   // in parallel, then a judge synthesizes one answer. It routes each panel/judge
   // sub-call through the normal path (cooldowns, quotas, analytics), so it
   // behaves like a normal model from the client's side — just K+1x the tokens.
-  // Vision is still rejected up front; tool requests run on tool-capable panel
-  // members and return the first structured tool call directly.
+  // Image requests run on vision-capable panel members; tool requests run on
+  // tool-capable members and return the first structured tool call directly.
   if (isFusionModel(requestedModel)) {
-    if (hasImage) {
-      res.status(422).json({ error: { message: 'Fusion does not support image input yet. Use a vision model directly.', type: 'invalid_request_error', code: 'fusion_no_vision' } });
-      return;
-    }
     const fusionOptions = { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams };
     const fusionConfig = parsed.data.fusion ?? {};
 
@@ -1511,6 +1507,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
           config: fusionConfig,
           options: fusionOptions,
           estimatedTokens: estimatedTotal,
+          vision: hasImage,
           hooks: {
             // `a` already carries a sanitized error for failed slots; content is
             // the model's own answer and is forwarded as-is.
@@ -1564,6 +1561,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
         config: fusionConfig,
         options: fusionOptions,
         estimatedTokens: estimatedTotal,
+        vision: hasImage,
       });
       // Structured-output enforcement for fusion (#516 scope gap): the panel/
       // judge output got no format check, so model:"fusion" could hand back

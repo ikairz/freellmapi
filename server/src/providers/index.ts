@@ -33,6 +33,15 @@ register(new OpenAICompatProvider({
   baseUrl: 'https://api.cerebras.ai/v1',
 }));
 
+// B.AI — OpenAI-compatible gateway. Provider support is first-class, but the
+// only free catalog row currently published is a limited-time 0-credit promo;
+// keep commercial eligibility in the hosted catalog rather than seeding it.
+register(new OpenAICompatProvider({
+  platform: 'bai',
+  name: 'B.AI',
+  baseUrl: 'https://api.b.ai/v1',
+}));
+
 // AnyAPI - OpenAI-compatible gateway (anyapi.ai). Free tier (checked against
 // anyapi.ai/pricing 2026-08-10): $0, no card, recurring — but the binding limit
 // is 100K TOKENS PER DAY, and only "free and basic" models are in scope. AnyAPI

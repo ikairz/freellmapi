@@ -374,6 +374,10 @@ export function isContextTooLargeError(err: any): boolean {
     || msg.includes('request entity too large')
     || msg.includes('request body too large')
     || msg.includes('content too large')
+    // Zhipu AI (bigmodel.cn) 400, error code 1261: "Prompt exceeds max length"
+    // (#873). Its wording matches none of the markers above, so without this it
+    // was mis-bucketed as provider_bad_request instead of context_too_large.
+    || msg.includes('exceeds max length')
     || msg.includes('api error 413');
 }
 

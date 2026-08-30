@@ -661,3 +661,75 @@ export function flushProxyCache(): void {
     console.warn(`[proxy] could not replace the global fetch dispatcher on wake: ${err?.message ?? err}`);
   }
 }
+
+export interface ProxyProbeResult {
+  ok: boolean;
+  latencyMs: number;
+  status?: number;
+  error?: string;
+  /** The URL the probe actually called, so the dashboard can say what it
+   *  reached rather than leaving the operator to guess. */
+  target?: string;
+}
+
+/**
+ * Where the probe goes when the caller names no target and no provider key
+ * can supply one.
+ *
+ * Deliberately NOT an AI vendor. The probe answers "can this proxy reach the
+ * internet", and pointing it at a third party the install may never use makes
+ * the test lie in both directions: a gateway that never calls that vendor now
+ * calls it on every Test, and a network that blocks it reports a working proxy
+ * as broken. `/cdn-cgi/trace` is a plain-text reachability endpoint with no
+ * account, no rate limit and no regional AI-vendor blocking.
+ */
+export const DEFAULT_PROXY_PROBE_TARGET = 'https://www.cloudflare.com/cdn-cgi/trace';
+
+/**
+ * Test whether a proxy URL can actually route traffic (#863). Backs the
+ * Settings → Outbound proxy "Test" button so an operator can verify a draft
+ * value BEFORE saving it.
+ *
+ * `proxyUrl` empty → falls back to the saved global proxy URL (getProxyUrl);
+ * when neither is set the probe runs direct, so the button is still useful
+ * before any proxy has been configured.
+ *
+ * The probe target is supplied by the caller and should be an endpoint this
+ * install genuinely uses — the /models route of a provider the operator holds
+ * an enabled key for. Any HTTP response, even a 401/403 without a key, proves
+ * the proxy route works; only a network-level failure (DNS, connect, timeout)
+ * counts as a proxy failure.
+ */
+export async function probeProxyUrl(
+  proxyUrl: string | undefined,
+  options: { targetUrl?: string; timeoutMs?: number } = {},
+): Promise<ProxyProbeResult> {
+  const timeoutMs = options.timeoutMs ?? 10_000;
+  const started = Date.now();
+  const url = (proxyUrl ?? '').trim() || getProxyUrl();
+  // The caller passes the endpoint this install actually talks to (see
+  // routes/settings.ts); the constant is only the no-providers fallback.
+  const target = (options.targetUrl ?? '').trim() || DEFAULT_PROXY_PROBE_TARGET;
+
+  try {
+    let response: Response;
+    if (!url) {
+      response = await fetch(target, { signal: AbortSignal.timeout(timeoutMs) });
+    } else {
+      const resolved = await resolvePerKeyDispatcher(url);
+      if (!resolved) {
+        return { ok: false, latencyMs: Date.now() - started, target, error: 'Failed to build a proxy agent for the given URL' };
+      }
+      if (resolved.isSocks) {
+        response = await socksFetch(target, { signal: AbortSignal.timeout(timeoutMs) }, resolved.dispatcher as http.Agent, undefined, 'unknown', timeoutMs);
+      } else {
+        response = await fetch(target, { ...{ signal: AbortSignal.timeout(timeoutMs) }, dispatcher: resolved.dispatcher } as unknown as RequestInit);
+      }
+    }
+    // Any HTTP response proves the proxy route works; the upstream may still
+    // answer 401/403 without a key, which is connectivity, not proxy failure.
+    return { ok: true, latencyMs: Date.now() - started, status: response.status, target };
+  } catch (err: any) {
+    return { ok: false, latencyMs: Date.now() - started, target, error: err?.message ?? String(err) };
+  }
+}

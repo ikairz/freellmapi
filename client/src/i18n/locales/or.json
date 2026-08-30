@@ -261,7 +261,11 @@
     "limitHint": "କୌଣସି ସୀମା ନ ରଖିବାକୁ ଖାଲି ଛାଡ଼ନ୍ତୁ।",
     "usageThisMonth": "ମାସିକ ବ୍ୟବହାର",
     "usageEmpty": "ଏହି ମାସରେ ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଅନୁରୋଧ ନାହିଁ।",
-    "usageRequestsMonth": "ଏହି ମାସରେ {count} ଅନୁରୋଧ"
+    "usageRequestsMonth": "ଏହି ମାସରେ {count} ଅନୁରୋଧ",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "ମପାଯାଇନଥିବା ମଡେଲଗୁଡ଼ିକୁ ଅନୁସନ୍ଧାନ କରନ୍ତୁ",
@@ -529,7 +533,11 @@
     "bulkDelete": "ସବୁ ବିଲୋପ କରନ୍ତୁ",
     "bulkDeleteConfirm": "{count} ବିଲୋପ କରିବେ?",
     "bulkResult": "{done} ଅଦ୍ୟତନ ହୋଇଛି; {failed} ବିଫଳ ହୋଇଛି।",
-    "bulkDeleteResult": "{done} ବିଲୋପ ହୋଇଛି; {failed} ବିଫଳ ହୋଇଛି।"
+    "bulkDeleteResult": "{done} ବିଲୋପ ହୋଇଛି; {failed} ବିଫଳ ହୋଇଛି।",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "ସୁସ୍ଥ",
@@ -694,7 +702,11 @@
     "howToUse": "କିପରି ବ୍ୟବହାର କରିବେ",
     "howToUseHelp": "ମଡେଲ୍ \"ଫ୍ୟୁଜନ୍\" ସହ ଏକ ସାମାନ୍ୟ ଚାଟ୍ ଅନୁରୋଧ ପ୍ରେରଣ କରନ୍ତୁ। ଏହି ସେଟିଂସ୍ ହେଉଛି ଡିଫଲ୍ଟ; ଯେକୌଣସି ଅନୁରୋଧ ସେମାନଙ୍କୁ ଏକ \"ଫ୍ୟୁଜନ୍\" ଫିଲ୍ଡ ସହିତ ଓଭରରାଇଡ୍ କରିପାରେ ।",
     "unsavedChanges": "ଅସଞ୍ଚିତ ପରିବର୍ତ୍ତନଗୁଡିକ",
-    "save": "ସଞ୍ଚୟ କରନ୍ତୁ"
+    "save": "ସଞ୍ଚୟ କରନ୍ତୁ",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "ପ୍ରିମିୟମ",

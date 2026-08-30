@@ -261,7 +261,11 @@
     "limitHint": "Залиште порожнім, щоб не було обмеження.",
     "usageThisMonth": "Місячні витрати",
     "usageEmpty": "Цього місяця ще немає запитів.",
-    "usageRequestsMonth": "{count} запитів цього місяця"
+    "usageRequestsMonth": "{count} запитів цього місяця",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Досліджувати невиміряні моделі",
@@ -529,7 +533,11 @@
     "bulkDelete": "Видалити всі",
     "bulkDeleteConfirm": "Видалити {count}?",
     "bulkResult": "Оновлено {done}; не вдалося {failed}.",
-    "bulkDeleteResult": "Видалено {done}; не вдалося {failed}."
+    "bulkDeleteResult": "Видалено {done}; не вдалося {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "здоровий",
@@ -694,7 +702,11 @@
     "howToUse": "Як використовувати",
     "howToUseHelp": "Надішліть звичайний запит у чат із моделлю \"fusion\". Ці налаштування є типовими; будь-який запит може замінити їх за допомогою поля \"fusion\".",
     "unsavedChanges": "Незбережені зміни",
-    "save": "зберегти"
+    "save": "зберегти",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Преміум",

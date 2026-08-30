@@ -261,7 +261,11 @@
     "limitHint": "Hapụ ya efu ka enweghị oke.",
     "usageThisMonth": "Ojiji kwa ọnwa",
     "usageEmpty": "Enweghị arịrịọ ọ bụla ọnwa a.",
-    "usageRequestsMonth": "arịrịọ {count} ọnwa a"
+    "usageRequestsMonth": "arịrịọ {count} ọnwa a",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Nyochaa ụdị a na-atụbeghị",
@@ -529,7 +533,11 @@
     "bulkDelete": "Hichapụ ha niile",
     "bulkDeleteConfirm": "Hichapụ {count}?",
     "bulkResult": "Emelitere {done}; {failed} dara.",
-    "bulkDeleteResult": "Ehichapụrụ {done}; {failed} dara."
+    "bulkDeleteResult": "Ehichapụrụ {done}; {failed} dara.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "ahụike",
@@ -694,7 +702,11 @@
     "howToUse": "Otu esi eji",
     "howToUseHelp": "zipu arịrịọ nkata nkịtị nwere ihe nlereanya \"fusion\". Ntọala ndị a bụ ndabara; Arịrịọ ọ bụla nwere ike iji mpaghara “fusion” wezuga ha.",
     "unsavedChanges": "Mgbanwe anaghị echekwa",
-    "save": "Chekwa"
+    "save": "Chekwa",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "adịchaghị",

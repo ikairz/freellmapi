@@ -261,7 +261,11 @@
     "limitHint": "పరిమితి వద్దనుకుంటే ఖాళీగా వదిలేయండి.",
     "usageThisMonth": "నెలవారీ వినియోగం",
     "usageEmpty": "ఈ నెలలో ఇంకా అభ్యర్థనలు లేవు.",
-    "usageRequestsMonth": "ఈ నెలలో {count} అభ్యర్థనలు"
+    "usageRequestsMonth": "ఈ నెలలో {count} అభ్యర్థనలు",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "కొలవని మోడల్స్‌ను అన్వేషించండి",
@@ -529,7 +533,11 @@
     "bulkDelete": "అన్నింటినీ తొలగించు",
     "bulkDeleteConfirm": "{count} తొలగించాలా?",
     "bulkResult": "{done} నవీకరించబడింది; {failed} విఫలమైంది.",
-    "bulkDeleteResult": "{done} తొలగించబడింది; {failed} విఫలమైంది."
+    "bulkDeleteResult": "{done} తొలగించబడింది; {failed} విఫలమైంది.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "ఆరోగ్యకరమైన",
@@ -694,7 +702,11 @@
     "howToUse": "ఎలా ఉపయోగించాలి",
     "howToUseHelp": "మోడల్ \"ఫ్యూజన్\"తో సాధారణ చాట్ అభ్యర్థనను పంపండి. ఈ సెట్టింగ్‌లు డిఫాల్ట్; ఏదైనా అభ్యర్థన వాటిని \"ఫ్యూజన్\" ఫీల్డ్‌తో భర్తీ చేయగలదు.",
     "unsavedChanges": "సేవ్ చేయని మార్పులు",
-    "save": "సేవ్ చేయండి"
+    "save": "సేవ్ చేయండి",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "ప్రీమియం",

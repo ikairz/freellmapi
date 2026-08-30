@@ -261,7 +261,11 @@
     "limitHint": "कुनै सीमा नराख्न खाली छोड्नुहोस्।",
     "usageThisMonth": "मासिक प्रयोग",
     "usageEmpty": "यो महिना अहिलेसम्म कुनै अनुरोध छैन।",
-    "usageRequestsMonth": "यो महिना {count} अनुरोध"
+    "usageRequestsMonth": "यो महिना {count} अनुरोध",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "नमापिएका मोडेलहरू अन्वेषण गर्नुहोस्",
@@ -529,7 +533,11 @@
     "bulkDelete": "सबै मेट्नुहोस्",
     "bulkDeleteConfirm": "{count} मेट्ने?",
     "bulkResult": "{done} अद्यावधिक भयो; {failed} असफल ।",
-    "bulkDeleteResult": "{done} मेटियो; {failed} असफल ।"
+    "bulkDeleteResult": "{done} मेटियो; {failed} असफल ।",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "स्वस्थ छ",
@@ -694,7 +702,11 @@
     "howToUse": "कसरी प्रयोग गर्ने?",
     "howToUseHelp": "मोडेल \"फ्यूजन\" संग एक सामान्य च्याट अनुरोध पठाउनुहोस्। यी सेटिङहरू पूर्वनिर्धारित हुन्; कुनै पनि अनुरोधले तिनीहरूलाई \"फ्यूजन\" फिल्डको साथ ओभरराइड गर्न सक्छ।",
     "unsavedChanges": "बचत नगरिएका परिवर्तनहरू",
-    "save": "बचत गर्नुहोस्"
+    "save": "बचत गर्नुहोस्",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "प्रिमियम",

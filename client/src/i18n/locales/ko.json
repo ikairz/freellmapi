@@ -261,7 +261,11 @@
     "limitHint": "제한 없음으로 두려면 비워 두세요.",
     "usageThisMonth": "월간 사용량",
     "usageEmpty": "이번 달에는 아직 요청이 없습니다.",
-    "usageRequestsMonth": "이번 달 {count}건"
+    "usageRequestsMonth": "이번 달 {count}건",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "미측정 모델 탐색",
@@ -529,7 +533,11 @@
     "bulkDelete": "모두 삭제",
     "bulkDeleteConfirm": "{count}개를 삭제할까요?",
     "bulkResult": "{done}개 업데이트됨, {failed}개 실패.",
-    "bulkDeleteResult": "{done}개 삭제됨, {failed}개 실패."
+    "bulkDeleteResult": "{done}개 삭제됨, {failed}개 실패.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "건강한",
@@ -694,7 +702,11 @@
     "howToUse": "사용방법",
     "howToUseHelp": "모델 \"fusion\"을 사용하여 일반 채팅 요청을 보냅니다. 이러한 설정은 기본값입니다. 모든 요청은 \"fusion\" 필드로 이를 재정의할 수 있습니다.",
     "unsavedChanges": "저장되지 않은 변경사항",
-    "save": "저장"
+    "save": "저장",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "프리미엄",

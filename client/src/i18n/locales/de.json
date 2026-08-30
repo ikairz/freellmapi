@@ -261,7 +261,11 @@
     "limitHint": "Leer lassen für kein Limit.",
     "usageThisMonth": "Monatliche Nutzung",
     "usageEmpty": "Diesen Monat noch keine Anfragen.",
-    "usageRequestsMonth": "{count} Anfr. diesen Monat"
+    "usageRequestsMonth": "{count} Anfr. diesen Monat",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Unvermessene Modelle erkunden",
@@ -529,7 +533,11 @@
     "bulkDelete": "Alle löschen",
     "bulkDeleteConfirm": "{count} löschen?",
     "bulkResult": "Aktualisiert {done}; fehlgeschlagen {failed}.",
-    "bulkDeleteResult": "Gelöscht {done}; fehlgeschlagen {failed}."
+    "bulkDeleteResult": "Gelöscht {done}; fehlgeschlagen {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "gesund",
@@ -694,7 +702,11 @@
     "howToUse": "Wie zu verwenden",
     "howToUseHelp": "Senden Sie eine normale Chat-Anfrage mit dem Model „Fusion“. Diese Einstellungen sind die Standardeinstellungen; Jede Anfrage kann sie mit einem „Fusion“-Feld überschreiben.",
     "unsavedChanges": "Nicht gespeicherte Änderungen",
-    "save": "Speichern"
+    "save": "Speichern",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Premium",

@@ -261,7 +261,11 @@
     "limitHint": "मर्यादा नको असल्यास रिकामे ठेवा.",
     "usageThisMonth": "मासिक वापर",
     "usageEmpty": "या महिन्यात अद्याप विनंत्या नाहीत.",
-    "usageRequestsMonth": "या महिन्यात {count} विनंत्या"
+    "usageRequestsMonth": "या महिन्यात {count} विनंत्या",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "न मोजलेले मॉडेल्स एक्सप्लोर करा",
@@ -529,7 +533,11 @@
     "bulkDelete": "सर्व हटवा",
     "bulkDeleteConfirm": "{count} हटवायचे?",
     "bulkResult": "{done} अद्ययावत केले; {failed} अयशस्वी.",
-    "bulkDeleteResult": "{done} हटवले; {failed} अयशस्वी."
+    "bulkDeleteResult": "{done} हटवले; {failed} अयशस्वी.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "निरोगी",
@@ -694,7 +702,11 @@
     "howToUse": "कसे वापरावे",
     "howToUseHelp": "मॉडेल \"फ्यूजन\" सह सामान्य चॅट विनंती पाठवा. या सेटिंग्ज डीफॉल्ट आहेत; कोणतीही विनंती त्यांना \"फ्यूजन\" फील्डसह अधिलिखित करू शकते.",
     "unsavedChanges": "जतन न केलेले बदल",
-    "save": "जतन करा"
+    "save": "जतन करा",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "प्रीमियम",

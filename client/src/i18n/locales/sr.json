@@ -261,7 +261,11 @@
     "limitHint": "Оставите празно за без ограничења.",
     "usageThisMonth": "Месечна потрошња",
     "usageEmpty": "Овог месеца још нема захтева.",
-    "usageRequestsMonth": "{count} захтева овог месеца"
+    "usageRequestsMonth": "{count} захтева овог месеца",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Истражи неизмерене моделе",
@@ -529,7 +533,11 @@
     "bulkDelete": "Избриши све",
     "bulkDeleteConfirm": "Избрисати {count}?",
     "bulkResult": "Ажурирано {done}; неуспешно {failed}.",
-    "bulkDeleteResult": "Избрисано {done}; неуспешно {failed}."
+    "bulkDeleteResult": "Избрисано {done}; неуспешно {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "здраво",
@@ -694,7 +702,11 @@
     "howToUse": "Како користити",
     "howToUseHelp": "Пошаљите нормалан захтев за ћаскање са моделом \"фусион\". Ова подешавања су подразумевана; сваки захтев их може заменити пољем „фузије“.",
     "unsavedChanges": "Несачуване промене",
-    "save": "Сачувај"
+    "save": "Сачувај",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Премиум",

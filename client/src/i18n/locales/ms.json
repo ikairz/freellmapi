@@ -261,7 +261,11 @@
     "limitHint": "Biarkan kosong untuk tiada had.",
     "usageThisMonth": "Penggunaan bulanan",
     "usageEmpty": "Tiada permintaan lagi bulan ini.",
-    "usageRequestsMonth": "{count} permintaan bulan ini"
+    "usageRequestsMonth": "{count} permintaan bulan ini",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "Teroka model yang belum diukur",
@@ -529,7 +533,11 @@
     "bulkDelete": "Padam semua",
     "bulkDeleteConfirm": "Padam {count}?",
     "bulkResult": "Dikemas kini {done}; gagal {failed}.",
-    "bulkDeleteResult": "Dipadam {done}; gagal {failed}."
+    "bulkDeleteResult": "Dipadam {done}; gagal {failed}.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "sihat",
@@ -694,7 +702,11 @@
     "howToUse": "Cara menggunakan",
     "howToUseHelp": "Hantar permintaan sembang biasa dengan model \"fusion\". Tetapan ini adalah lalai; Mana-mana permintaan boleh menggantikannya dengan medan \"fusion\".",
     "unsavedChanges": "Perubahan yang belum disimpan",
-    "save": "Simpan"
+    "save": "Simpan",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "Premium",

@@ -261,7 +261,11 @@
     "limitHint": "કોઈ મર્યાદા ન રાખવા ખાલી છોડો.",
     "usageThisMonth": "માસિક વપરાશ",
     "usageEmpty": "આ મહિને હજી કોઈ વિનંતી નથી.",
-    "usageRequestsMonth": "આ મહિને {count} વિનંતી"
+    "usageRequestsMonth": "આ મહિને {count} વિનંતી",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "માપ્યા વગરના મોડલ્સ એક્સપ્લોર કરો",
@@ -529,7 +533,11 @@
     "bulkDelete": "બધું કાઢી નાખો",
     "bulkDeleteConfirm": "{count} કાઢી નાખવી?",
     "bulkResult": "{done} અપડેટ થયા; {failed} નિષ્ફળ.",
-    "bulkDeleteResult": "{done} કાઢી નાખ્યા; {failed} નિષ્ફળ."
+    "bulkDeleteResult": "{done} કાઢી નાખ્યા; {failed} નિષ્ફળ.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "સ્વસ્થ",
@@ -694,7 +702,11 @@
     "howToUse": "કેવી રીતે ઉપયોગ કરવો",
     "howToUseHelp": "મોડેલ \"ફ્યુઝન\" સાથે સામાન્ય ચેટ વિનંતી મોકલો. આ સેટિંગ્સ મૂળભૂત છે; કોઈપણ વિનંતી તેમને \"ફ્યુઝન\" ફીલ્ડ વડે ઓવરરાઈડ કરી શકે છે.",
     "unsavedChanges": "વણસાચવેલા ફેરફારો",
-    "save": "સાચવો"
+    "save": "સાચવો",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "પ્રીમિયમ",

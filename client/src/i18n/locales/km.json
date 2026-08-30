@@ -261,7 +261,11 @@
     "limitHint": "ទុកឱ្យទទេ ដើម្បីគ្មានដែនកំណត់។",
     "usageThisMonth": "ការប្រើប្រាស់ប្រចាំខែ",
     "usageEmpty": "មិនទាន់មានសំណើនៅខែនេះទេ។",
-    "usageRequestsMonth": "ខែនេះ {count} សំណើ"
+    "usageRequestsMonth": "ខែនេះ {count} សំណើ",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "ស្វែងរកម៉ូដែលដែលមិនទាន់វាស់វែង",
@@ -529,7 +533,11 @@
     "bulkDelete": "លុបទាំងអស់",
     "bulkDeleteConfirm": "លុប {count}?",
     "bulkResult": "បានធ្វើបច្ចុប្បន្នភាព {done}; បរាជ័យ {failed}។",
-    "bulkDeleteResult": "បានលុប {done}; បរាជ័យ {failed}។"
+    "bulkDeleteResult": "បានលុប {done}; បរាជ័យ {failed}។",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "មានសុខភាពល្អ",
@@ -694,7 +702,11 @@
     "howToUse": "របៀបប្រើ",
     "howToUseHelp": "ផ្ញើសំណើជជែកធម្មតាជាមួយម៉ូដែល \"fusion\"។ ការកំណត់ទាំងនេះគឺជាការកំណត់លំនាំដើម; សំណើណាមួយអាចបដិសេធវាដោយវាល \"fusion\"។",
     "unsavedChanges": "ការផ្លាស់ប្តូរដែលមិនបានរក្សាទុក",
-    "save": "រក្សាទុក"
+    "save": "រក្សាទុក",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "ព្រីមៀម",

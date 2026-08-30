@@ -261,7 +261,11 @@
     "limitHint": "برای بدون محدودیت خالی بگذارید.",
     "usageThisMonth": "مصرف ماهانه",
     "usageEmpty": "هنوز درخواستی در این ماه نیست.",
-    "usageRequestsMonth": "{count} درخواست این ماه"
+    "usageRequestsMonth": "{count} درخواست این ماه",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "کاوش مدل‌های اندازه‌گیری‌نشده",
@@ -529,7 +533,11 @@
     "bulkDelete": "حذف همه",
     "bulkDeleteConfirm": "حذف {count}؟",
     "bulkResult": "{done} به‌روزرسانی شد؛ {failed} ناموفق.",
-    "bulkDeleteResult": "{done} حذف شد؛ {failed} ناموفق."
+    "bulkDeleteResult": "{done} حذف شد؛ {failed} ناموفق.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "سالم",
@@ -694,7 +702,11 @@
     "howToUse": "نحوه استفاده",
     "howToUseHelp": "یک درخواست چت معمولی با مدل \"fusion\" ارسال کنید. این تنظیمات پیش فرض هستند. هر درخواستی می تواند آنها را با یک فیلد \"fusion\" لغو کند.",
     "unsavedChanges": "تغییرات ذخیره نشده",
-    "save": "ذخیره کنید"
+    "save": "ذخیره کنید",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "حق بیمه",

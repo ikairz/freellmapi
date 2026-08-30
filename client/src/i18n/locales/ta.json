@@ -261,7 +261,11 @@
     "limitHint": "வரம்பு வேண்டாம் எனில் காலியாக விடவும்.",
     "usageThisMonth": "மாதாந்திர பயன்பாடு",
     "usageEmpty": "இந்த மாதம் இதுவரை கோரிக்கைகள் இல்லை.",
-    "usageRequestsMonth": "இந்த மாதம் {count} கோரிக்கை"
+    "usageRequestsMonth": "இந்த மாதம் {count} கோரிக்கை",
+    "aliasMergeHeading": "Merge model aliases",
+    "aliasMergeHint": "Requests for the unified model id are also served through these custom-provider aliases (e.g. custom:my-alias).",
+    "aliasMergeAdd": "Add",
+    "aliasMergeRemove": "Remove"
   },
   "strategies": {
     "explore": "அளவிடப்படாத மாதிரிகளை ஆராயுங்கள்",
@@ -529,7 +533,11 @@
     "bulkDelete": "அனைத்தையும் நீக்கு",
     "bulkDeleteConfirm": "{count} நீக்கவா?",
     "bulkResult": "{done} புதுப்பிக்கப்பட்டது; {failed} தோல்வி.",
-    "bulkDeleteResult": "{done} நீக்கப்பட்டது; {failed} தோல்வி."
+    "bulkDeleteResult": "{done} நீக்கப்பட்டது; {failed} தோல்வி.",
+    "testProxy": "Test",
+    "testingProxy": "Testing…",
+    "proxyTestOk": "Proxy works — {ms}ms round trip",
+    "proxyTestFail": "Proxy failed: {reason}"
   },
   "status": {
     "healthy": "ஆரோக்கியமான",
@@ -694,7 +702,11 @@
     "howToUse": "எப்படி பயன்படுத்துவது",
     "howToUseHelp": "மாதிரி \"ஃப்யூஷன்\" உடன் சாதாரண அரட்டை கோரிக்கையை அனுப்பவும். இந்த அமைப்புகள் இயல்புநிலை; எந்தவொரு கோரிக்கையும் அவற்றை \"இணைவு\" புலத்துடன் மேலெழுதலாம்.",
     "unsavedChanges": "சேமிக்கப்படாத மாற்றங்கள்",
-    "save": "சேமிக்கவும்"
+    "save": "சேமிக்கவும்",
+    "searchPlaceholder": "Search models…",
+    "providerFilterLabel": "Filter by provider",
+    "providerAll": "All providers",
+    "noMatch": "No models match your search."
   },
   "premium": {
     "title": "பிரீமியம்",
