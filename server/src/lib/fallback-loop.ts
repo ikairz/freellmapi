@@ -16,7 +16,7 @@
 // the fire-and-forget key revalidation kicked off on an upstream 401 (below).
 
 import type { RouteResult } from '../services/router.js';
-import { recordRateLimitHit, recordModelFailure, recordSuccess, hasOtherUsableKey, routableKeyIdsForModel, formatResetEta } from '../services/router.js';
+import { recordRateLimitHit, recordModelFailure, recordSuccess, hasOtherUsableKey, routableKeyIdsForModel, formatResetEta, platformSkipKey } from '../services/router.js';
 import { safeHeaderValue } from './header-value.js';
 import {
   recordRequest,
@@ -315,8 +315,15 @@ export function recordRetryableFailure(route: RouteResult, err: any, state: Fall
   // failover hop per key. Key-scoped failures (auth/quota) stay on the
   // single-key path, and the per-key cooldown below is still the only thing
   // that outlives the request.
+  //
+  // #651 granularity: "the provider" is the OPERATOR, and for `custom` that is
+  // the individual endpoint (its base URL), not the platform label. Custom rows
+  // are unrelated third-party relays that merely share a name, so ruling out
+  // all of `custom` because one relay's socket died empties the chain for every
+  // model that lives only on custom — the loop then exits after a single hop
+  // and the client sees a hard error with no failover at all. Skip the endpoint.
   if (isProviderLevelError(err)) {
-    state.skipPlatforms.add(route.platform);
+    state.skipPlatforms.add(platformSkipKey(route.platform, route.endpointScope));
   }
   if (consumeSkipBenchExemption(route, err)) return true;
   const decision = cooldownDecisionForError(route, err);

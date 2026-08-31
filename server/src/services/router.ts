@@ -1541,6 +1541,40 @@ export function resolveFusionCandidate(modelId: string): FusionCandidate | null 
   return null;
 }
 
+// ── Provider-level skip scoping (#788 × #651) ────────────────────────────────
+// A provider-level failure (5xx, timeout, dead socket) is about ONE operator,
+// so #788 rules the operator out for the rest of the request instead of burning
+// one failover hop per key.
+//
+// For catalog platforms the operator IS the platform name (nvidia, google,
+// mistral …) — one name, one backend. `custom` is different: it is a
+// pseudo-platform where every row is a DIFFERENT third-party relay with its own
+// base URL, its own keys and its own uptime (OpenRouter, api.b.ai, sea-lion,
+// NVIDIA-via-custom …). Two custom rows share nothing but the label. Skipping
+// the bare name 'custom' because one relay's socket died rules out every other
+// relay too — and a model that exists ONLY on custom (most custom models) is
+// then left with an empty chain, so failover dies after a single hop and the
+// client sees a hard error. That is exactly the "no failover" symptom: the
+// error was classified retryable, the loop did continue, and routeRequest had
+// nothing left to hand it.
+//
+// So the skip key for a scoped row is "platform:endpoint"; catalog rows keep
+// using the bare platform name. Matching honors both shapes, so a caller that
+// rules out a bare platform name (tests, future callers) still works.
+export function platformSkipKey(platform: string, endpointScope?: string | null): string {
+  return endpointScope ? `${platform}:${endpointScope}` : platform;
+}
+
+export function isPlatformSkipped(
+  skipPlatforms: Set<string> | undefined,
+  platform: string,
+  endpointScope?: string | null,
+): boolean {
+  if (!skipPlatforms || skipPlatforms.size === 0) return false;
+  if (skipPlatforms.has(platform)) return true;
+  return endpointScope ? skipPlatforms.has(`${platform}:${endpointScope}`) : false;
+}
+
 export function routeRequest(estimatedTokens = 1000, skipKeys?: Set<string>, preferredModelDbId?: number, requireVision = false, requireTools = false, skipModels?: Set<number>, prefetchedChain?: ChainRow[], requireStructured = false, skipPlatforms?: Set<string>): RouteResult {
   const db = getDb();
 
@@ -1575,7 +1609,7 @@ export function routeRequest(estimatedTokens = 1000, skipKeys?: Set<string>, pre
       // Mirror the main loop's gates below so exploration only samples
       // candidates that can actually serve this request.
       if (skipModels?.has(e.model_db_id)) return false;
-      if (skipPlatforms?.has(e.platform)) return false;
+      if (isPlatformSkipped(skipPlatforms, e.platform, e.endpoint_scope)) return false;
       if (requireVision && !e.supports_vision) return false;
       if (requireTools && !e.supports_tools) return false;
       if (requireStructured && platformDropsResponseFormat(e.platform)) return false;
@@ -1638,8 +1672,9 @@ export function routeRequest(estimatedTokens = 1000, skipKeys?: Set<string>, pre
     // failure this request — a 5xx, a timeout, a dead socket — is about the
     // PROVIDER, so its other keys and its other models would fail the same way.
     // Skipping the platform moves failover to the next provider instead of
-    // burning one hop per key. Request-scoped; nothing is benched by this.
-    if (skipPlatforms?.has(entry.platform)) { diag.push(`${label}: provider ruled out earlier this request`); continue; }
+    // burned one hop per key. Request-scoped; nothing is benched by this.
+    // Scoped per ENDPOINT for custom rows — see platformSkipKey above.
+    if (isPlatformSkipped(skipPlatforms, entry.platform, entry.endpoint_scope)) { diag.push(`${label}: provider ruled out earlier this request`); continue; }
 
     // Vision requests skip text-only models — including a sticky/preferred one,
     // which is correct: don't pin an image turn to a model that can't see it.
