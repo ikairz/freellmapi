@@ -14,6 +14,15 @@ function getSinceTimestamp(range: string): string {
   const now = Date.now();
 
   switch (range) {
+    case '1h':
+      return toSqliteDateTime(now - 60 * 60 * 1000);
+    case 'today': {
+      // Start of today in the server's local timezone, converted to UTC.
+      // Works for self-hosted setups where server and browser share a tz.
+      const d = new Date();
+      const startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      return toSqliteDateTime(startOfDay.getTime());
+    }
     case '24h':
       return toSqliteDateTime(now - 24 * 60 * 60 * 1000);
     case '30d':
