@@ -382,7 +382,7 @@ analyticsRouter.get('/by-key', (req: Request, res: Response) => {
 // Timeline data
 analyticsRouter.get('/timeline', (req: Request, res: Response) => {
   const range = (req.query.range as string) ?? '7d';
-  const interval = (req.query.interval as string) ?? (range === '24h' ? 'hour' : 'day');
+  const interval = (req.query.interval as string) ?? (range === '24h' || range === 'today' || range === '1h' ? 'hour' : 'day');
   const since = getSinceTimestamp(range);
   const db = getDb();
 
