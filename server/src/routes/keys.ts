@@ -20,6 +20,7 @@ import { endpointScopeForBaseUrl, normalizeBaseUrl } from '../lib/endpoint-scope
 import type { Db } from '../db/types.js';
 import { parseModelScope } from '../lib/model-scope.js';
 import { KEY_PROXY_URL_ERROR, KEY_PROXY_URL_MAX, decryptProxyUrl, encryptProxyUrl, isValidKeyProxyUrl, maskProxyUrl } from '../lib/key-proxy.js';
+import { withKeyProxy } from '../lib/proxy.js';
 
 export const keysRouter = Router();
 
@@ -663,6 +664,9 @@ interface CustomEndpointRef {
   keyId: number | null;
   /** Plaintext of that row's credential, when there is one. */
   storedKey: string | null;
+  /** Plaintext of that row's per-key proxy override, when there is one
+   *  (#590). Empty/null = use the global proxy rules. */
+  proxyUrl: string | null;
 }
 
 /**
@@ -677,8 +681,8 @@ function resolveEndpointRef(ref: { keyId?: number; baseUrl?: string }): CustomEn
   const requestedBaseUrl = ref.baseUrl === undefined ? undefined : normalizeBaseUrl(ref.baseUrl);
 
   if (ref.keyId !== undefined) {
-    const row = db.prepare('SELECT id, platform, base_url, encrypted_key, iv, auth_tag FROM api_keys WHERE id = ?')
-      .get(ref.keyId) as { id: number; platform: string; base_url: string | null; encrypted_key: string; iv: string; auth_tag: string } | undefined;
+    const row = db.prepare('SELECT id, platform, base_url, encrypted_key, iv, auth_tag, proxy_encrypted, proxy_iv, proxy_auth_tag FROM api_keys WHERE id = ?')
+      .get(ref.keyId) as { id: number; platform: string; base_url: string | null; encrypted_key: string; iv: string; auth_tag: string; proxy_encrypted: string | null; proxy_iv: string | null; proxy_auth_tag: string | null } | undefined;
     if (!row || row.platform !== 'custom' || !row.base_url) {
       throw Object.assign(new Error('keyId does not name a custom endpoint'), { status: 400 });
     }
@@ -689,7 +693,11 @@ function resolveEndpointRef(ref: { keyId?: number; baseUrl?: string }): CustomEn
     try {
       storedKey = decrypt(row.encrypted_key, row.iv, row.auth_tag);
     } catch { /* an undecryptable row still names the endpoint */ }
-    return { baseUrl: row.base_url, keyId: row.id, storedKey };
+    let proxyUrl: string | null = null;
+    try {
+      proxyUrl = decryptProxyUrl({ proxy_encrypted: row.proxy_encrypted, proxy_iv: row.proxy_iv, proxy_auth_tag: row.proxy_auth_tag });
+    } catch { /* undecryptable proxy still leaves the endpoint usable */ }
+    return { baseUrl: row.base_url, keyId: row.id, storedKey, proxyUrl };
   }
 
   if (!requestedBaseUrl) {
@@ -699,15 +707,19 @@ function resolveEndpointRef(ref: { keyId?: number; baseUrl?: string }): CustomEn
   // Any key of this base_url serves the whole endpoint (#619), so the first one
   // is as good a representative as any.
   const rows = db.prepare(`
-    SELECT id, encrypted_key, iv, auth_tag FROM api_keys
+    SELECT id, encrypted_key, iv, auth_tag, proxy_encrypted, proxy_iv, proxy_auth_tag FROM api_keys
      WHERE platform = 'custom' AND base_url = ? ORDER BY id
-  `).all(requestedBaseUrl) as Array<{ id: number; encrypted_key: string; iv: string; auth_tag: string }>;
+  `).all(requestedBaseUrl) as Array<{ id: number; encrypted_key: string; iv: string; auth_tag: string; proxy_encrypted: string | null; proxy_iv: string | null; proxy_auth_tag: string | null }>;
   for (const row of rows) {
     try {
-      return { baseUrl: requestedBaseUrl, keyId: row.id, storedKey: decrypt(row.encrypted_key, row.iv, row.auth_tag) };
+      let proxyUrl: string | null = null;
+      try {
+        proxyUrl = decryptProxyUrl({ proxy_encrypted: row.proxy_encrypted, proxy_iv: row.proxy_iv, proxy_auth_tag: row.proxy_auth_tag });
+      } catch { /* undecryptable proxy still leaves the endpoint usable */ }
+      return { baseUrl: requestedBaseUrl, keyId: row.id, storedKey: decrypt(row.encrypted_key, row.iv, row.auth_tag), proxyUrl };
     } catch { /* try the next credential */ }
   }
-  return { baseUrl: requestedBaseUrl, keyId: rows[0]?.id ?? null, storedKey: null };
+  return { baseUrl: requestedBaseUrl, keyId: rows[0]?.id ?? null, storedKey: null, proxyUrl: null };
 }
 
 /**
@@ -815,7 +827,11 @@ keysRouter.post('/custom/discover-models', async (req: Request, res: Response) =
   const apiKey = parsed.data.apiKey?.trim() || endpoint.storedKey || 'no-key';
 
   try {
-    const discovered = await discoverEndpointModels(endpoint.baseUrl, apiKey);
+    // #590: discover through the endpoint's own per-key proxy when it has one —
+    // a relay that's only reachable via a proxy would otherwise fail discovery
+    // with an unreachable-network error even though real traffic works.
+    const discovered = await withKeyProxy(endpoint.proxyUrl ?? undefined, () =>
+      discoverEndpointModels(endpoint.baseUrl, apiKey));
 
     // "Already registered" means bound to THIS endpoint — any key of the pool
     // counts, since they all serve the same model list (#619).
@@ -889,7 +905,11 @@ keysRouter.post('/custom/probe', async (req: Request, res: Response) => {
   }
 
   try {
-    const probe = await probeEndpointModel(endpoint.baseUrl, apiKey, registeredModelId);
+    // #590: probe through the endpoint's own per-key proxy when it has one —
+    // the probe is meant to measure latency over the SAME path real traffic
+    // takes, and a proxy-only endpoint would otherwise fail the probe.
+    const probe = await withKeyProxy(endpoint.proxyUrl ?? undefined, () =>
+      probeEndpointModel(endpoint.baseUrl, apiKey, registeredModelId));
 
     // Only a successful probe records a sample. The row mirrors what the proxy
     // writes on a real request so the decay-weighted stats cache picks it up.

@@ -550,21 +550,23 @@ async function dispatchFetch(
   // #590: a per-key proxy override (set via withKeyProxy around the provider
   // call) takes precedence over the global proxy for THIS request. Empty
   // string (the store default) means "fall back to global".
+  //
+  // Semantics: a per-key override is an EXPLICIT operator declaration that
+  // THIS key's traffic must exit through THIS proxy. The platform-level
+  // bypass list and NO_PROXY are broad, ambient rules designed to keep
+  // direct-connect keys from accidentally hitting the proxy; they should
+  // not apply when the operator has hand-configured a per-key override.
+  // The only ambient rule that still wins is the global on/off switch — an
+  // operator who turned proxying off globally has unambiguously disabled
+  // proxying, full stop, and per-key overrides must respect that.
   const perKeyUrl = perKeyProxyStore.getStore() ?? '';
-  if (perKeyUrl) {
-    // Every bypass still applies, unchanged: the global on/off switch, the
-    // per-platform bypass list, and NO_PROXY. A per-key override says WHICH
-    // proxy to use, not that this request must be proxied — an operator who
-    // turned proxying off, or listed the upstream in NO_PROXY, still gets a
-    // direct connection.
-    if (!shouldBypassProxy(url, platform)) {
-      const resolved = await resolvePerKeyDispatcher(perKeyUrl);
-      if (resolved) {
-        if (resolved.isSocks) {
-          return socksFetch(url, init, resolved.dispatcher as http.Agent, platform, requestType, timeoutMs);
-        }
-        return fetch(url, { ...init, dispatcher: resolved.dispatcher } as unknown as RequestInit);
+  if (perKeyUrl && _proxyEnabled) {
+    const resolved = await resolvePerKeyDispatcher(perKeyUrl);
+    if (resolved) {
+      if (resolved.isSocks) {
+        return socksFetch(url, init, resolved.dispatcher as http.Agent, platform, requestType, timeoutMs);
       }
+      return fetch(url, { ...init, dispatcher: resolved.dispatcher } as unknown as RequestInit);
     }
     // Per-key proxy failed to build → fall through to the global/direct path.
   }
