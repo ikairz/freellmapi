@@ -233,6 +233,9 @@ export interface ApiKey {
   /** Model ids this key is limited to; null = serves every model of its
    *  platform (#657). */
   modelScope?: string[] | null;
+  /** Masked per-key proxy override (#590). '' / null = no override, the key
+   *  falls back to the global outbound proxy. Never the plaintext URL. */
+  maskedProxyUrl?: string | null;
   models?: ApiKeyModel[];
   cooldowns?: ApiKeyCooldown[];
 }

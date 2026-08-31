@@ -17,7 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu'
-import { ChevronDown, CircleAlert, Copy, ExternalLink, KeyRound, ListFilter, ListPlus, MoreHorizontal, Pencil, Plus, RefreshCw, Search, Trash2, Zap } from 'lucide-react'
+import { ChevronDown, CircleAlert, Copy, ExternalLink, Globe, KeyRound, ListFilter, ListPlus, MoreHorizontal, Pencil, Plus, RefreshCw, Search, Trash2, Zap } from 'lucide-react'
 import type { ApiKey, ApiKeyModel } from '../../../../shared/types'
 import { formatSqliteUtcToLocalTime } from '@/lib/utils'
 import { useI18n } from '@/i18n'
@@ -36,6 +36,7 @@ import { DiscoverModelsDialog } from './discover-models-dialog'
 import { AddEndpointKeyDialog } from './add-endpoint-key-dialog'
 import { CopyKeyDialog } from './copy-key-dialog'
 import { ModelScopeDialog } from './model-scope-dialog'
+import { KeyProxyDialog } from './key-proxy-dialog'
 
 type StatusFilter = 'all' | 'healthy' | 'issues' | 'disabled'
 
@@ -68,6 +69,8 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   const [copyKey, setCopyKey] = useState<{ id: number; maskedKey: string } | null>(null)
   // Key whose model scope is being edited (#657).
   const [scopeKeyId, setScopeKeyId] = useState<number | null>(null)
+  // Key whose per-key proxy override is being edited (#590).
+  const [proxyKeyId, setProxyKeyId] = useState<number | null>(null)
   // #787: keys selected for bulk enable/disable/delete within a group.
   const [selectedKeyIds, setSelectedKeyIds] = useState<Set<number>>(new Set())
   const editInputRef = useRef<HTMLInputElement>(null)
@@ -597,6 +600,17 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                                 {t(k.modelScope!.length === 1 ? 'keys.modelScopeBadgeOne' : 'keys.modelScopeBadgeOther', { count: k.modelScope!.length })}
                               </Badge>
                             )}
+                            {/* #590: a key with its own proxy override is worth flagging
+                                at a glance, the same way model scope is. */}
+                            {k.maskedProxyUrl && (
+                              <Badge
+                                variant="secondary"
+                                className={`text-[10px] text-muted-foreground ${k.enabled ? '' : 'opacity-50'}`}
+                                title={k.maskedProxyUrl}
+                              >
+                                {t('keys.keyProxyBadge')}
+                              </Badge>
+                            )}
                             <div className="flex-1" />
                             {lastChecked && (
                               <span className="text-[11px] text-muted-foreground tabular-nums">
@@ -676,6 +690,22 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                                   </Button>
                                 </Tooltip>
                               )}
+                              {/* #590: per-key proxy override. Lives in the shared
+                                  cluster (not the custom-only one) because routing
+                                  through a proxy is platform-agnostic. The filled
+                                  dot marks a key that has its own override. */}
+                              <Tooltip text={t('keys.keyProxy')}>
+                                <Button
+                                  variant="ghost"
+                                  size="icon-xs"
+                                  onClick={() => setProxyKeyId(k.id)}
+                                  aria-label={t('keys.keyProxy')}
+                                  title={t('keys.keyProxy')}
+                                  className={k.maskedProxyUrl ? 'text-foreground' : undefined}
+                                >
+                                  <Globe className={`size-3 ${k.maskedProxyUrl ? 'fill-current' : ''}`} />
+                                </Button>
+                              </Tooltip>
                               <Tooltip text={t('keys.checkNow')}>
                                 <Button
                                   variant="ghost"
@@ -781,6 +811,18 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
           <ModelScopeDialog
             apiKey={scopeKey}
             onOpenChange={(open) => { if (!open) setScopeKeyId(null) }}
+          />
+        ) : null
+      })()}
+
+      {(() => {
+        // Same re-seed pattern: an override added while this is open must show
+        // in the dialog on the next open (#590).
+        const proxyKey = proxyKeyId !== null ? keys.find(k => k.id === proxyKeyId) : undefined
+        return proxyKey ? (
+          <KeyProxyDialog
+            apiKey={proxyKey}
+            onOpenChange={(open) => { if (!open) setProxyKeyId(null) }}
           />
         ) : null
       })()}
