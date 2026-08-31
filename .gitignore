@@ -24,3 +24,13 @@ update-hermes.sh
 
 # Monetization planning — private, never committed
 monetization/
+
+# Local runtime noise (logs, upgrade backups, ad-hoc scripts, stray DBs)
+*.log
+nohup.out
+storage.sqlite
+pnpm-lock.yaml
+.upgrade-backup/
+.workbuddy/
+check_models.js
+scripts/keepalive-server.sh
