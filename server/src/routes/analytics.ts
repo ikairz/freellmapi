@@ -213,6 +213,7 @@ analyticsRouter.get('/by-model', (req: Request, res: Response) => {
   const rows = db.prepare(`
     SELECT
       r.platform,
+      CASE WHEN r.platform = 'custom' THEN COALESCE(k.label, 'custom') ELSE r.platform END as provider,
       r.model_id,
       m.display_name,
       COUNT(*) as requests,
@@ -228,13 +229,15 @@ analyticsRouter.get('/by-model', (req: Request, res: Response) => {
       ELSE 0 END) as est_cost
     FROM requests r
     LEFT JOIN models m ON m.platform = r.platform AND m.model_id = r.model_id
+    LEFT JOIN api_keys k ON k.id = r.key_id
     WHERE r.created_at >= ?
-    GROUP BY r.platform, r.model_id
+    GROUP BY r.platform, r.model_id, provider
     ORDER BY requests DESC
   `).all(FALLBACK_INPUT_PER_M, FALLBACK_OUTPUT_PER_M, since) as any[];
 
   res.json(rows.map(r => ({
     platform: r.platform,
+    provider: r.provider,
     modelId: r.model_id,
     displayName: r.display_name ?? r.model_id,
     requests: r.requests,
@@ -249,7 +252,8 @@ analyticsRouter.get('/by-model', (req: Request, res: Response) => {
   })));
 });
 
-// Stats grouped by platform
+// Stats grouped by platform/provider. For 'custom' platform, resolves the
+// key label so each custom endpoint shows as its own provider row.
 analyticsRouter.get('/by-platform', (req: Request, res: Response) => {
   const range = (req.query.range as string) ?? '7d';
   const since = getSinceTimestamp(range);
@@ -257,43 +261,46 @@ analyticsRouter.get('/by-platform', (req: Request, res: Response) => {
 
   const rows = db.prepare(`
     SELECT
-      platform,
+      CASE WHEN r.platform = 'custom' THEN COALESCE(k.label, 'custom') ELSE r.platform END as provider,
+      r.platform,
       COUNT(*) as requests,
-      COUNT(latency_ms) as latency_count,
-      SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) * 100.0 / NULLIF(SUM(CASE WHEN status <> 'canceled' THEN 1 ELSE 0 END), 0) as success_rate,
-      AVG(latency_ms) as avg_latency_ms,
-      AVG(ttfb_ms) as avg_ttfb_ms,
-      SUM(CASE WHEN status = 'error' THEN 1 ELSE 0 END) as error_count,
-      AVG(CASE WHEN output_tokens > 0 AND latency_ms > 0
-        THEN output_tokens / (latency_ms / 1000.0) ELSE NULL END) as avg_tokens_per_second,
-      SUM(input_tokens) as total_input_tokens,
-      SUM(output_tokens) as total_output_tokens
-    FROM requests
-    WHERE created_at >= ?
-    GROUP BY platform
+      COUNT(r.latency_ms) as latency_count,
+      SUM(CASE WHEN r.status = 'success' THEN 1 ELSE 0 END) * 100.0 / NULLIF(SUM(CASE WHEN r.status <> 'canceled' THEN 1 ELSE 0 END), 0) as success_rate,
+      AVG(r.latency_ms) as avg_latency_ms,
+      AVG(r.ttfb_ms) as avg_ttfb_ms,
+      SUM(CASE WHEN r.status = 'error' THEN 1 ELSE 0 END) as error_count,
+      AVG(CASE WHEN r.output_tokens > 0 AND r.latency_ms > 0
+        THEN r.output_tokens / (r.latency_ms / 1000.0) ELSE NULL END) as avg_tokens_per_second,
+      SUM(r.input_tokens) as total_input_tokens,
+      SUM(r.output_tokens) as total_output_tokens
+    FROM requests r
+    LEFT JOIN api_keys k ON k.id = r.key_id
+    WHERE r.created_at >= ?
+    GROUP BY provider
     ORDER BY requests DESC
   `).all(since) as any[];
 
   // P95 latency is a per-group percentile; SQLite has no native percentile
-  // aggregate, so we take the nearest-rank value per platform with a small
-  // ORDER BY/OFFSET query. The platform count is tiny (one row per provider),
+  // aggregate, so we take the nearest-rank value per provider with a small
+  // ORDER BY/OFFSET query. The provider count is tiny (one row per provider),
   // so the extra round-trips are negligible and keep the SQL readable.
   const p95Stmt = db.prepare(`
-    SELECT latency_ms FROM requests
-    WHERE created_at >= ? AND platform = ? AND latency_ms IS NOT NULL
-    ORDER BY latency_ms ASC
+    SELECT r.latency_ms FROM requests r
+    LEFT JOIN api_keys k ON k.id = r.key_id
+    WHERE r.created_at >= ?
+      AND CASE WHEN r.platform = 'custom' THEN COALESCE(k.label, 'custom') ELSE r.platform END = ?
+      AND r.latency_ms IS NOT NULL
+    ORDER BY r.latency_ms ASC
     LIMIT 1 OFFSET ?
   `);
 
   res.json(rows.map(r => {
-    // Offset math and the ordered selection both range over the non-null
-    // latency rows (latency_count), so a NULL can neither be counted into the
-    // denominator nor selected as the p95 value.
     const latencyCount = r.latency_count ?? 0;
     const p95Row = latencyCount > 0
-      ? (p95Stmt.get(since, r.platform, Math.floor((latencyCount - 1) * 0.95)) as { latency_ms: number } | undefined)
+      ? (p95Stmt.get(since, r.provider, Math.floor((latencyCount - 1) * 0.95)) as { latency_ms: number } | undefined)
       : undefined;
     return {
+      provider: r.provider,
       platform: r.platform,
       requests: r.requests,
       successRate: Math.round((r.success_rate ?? 0) * 10) / 10,
@@ -435,22 +442,24 @@ analyticsRouter.get('/error-distribution', (req: Request, res: Response) => {
   // Group errors by category (extract the key part of the error message)
   const rows = db.prepare(`
     SELECT
-      platform,
-      model_id,
+      CASE WHEN r.platform = 'custom' THEN COALESCE(k.label, 'custom') ELSE r.platform END as provider,
+      r.platform,
+      r.model_id,
       CASE
-        WHEN error LIKE '%429%' OR error LIKE '%rate limit%' OR error LIKE '%too many%' OR error LIKE '%quota%' THEN 'Rate Limited (429)'
-        WHEN error LIKE '%401%' OR error LIKE '%unauthorized%' OR error LIKE '%invalid.*key%' THEN 'Auth Error (401)'
-        WHEN error LIKE '%403%' OR error LIKE '%forbidden%' THEN 'Forbidden (403)'
-        WHEN error LIKE '%404%' OR error LIKE '%not found%' THEN 'Not Found (404)'
-        WHEN error LIKE '%timeout%' OR error LIKE '%ETIMEDOUT%' OR error LIKE '%ECONNREFUSED%' THEN 'Timeout/Connection'
-        WHEN error LIKE '%500%' OR error LIKE '%internal server%' THEN 'Server Error (500)'
-        WHEN error LIKE '%503%' OR error LIKE '%unavailable%' THEN 'Unavailable (503)'
+        WHEN r.error LIKE '%429%' OR r.error LIKE '%rate limit%' OR r.error LIKE '%too many%' OR r.error LIKE '%quota%' THEN 'Rate Limited (429)'
+        WHEN r.error LIKE '%401%' OR r.error LIKE '%unauthorized%' OR r.error LIKE '%invalid.*key%' THEN 'Auth Error (401)'
+        WHEN r.error LIKE '%403%' OR r.error LIKE '%forbidden%' THEN 'Forbidden (403)'
+        WHEN r.error LIKE '%404%' OR r.error LIKE '%not found%' THEN 'Not Found (404)'
+        WHEN r.error LIKE '%timeout%' OR r.error LIKE '%ETIMEDOUT%' OR r.error LIKE '%ECONNREFUSED%' THEN 'Timeout/Connection'
+        WHEN r.error LIKE '%500%' OR r.error LIKE '%internal server%' THEN 'Server Error (500)'
+        WHEN r.error LIKE '%503%' OR r.error LIKE '%unavailable%' THEN 'Unavailable (503)'
         ELSE 'Other'
       END as error_category,
       COUNT(*) as count
-    FROM requests
-    WHERE status = 'error' AND created_at >= ?
-    GROUP BY platform, error_category
+    FROM requests r
+    LEFT JOIN api_keys k ON k.id = r.key_id
+    WHERE r.status = 'error' AND r.created_at >= ?
+    GROUP BY provider, r.platform, r.model_id, error_category
     ORDER BY count DESC
   `).all(since) as any[];
 
@@ -474,12 +483,16 @@ analyticsRouter.get('/error-distribution', (req: Request, res: Response) => {
     ORDER BY count DESC
   `).all(since) as any[];
 
-  // Errors by platform
+  // Errors by provider (custom resolved to key label)
   const byPlatform = db.prepare(`
-    SELECT platform, COUNT(*) as count
-    FROM requests
-    WHERE status = 'error' AND created_at >= ?
-    GROUP BY platform
+    SELECT
+      CASE WHEN r.platform = 'custom' THEN COALESCE(k.label, 'custom') ELSE r.platform END as provider,
+      r.platform,
+      COUNT(*) as count
+    FROM requests r
+    LEFT JOIN api_keys k ON k.id = r.key_id
+    WHERE r.status = 'error' AND r.created_at >= ?
+    GROUP BY provider, r.platform
     ORDER BY count DESC
   `).all(since) as any[];
 
@@ -497,15 +510,23 @@ analyticsRouter.get('/errors', (req: Request, res: Response) => {
   const db = getDb();
 
   const rows = db.prepare(`
-    SELECT id, platform, model_id, error, latency_ms, created_at
-    FROM requests
-    WHERE status = 'error' AND created_at >= ?
-    ORDER BY created_at DESC
+    SELECT r.id,
+           CASE WHEN r.platform = 'custom' THEN COALESCE(k.label, 'custom') ELSE r.platform END as provider,
+           r.platform,
+           r.model_id,
+           r.error,
+           r.latency_ms,
+           r.created_at
+    FROM requests r
+    LEFT JOIN api_keys k ON k.id = r.key_id
+    WHERE r.status = 'error' AND r.created_at >= ?
+    ORDER BY r.created_at DESC
     LIMIT 50
   `).all(since) as any[];
 
   res.json(rows.map(r => ({
     id: r.id,
+    provider: r.provider,
     platform: r.platform,
     modelId: r.model_id,
     error: r.error,

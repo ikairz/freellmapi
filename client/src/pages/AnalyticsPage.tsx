@@ -78,6 +78,11 @@ interface SummaryResponse {
 
 interface ByPlatformRow {
   platform: string
+  // Display label: catalog providers keep their platform slug, custom
+  // endpoints surface their key label ("dots.ai", "Ollama box"). Custom
+  // endpoints all share the generic 'custom' platform id so the label is the
+  // only thing that tells them apart in the analytics view (#785).
+  provider: string
   requests: number
   successRate: number
   avgLatencyMs: number
@@ -110,6 +115,8 @@ interface TimelineBucket {
 
 interface ByModelRow {
   platform: string
+  // Resolved provider label (custom endpoints surface their key label).
+  provider: string
   modelId: string
   displayName: string
   requests: number
@@ -134,12 +141,14 @@ interface ByKeyRow {
 
 interface ErrorDistribution {
   byCategory: Array<{ category: string; count: number }>
-  byPlatform: Array<{ platform: string; count: number }>
-  detailed: Array<{ platform: string; model_id: string; error_category: string; count: number }>
+  byPlatform: Array<{ provider: string; platform: string; count: number }>
+  detailed: Array<{ provider: string; platform: string; model_id: string; error_category: string; count: number }>
 }
 
 interface RecentErrorRow {
   id: number
+  // Resolved provider label (custom endpoints surface their key label).
+  provider: string
   platform: string
   modelId: string
   error: string
@@ -406,6 +415,15 @@ const gridStyle = 'var(--border)'
 const primaryFill = 'var(--foreground)'
 const tooltipStyle = { backgroundColor: 'var(--popover)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 } as const
 
+// Custom-endpoint keys carry arbitrary host labels ("api.tokenrouter.com",
+// "free.empero.org") — wide enough that the chart XAxis overlaps without a
+// trim. Elide the middle at 14 chars and pass the full label through the
+// tooltip, so nothing is lost (#785 follow-up).
+function truncateProviderLabel(label: string, max = 14): string {
+  if (label.length <= max) return label
+  return `${label.slice(0, Math.max(1, max - 1))}…`
+}
+
 // The timeline endpoint buckets on the viewer's wall clock (the query sends
 // the browser's tzOffset), so its zone-less timestamps ("2026-08-10T14:00:00"
 // hourly, "2026-08-10" daily) are already local time. Parse them as local —
@@ -666,10 +684,10 @@ export default function AnalyticsPage() {
                   <SelectContent>
                     <SelectItem value="all">{t('analytics.allProviders')}</SelectItem>
                     {byPlatform.map((p) => (
-                      <SelectItem key={p.platform} value={p.platform}>
+                      <SelectItem key={p.provider} value={p.platform}>
                         <span className="flex items-center gap-2">
                           <PlatformDot platform={p.platform} />
-                          <span>{p.platform}</span>
+                          <span>{p.provider}</span>
                         </span>
                       </SelectItem>
                     ))}
@@ -796,7 +814,7 @@ export default function AnalyticsPage() {
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={byPlatform} margin={{ top: 6, right: 6, left: -12, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="2 4" stroke={gridStyle} />
-                  <XAxis dataKey="platform" tick={axisStyle} tickLine={false} axisLine={{ stroke: gridStyle }} />
+                  <XAxis dataKey="provider" tick={axisStyle} tickLine={false} axisLine={{ stroke: gridStyle }} tickFormatter={truncateProviderLabel} interval={0} angle={-30} textAnchor="end" height={56} />
                   <YAxis tick={axisStyle} tickLine={false} axisLine={false} />
                   <Tooltip contentStyle={tooltipStyle} />
                   <Bar dataKey="requests" name={t('analytics.requests')} fill={primaryFill} radius={[3, 3, 0, 0]} maxBarSize={24} />
@@ -829,7 +847,7 @@ export default function AnalyticsPage() {
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={byPlatform} margin={{ top: 6, right: 6, left: -12, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="2 4" stroke={gridStyle} />
-                  <XAxis dataKey="platform" tick={axisStyle} tickLine={false} axisLine={{ stroke: gridStyle }} />
+                  <XAxis dataKey="provider" tick={axisStyle} tickLine={false} axisLine={{ stroke: gridStyle }} tickFormatter={truncateProviderLabel} interval={0} angle={-30} textAnchor="end" height={56} />
                   <YAxis unit="ms" tick={axisStyle} tickLine={false} axisLine={false} />
                   <Tooltip contentStyle={tooltipStyle} />
                   <Legend wrapperStyle={{ fontSize: 12 }} iconType="rect" />
@@ -850,7 +868,7 @@ export default function AnalyticsPage() {
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={byPlatform} margin={{ top: 6, right: 6, left: -12, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="2 4" stroke={gridStyle} />
-                  <XAxis dataKey="platform" tick={axisStyle} tickLine={false} axisLine={{ stroke: gridStyle }} />
+                  <XAxis dataKey="provider" tick={axisStyle} tickLine={false} axisLine={{ stroke: gridStyle }} tickFormatter={truncateProviderLabel} interval={0} angle={-30} textAnchor="end" height={56} />
                   <YAxis unit="ms" tick={axisStyle} tickLine={false} axisLine={false} />
                   <Tooltip contentStyle={tooltipStyle} />
                   <Bar dataKey="avgTtfbMs" name={t('analytics.avgTtft')} fill={seriesA} radius={[3, 3, 0, 0]} maxBarSize={24} />
@@ -883,7 +901,7 @@ export default function AnalyticsPage() {
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={errorDist.byPlatform} margin={{ top: 6, right: 6, left: -12, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="2 4" stroke={gridStyle} />
-                  <XAxis dataKey="platform" tick={axisStyle} tickLine={false} axisLine={{ stroke: gridStyle }} />
+                  <XAxis dataKey="provider" tick={axisStyle} tickLine={false} axisLine={{ stroke: gridStyle }} tickFormatter={truncateProviderLabel} interval={0} angle={-30} textAnchor="end" height={56} />
                   <YAxis tick={axisStyle} tickLine={false} axisLine={false} />
                   <Tooltip contentStyle={tooltipStyle} />
                   <Bar dataKey="count" name={t('analytics.errors')} fill="var(--destructive)" radius={[3, 3, 0, 0]} maxBarSize={24} />
@@ -908,7 +926,7 @@ export default function AnalyticsPage() {
                   <TableBody>
                     {errors.slice(0, 20).map((e) => (
                       <TableRow key={e.id}>
-                        <TableCell className="pl-4 text-xs">{e.platform}</TableCell>
+                        <TableCell className="pl-4 text-xs max-w-[140px] truncate" title={e.provider}>{e.provider}</TableCell>
                         <TableCell className="text-xs max-w-[200px] truncate">{e.error}</TableCell>
                         <TableCell className="text-right text-xs text-muted-foreground tabular-nums pr-4">
                           {formatSqliteUtcToLocalTime(e.createdAt, { hour: '2-digit', minute: '2-digit' })}
@@ -947,11 +965,11 @@ export default function AnalyticsPage() {
                     </TableHeader>
                     <TableBody>
                       {byPlatform.map((p) => (
-                        <TableRow key={p.platform}>
-                          <TableCell className="pl-4 text-sm font-medium">
+                        <TableRow key={p.provider}>
+                          <TableCell className="pl-4 text-sm font-medium max-w-[160px] truncate" title={p.provider}>
                             <span className="flex items-center gap-2">
                               <PlatformDot platform={p.platform} />
-                              {p.platform}
+                              {p.provider}
                             </span>
                           </TableCell>
                           <TableCell className="text-right tabular-nums">{p.requests}</TableCell>
@@ -998,7 +1016,7 @@ export default function AnalyticsPage() {
                       {byModel.map((m, i) => (
                         <TableRow key={i}>
                           <TableCell className="pl-4 text-sm font-medium">{m.displayName}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{m.platform}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground max-w-[120px] truncate" title={m.provider}>{m.provider}</TableCell>
                           <TableCell className="text-right tabular-nums">{m.requests}</TableCell>
                           <TableCell className="text-right tabular-nums">{m.pinnedRequests > 0 ? m.pinnedRequests : '—'}</TableCell>
                           <TableCell className="text-right tabular-nums">{m.successRate}%</TableCell>
