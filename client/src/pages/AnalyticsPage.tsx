@@ -556,9 +556,6 @@ export default function AnalyticsPage() {
     setRange(r)
     try { localStorage.setItem(RANGE_KEY, r) } catch { /* ignore */ }
   }
-  // Capture "now" once at mount so the savings extrapolation below stays a pure
-  // render (calling Date.now() during render is impure and non-deterministic).
-  const [now] = useState(() => Date.now())
 
   const { data: summary, isLoading: summaryLoading } = useQuery({
     queryKey: ['analytics', 'summary', range],
@@ -700,39 +697,16 @@ export default function AnalyticsPage() {
     ? t('analytics.sortHint', { count: recentCalls.rows.length })
     : null
 
-  // Savings card shows ONE stable monthly figure regardless of the selected
-  // range: the last-30-days data projected to a full month from its actual
-  // span (a young install with 2 days of data shows 15x its 2-day total).
-  // Once 30 days of history exist the real total shows as-is. The hover
-  // hint carries the selected period's actual amount and the projection
-  // basis. Querying 30d separately is free: react-query shares the cache
-  // with the 30d tab.
-  const { data: summary30 } = useQuery({
-    queryKey: ['analytics', 'summary', '30d'],
-    queryFn: () => apiFetch<SummaryResponse>(`/api/analytics/summary?range=30d`),
-  })
+  // Savings card shows the actual estimated cost savings for the selected time range.
+  // No projection/extrapolation — the value matches the chosen window.
   const actualSavings = summary?.estimatedCostSavings ?? 0
-  const baseSavings = summary30?.estimatedCostSavings ?? 0
-  const spanDays = (() => {
-    if (!summary30?.firstRequestAt) return 30
-    // SQLite stores UTC "YYYY-MM-DD HH:MM:SS"
-    const first = new Date(summary30.firstRequestAt.replace(' ', 'T') + 'Z').getTime()
-    const days = (now - first) / 86_400_000
-    if (!Number.isFinite(days)) return 30
-    return Math.min(Math.max(days, 1 / 24), 30)
-  })()
-  const extrapolated = spanDays < 29.5
-  const savings30d = extrapolated ? baseSavings * (30 / spanDays) : baseSavings
   const rangeLabel = range === 'today' ? t('analytics.rangeLabelToday')
     : range === '1h' ? t('analytics.rangeLabel1h')
     : range === '24h' ? t('analytics.rangeLabel24h')
     : range === '7d' ? t('analytics.rangeLabel7d')
     : range === '30d' ? t('analytics.rangeLabel30d')
     : t('analytics.rangeLabel90d')
-  const spanLabel = spanDays >= 2 ? t('analytics.spanDays', { count: Math.round(spanDays) }) : t('analytics.spanHours', { count: Math.max(1, Math.round(spanDays * 24)) })
-  const savingsHint = extrapolated
-    ? t('analytics.savingsHint', { actual: actualSavings.toFixed(2), range: rangeLabel, span: spanLabel })
-    : t('analytics.savingsHintExact', { actual: actualSavings.toFixed(2), range: rangeLabel })
+  const savingsHint = t('analytics.savingsHint', { actual: actualSavings.toFixed(2), range: rangeLabel })
 
   // Pinned = the client named a specific model instead of auto-routing.
   // Honored = that model actually served it (the rest failed over).
@@ -797,9 +771,9 @@ export default function AnalyticsPage() {
               <Stat icon={Zap} label={t('analytics.avgTtft')} value={ttftValue} />
               {/* Priced per request at the served model's paid-API equivalent
                   rate (not a flat frontier-model rate) — see db/model-pricing.ts.
-                  The value is a 30-day projection; the hover hint tells the whole
-                  story (actual period amount + whether it was extrapolated). */}
-              <Stat icon={CircleDollarSign} label={t('analytics.estSavings')} value={`$${savings30d.toFixed(2)}`} hint={savingsHint} />
+                  The value shows the actual savings for the selected range.
+                  The hover hint shows the range's actual amount. */}
+              <Stat icon={CircleDollarSign} label={t('analytics.estSavings')} value={`$${actualSavings.toFixed(2)}`} hint={savingsHint} />
               {/* Response-cache impact, as ONE card: hit rate with the tokens
                   it gave back underneath. Rendered only when the cache is on,
                   so installs that opted out neither lose a slot in this row nor
