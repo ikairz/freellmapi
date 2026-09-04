@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -22,6 +22,7 @@ import {
   Layers,
   List,
   Network,
+  RefreshCw,
   Server,
   TriangleAlert,
   Zap,
@@ -642,7 +643,45 @@ export default function AnalyticsPage() {
       if (platformFilter !== 'all') params.set('provider', platformFilter)
       return apiFetch<RecentCallsResponse>(`/api/analytics/requests?${params}`)
     },
+    refetchInterval: 5000,
   })
+
+  // Track new rows to highlight them with a fade-in animation.
+  // Persist maxSeenId to localStorage so it survives page reloads, tab switches,
+  // and filter changes. Only rows with ID > stored max are genuinely new.
+  const MAX_SEEN_KEY = 'analytics.recentCalls.maxSeenId'
+  const getStoredMax = () => { try { return Number(localStorage.getItem(MAX_SEEN_KEY)) || 0 } catch { return 0 } }
+  const maxSeenIdRef = useRef<number>(getStoredMax())
+  const [highlightedIds, setHighlightedIds] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    if (!recentCalls?.rows || recentCalls.rows.length === 0) return
+    const rows = recentCalls.rows
+    const currentMaxId = Math.max(...rows.map((r) => r.id))
+    const prevMax = maxSeenIdRef.current
+
+    // New rows are those with ID > prevMax
+    const newIds = rows.filter((r) => r.id > prevMax).map((r) => r.id)
+
+    if (newIds.length > 0) {
+      setHighlightedIds((prev) => new Set([...prev, ...newIds]))
+      maxSeenIdRef.current = Math.max(prevMax, currentMaxId)
+      try { localStorage.setItem(MAX_SEEN_KEY, String(currentMaxId)) } catch { /* ignore */ }
+    }
+  }, [recentCalls?.rows])
+
+  // Clear highlights after 2.5s
+  useEffect(() => {
+    if (highlightedIds.size === 0) return
+    const timer = setTimeout(() => {
+      setHighlightedIds((prev) => {
+        const next = new Set(prev)
+        highlightedIds.forEach((id) => next.delete(id))
+        return next
+      })
+    }, 2500)
+    return () => clearTimeout(timer)
+  }, [highlightedIds])
 
   // Per-table column sort (client-side, remembered per table). `null` keeps
   // the API order, so the memoised arrays are the query data itself then.
@@ -779,6 +818,126 @@ export default function AnalyticsPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Recent calls: one line per proxied request with the caller's IP +
+              user agent. All local clients share the unified key, so this is
+              the only view that answers "who is hitting the router". Rows open
+              the failover-ladder drill-down; the header hosts status/provider
+              filters (server-side, so total reflects the filtered set).
+              Auto-refreshes every 5 seconds so the list stays live. */}
+          <div className="lg:col-span-2">
+            <Panel
+              icon={List}
+              title={t('analytics.recentCalls')}
+              actions={
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <RefreshCw className="size-3" aria-hidden="true" />
+                    5s
+                  </span>
+                  <SegmentedControl
+                    value={statusFilter}
+                    onValueChange={setStatusFilter}
+                    options={[
+                      { value: 'all', label: t('analytics.filterAll') },
+                      { value: 'success', label: t('common.success') },
+                      { value: 'error', label: t('analytics.errors') },
+                      { value: 'canceled', label: t('analytics.filterCanceled') },
+                    ]}
+                    ariaLabel={t('common.status')}
+                  />
+                  <Select value={platformFilter} onValueChange={(v) => setPlatformFilter(v ?? 'all')}>
+                    <SelectTrigger size="sm" aria-label={t('common.provider')}>
+                      <SelectValue>
+                        {(v: string) => (!v || v === 'all' ? t('analytics.allProviders') : providerDisplay.get(v) ?? v)}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('analytics.allProviders')}</SelectItem>
+                      {byPlatform.map((p) => (
+                        <SelectItem key={p.providerId} value={p.providerId}>
+                          <span className="flex items-center gap-2">
+                            <PlatformDot platform={p.platform} />
+                            <span>{p.endpoint ?? p.platform}</span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              }
+            >
+              {recentCallsSortHint && (
+                <p className="pb-2 text-xs text-muted-foreground">{recentCallsSortHint}</p>
+              )}
+              {!recentCalls?.rows?.length ? (
+                <p className="text-sm text-muted-foreground text-center py-8">{t('common.noData')}</p>
+              ) : (
+                <div className="max-h-[420px] overflow-y-auto -mx-4">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <SortableHeader column="time" label={t('analytics.time')} className="pl-4" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="ip" label={t('analytics.clientIp')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="agent" label={t('analytics.clientAgent')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="model" label={t('common.model')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="provider" label={t('common.provider')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="status" label={t('common.status')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="attempts" label={t('analytics.attempts')} align="right" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="inTokens" label={t('analytics.inTokens')} align="right" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="outTokens" label={t('analytics.outTokens')} align="right" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                        <SortableHeader column="latency" label={t('analytics.latency')} align="right" className="pr-4" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {recentCallRows.map((r) => {
+                        const isHighlighted = highlightedIds.has(r.id)
+                        const isError = r.status === 'error'
+                        const highlightClass = isHighlighted
+                          ? isError
+                            ? 'bg-red-500/20 dark:bg-red-500/30 border-l-4 border-l-red-500'
+                            : 'bg-blue-500/20 dark:bg-blue-500/30 border-l-4 border-l-blue-500'
+                          : ''
+                        return (
+                        <TableRow
+                          key={r.id}
+                          onClick={() => setDetailId(r.id)}
+                          className={`cursor-pointer transition-all duration-700 ${highlightClass}`}
+                        >
+                          <TableCell className={`pl-4 text-xs tabular-nums whitespace-nowrap transition-colors ${highlightedIds.has(r.id) ? 'text-foreground font-bold' : 'text-muted-foreground'}`}>
+                            {formatSqliteUtcToLocalTime(r.createdAt, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                          </TableCell>
+                          <TableCell className="text-xs font-medium tabular-nums">{r.clientIp ?? '—'}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground" title={r.clientUserAgent ?? undefined}>
+                            {shortUserAgent(r.clientUserAgent)}
+                          </TableCell>
+                          <TableCell className="text-xs max-w-[220px] truncate" title={r.requestedModel && r.requestedModel !== r.modelId ? t('analytics.requestedModelHint', { model: r.requestedModel }) : undefined}>
+                            {r.modelId}
+                            {r.requestedModel && r.requestedModel !== r.modelId ? ' *' : ''}
+                          </TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {r.platform === 'custom' && r.keyLabel ? r.keyLabel : r.platform}
+                          </TableCell>
+                          <TableCell className={`text-xs ${statusTextClass(r.status)}`} title={r.error ?? undefined}>
+                            {r.status}
+                          </TableCell>
+                          {/* >1 = the request burned failover hops; that is the
+                              row worth drilling into, so give it weight. */}
+                          <TableCell className={`text-right text-xs tabular-nums ${r.attemptCount > 1 ? 'font-medium' : 'text-muted-foreground'}`}>
+                            {r.attemptCount > 0 ? r.attemptCount : '—'}
+                          </TableCell>
+                          <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.inputTokens)}</TableCell>
+                          <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.outputTokens)}</TableCell>
+                          <TableCell className="text-right text-xs tabular-nums pr-4">{r.latencyMs} ms</TableCell>
+                        </TableRow>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </Panel>
+          </div>
+
           <div className="lg:col-span-2">
             <Panel icon={ChartLine} title={t('analytics.requestsOverTime')}>
               {timeline.length === 0 ? (
@@ -956,111 +1115,6 @@ export default function AnalyticsPage() {
             )}
           </Panel>
 
-          {/* Recent calls: one line per proxied request with the caller's IP +
-              user agent. All local clients share the unified key, so this is
-              the only view that answers "who is hitting the router". Rows open
-              the failover-ladder drill-down; the header hosts status/provider
-              filters (server-side, so total reflects the filtered set). */}
-          <div className="lg:col-span-2">
-            <Panel
-              icon={List}
-              title={t('analytics.recentCalls')}
-              actions={
-                <div className="flex flex-wrap items-center gap-2">
-                  <SegmentedControl
-                    value={statusFilter}
-                    onValueChange={setStatusFilter}
-                    options={[
-                      { value: 'all', label: t('analytics.filterAll') },
-                      { value: 'success', label: t('common.success') },
-                      { value: 'error', label: t('analytics.errors') },
-                      { value: 'canceled', label: t('analytics.filterCanceled') },
-                    ]}
-                    ariaLabel={t('common.status')}
-                  />
-                  <Select value={platformFilter} onValueChange={(v) => setPlatformFilter(v ?? 'all')}>
-                    <SelectTrigger size="sm" aria-label={t('common.provider')}>
-                      <SelectValue>
-                        {(v: string) => (!v || v === 'all' ? t('analytics.allProviders') : providerDisplay.get(v) ?? v)}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">{t('analytics.allProviders')}</SelectItem>
-                      {byPlatform.map((p) => (
-                        <SelectItem key={p.providerId} value={p.providerId}>
-                          <span className="flex items-center gap-2">
-                            <PlatformDot platform={p.platform} />
-                            <span>{p.endpoint ?? p.platform}</span>
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              }
-            >
-              {recentCallsSortHint && (
-                <p className="pb-2 text-xs text-muted-foreground">{recentCallsSortHint}</p>
-              )}
-              {!recentCalls?.rows?.length ? (
-                <p className="text-sm text-muted-foreground text-center py-8">{t('common.noData')}</p>
-              ) : (
-                <div className="max-h-[420px] overflow-y-auto -mx-4">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <SortableHeader column="time" label={t('analytics.time')} className="pl-4" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="ip" label={t('analytics.clientIp')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="agent" label={t('analytics.clientAgent')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="model" label={t('common.model')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="provider" label={t('common.provider')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="status" label={t('common.status')} sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="attempts" label={t('analytics.attempts')} align="right" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="inTokens" label={t('analytics.inTokens')} align="right" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="outTokens" label={t('analytics.outTokens')} align="right" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                        <SortableHeader column="latency" label={t('analytics.latency')} align="right" className="pr-4" sort={recentCallsSort.sort} onToggle={recentCallsSort.toggle} />
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {recentCallRows.map((r) => (
-                        <TableRow
-                          key={r.id}
-                          onClick={() => setDetailId(r.id)}
-                          className="cursor-pointer"
-                        >
-                          <TableCell className="pl-4 text-xs text-muted-foreground tabular-nums whitespace-nowrap">
-                            {formatSqliteUtcToLocalTime(r.createdAt, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                          </TableCell>
-                          <TableCell className="text-xs font-medium tabular-nums">{r.clientIp ?? '—'}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground" title={r.clientUserAgent ?? undefined}>
-                            {shortUserAgent(r.clientUserAgent)}
-                          </TableCell>
-                          <TableCell className="text-xs max-w-[220px] truncate" title={r.requestedModel && r.requestedModel !== r.modelId ? t('analytics.requestedModelHint', { model: r.requestedModel }) : undefined}>
-                            {r.modelId}
-                            {r.requestedModel && r.requestedModel !== r.modelId ? ' *' : ''}
-                          </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
-                            {r.platform === 'custom' && r.keyLabel ? r.keyLabel : r.platform}
-                          </TableCell>
-                          <TableCell className={`text-xs ${statusTextClass(r.status)}`} title={r.error ?? undefined}>
-                            {r.status}
-                          </TableCell>
-                          {/* >1 = the request burned failover hops; that is the
-                              row worth drilling into, so give it weight. */}
-                          <TableCell className={`text-right text-xs tabular-nums ${r.attemptCount > 1 ? 'font-medium' : 'text-muted-foreground'}`}>
-                            {r.attemptCount > 0 ? r.attemptCount : '—'}
-                          </TableCell>
-                          <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.inputTokens)}</TableCell>
-                          <TableCell className="text-right text-xs tabular-nums">{formatTokens(r.outputTokens)}</TableCell>
-                          <TableCell className="text-right text-xs tabular-nums pr-4">{r.latencyMs} ms</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </Panel>
-          </div>
 
           {/* Per-provider breakdown: the tabular face of the by-platform data —
               the charts above show volume/latency, this row surfaces the
