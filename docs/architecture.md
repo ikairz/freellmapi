@@ -1,12 +1,14 @@
 # Architecture & internals
 
-[← Back to README](../README.md) · [Documentation index](README.md)
+[← Back to README](../README.md) · [Documentation index](README.md) · [Deep-dive domain](architecture/OVERVIEW.md)
 
-How the router decides, what to expect from stacked free tiers, and where the boundaries are.
+FreeLLMAPI is a self-hosted OpenAI-compatible gateway that stacks the free tiers of ~34 providers behind a single `freellmapi-…` bearer token. An Express proxy exposes `/v1/chat/completions` (plus `/v1/responses`, `/v1/messages`, `/v1/completions`, `/v1/embeddings` and `/v1/models`) and, per request, the router selects the best healthy model that is under all of its rate limits, decrypts its upstream key in memory, and streams the response back.
+
+Because no single free tier is generous enough to live on, the router treats the catalog as a pooled fallback chain: it scores live reliability, speed, capability and headroom via a Thompson-sampling bandit, enforces RPM/RPD/TPM/TPD and provider-wide caps with a persistent ledger, and fails over across up to 20 attempts within a wall-clock budget. When the top of the chain exhausts its daily caps the endpoint gracefully degrades to the next healthy tier and resets at UTC midnight.
+
+See [OVERVIEW.md](architecture/OVERVIEW.md) for deep-dives.
 
 - [How it works](#how-it-works)
-- [Routing in detail](#routing-in-detail)
-- [Operational details](#operational-details)
 - [Not yet supported](#not-yet-supported)
 - [Limitations](#limitations)
 - [Terms of Service review](#terms-of-service-review)
@@ -33,7 +35,7 @@ How the router decides, what to expect from stacked free tiers, and where the bo
                                           │
    ┌──────────────┬────────────┬──────────┴─────────┬─────────────┬──────────┐
    ▼              ▼            ▼                    ▼             ▼          ▼
- Google         Groq        Cerebras           OpenRouter        HF       …22 more
+ Google         Groq        Cerebras           OpenRouter        HF       …29 more
 ```
 
 - **Router** (`server/src/services/router.ts`) — picks a model per request.
@@ -42,28 +44,10 @@ How the router decides, what to expect from stacked free tiers, and where the bo
 - **Health service** (`server/src/services/health.ts`) — periodic probe keeps key status fresh.
 - **Dashboard** (`client/`) — React + Vite + shadcn/ui admin surface.
 - **Storage** — SQLite (`better-sqlite3`) with AES-256-GCM envelope encryption for keys.
-
-## Routing in detail
-
-- **Automatic fallover** — If the chosen provider returns a 429, 5xx, or times out, the router skips it, puts the key on a short cooldown, and retries on the next model in your fallback chain (up to 20 attempts, bounded by a wall-clock retry budget). A dead key rotates to its siblings instead of failing the request, and exhaustion errors carry the full attempt trail so you can see exactly what was tried.
-- **Smart routing, six strategies** — the chain is ranked by a selectable strategy: `priority` (your manual order), `balanced`, `smartest`, `fastest`, `reliable`, or `custom` with your own weight mix. Scores come from live per-model measurements (speed, capability, rate-limit headroom, recent errors) with a Thompson-sampling bandit under the hood; one-click sort presets reorder the chain from the dashboard.
-- **Unified models** — the same logical model served by several providers (say, GLM-4.7 on Cloudflare and Z.ai) collapses into one entry: one name in `/v1/models`, strict in-group failover between its providers, and merge/split overrides when the grouping guesses wrong.
-- **Model profiles** — save named fallback-chain configurations (a coding chain, a long-context chain, a vision chain) and switch the active one from the dashboard.
-- **Per-key rate tracking** — RPM, RPD, TPM, and TPD counters per `(platform, model, key)` so the router always picks a key that's under its caps. The ledger also learns: ceilings a provider reports in error bodies or quota headers (a Groq 413 naming its TPM limit) tighten the router's own limits automatically.
-- **Sticky sessions** — Multi-turn conversations keep talking to the same model for 30 minutes to avoid the hallucination spike that comes from mid-conversation model switches. See also [Context Handoff](clients.md#context-handoff) for what happens when a switch is unavoidable.
-- **Structured outputs & full sampling passthrough** — `response_format` (`json_object` / `json_schema`, translated to Gemini's native `responseSchema`), plus `seed`, `top_k`, `min_p`, presence/frequency/repetition penalties, `logit_bias`, `logprobs`, and the `max_completion_tokens` alias. Params a provider is known to reject are dropped per platform (Mistral's strict API, Groq's logprobs family…), and every model advertises its honest list in `/v1/models` `supported_parameters`.
-- **Tool-call rescue** — models that emit tool calls as plain text instead of structured JSON are rescued into real `tool_calls` automatically, and tool requests only route to models that actually support them.
-
-## Operational details
-
-- **Encrypted key storage** — API keys are encrypted with AES-256-GCM before hitting SQLite; decryption happens in-memory just before a request.
-- **Unified API key** — Clients authenticate to your proxy with a single `freellmapi-…` bearer token. You never expose upstream provider keys to your apps.
-- **Dashboard login** — The admin UI and all `/api/*` routes are gated behind an email + password account (scrypt-hashed, session-token auth), set on first run. The `/v1` proxy keeps its own unified-key auth for apps.
-- **Health checks** — Periodic probes mark keys as `healthy`, `rate_limited`, `invalid`, or `error` so the router skips dead ones automatically.
-- **Response cache (opt-in)** — an exact-match in-memory LRU for identical non-streaming requests: canonical SHA-256 keys over the full request, TTL and temperature gates, per-request `X-FreeLLM-Cache: on|off` override, and saved-token stats on the dashboard. Off by default; cache hits consume zero provider quota.
+- **Tool-call rescue** (`server/src/lib/tool-call-rescue.ts`) — models that emit tool calls as plain text instead of structured JSON are rescued into real `tool_calls` automatically, and tool requests only route to models that actually support them.
 - **Key import & export** — bulk-import keys by pasting a `.env` file (with preview and per-key selection), export back out as JSON, `.env`, or CSV.
-- **Analytics** — Per-request logging with latency (p50 / p95 and time-to-first-token for streams), token counts, success rate, estimated cost savings, and per-provider / per-model / per-key breakdowns over 24h to 90d windows.
-- **Encrypted DB backups** — optional periodic encrypted snapshots of the SQLite database to a local path or HTTP target, restored automatically on a fresh boot (see [Install & deploy](install.md#docker-image--operations)).
+
+> Routing strategies, bandit scoring, quota and cooldown accounting, streaming, degraded-mode failover and the provider catalog are covered at implementation depth in the deep-dives — See [OVERVIEW.md](architecture/OVERVIEW.md) for deep-dives.
 
 ## Not yet supported
 
@@ -79,8 +63,8 @@ PRs that add any of these are very welcome. See [Contributing](../README.md#cont
 
 Stacking free tiers has real trade-offs. Be honest with yourself about them:
 
-- **No frontier models.** The free-tier catalog tops out around Llama 3.3 70B, GLM-4.5, Qwen 3 Coder, and Gemini 2.5 Pro. You will not get GPT-5 or Claude Opus class reasoning through this. For hard problems, pay for a real API.
-- **Intelligence degrades as the day progresses.** Your top-ranked models (usually Gemini 2.5 Pro, GPT-4o via GitHub Models) have the lowest daily caps. Once they hit their limits, the router falls down your priority chain to smaller/weaker models. Expect the effective intelligence of the endpoint to drop in the late hours of each day — then reset at UTC midnight.
+- **Quota and availability are the ceiling, not model class.** The catalog does carry frontier-class rows — GPT-5.x, Grok 4.x, Kimi K3, DeepSeek V4 Pro, and Gemini 3.x all show up on somebody's free tier. What you don't get is *sustained* access to them: those are exactly the rows with the smallest daily allowances, the longest queues, and the highest chance of being pulled or paywalled at short notice. Budget for capacity and uptime, not for a capability limit.
+- **Intelligence degrades as the day progresses.** Your top-ranked models (usually Gemini 3.6 Flash, DeepSeek V4, Kimi K2.6) have the lowest daily caps. Once they hit their limits, the router falls down your priority chain to smaller/weaker models. Expect the effective intelligence of the endpoint to drop in the late hours of each day — then reset at UTC midnight.
 - **Latency is highly variable.** Cerebras and Groq are extremely fast; others are not. You get whichever one is available.
 - **Free tiers can change without notice.** Providers regularly tighten, loosen, or remove free tiers. When that happens you'll see 429s or auth errors until the catalog update reaches you — live-feed installs get those fixes within days, free installs on the 30-day trail. Re-seed scripts live in `server/src/scripts/`.
 - **No SLA, by definition.** If you need reliability, use a paid provider with a contract.
@@ -109,4 +93,4 @@ A self-hosted, single-user, personal-use setup was re-reviewed against each prov
 
 Rules of thumb that keep most providers happy: **one account per provider**, **no reselling**, **no sharing your endpoint with other humans**, **don't hammer a free tier as a paid production backend**. This is informational, not legal advice — read each provider's ToS and make your own call.
 
-Removed since the April 2026 review: Hugging Face, Moonshot, and MiniMax direct integrations were dropped from the catalog (HF — tool-call format issues; Moonshot — moved to paid only; MiniMax — superseded by the OpenRouter `minimax/minimax-m2.5:free` route).
+Removed since the April 2026 review: Moonshot and MiniMax direct integrations were dropped from the catalog (Moonshot — moved to paid only; MiniMax — superseded by the OpenRouter `minimax/minimax-m2.5:free` route).

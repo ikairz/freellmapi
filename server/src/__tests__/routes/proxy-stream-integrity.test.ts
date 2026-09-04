@@ -228,6 +228,68 @@ describe('proxy stream turn-integrity', () => {
     expect(frames(r.text).some(f => f.choices?.[0]?.delta?.content?.includes('Non-empty'))).toBe(true);
   });
 
+  it('fails over a stream whose model answers in prose despite response_format json_object (#933)', async () => {
+    // The whole point of #933: a streamed structured-output request must not
+    // ship an essay as a "success". The first model ignores the format; the
+    // second honors it. Headers are held in 'json' hold mode, so the first
+    // attempt can still fail over invisibly.
+    const up = mockUpstream([
+      { body: sse(roleChunk, textChunk('Here is your answer in prose form, sorry.'), finishChunk('stop'), '[DONE]') },
+      { body: sse(roleChunk, textChunk('{"city":"Paris"}'), finishChunk('stop'), '[DONE]') },
+    ]);
+    const r = await request(app, '/v1/chat/completions', {
+      stream: true,
+      messages: [{ role: 'user', content: 'give me json' }],
+      response_format: { type: 'json_object' },
+    });
+    expect(r.status).toBe(200);
+    expect(up.calls()).toBe(2);
+    expect(r.headers.get('x-fallback-attempts')).toBe('1');
+    const fs = frames(r.text);
+    expect(fs.some(f => f.choices?.[0]?.delta?.content?.includes('prose form'))).toBe(false);
+    expect(fs.some(f => f.choices?.[0]?.delta?.content?.includes('Paris'))).toBe(true);
+    const rows = getDb().prepare("SELECT status, error FROM requests ORDER BY id").all() as any[];
+    expect(rows[0].status).toBe('error');
+    expect(rows[0].error).toMatch(/ignored response_format/);
+    expect(rows[1].status).toBe('success');
+  });
+
+  it('heals a fenced JSON block streamed for a json_object request (#933)', async () => {
+    // Prose-wrapped/fenced output is the common "almost right" shape: heal it
+    // in place and deliver only the JSON, same as the non-stream path.
+    mockUpstream([
+      { body: sse(roleChunk, textChunk('```json\n{"answer": 42}\n```'), finishChunk('stop'), '[DONE]') },
+    ]);
+    const r = await request(app, '/v1/chat/completions', {
+      stream: true,
+      messages: [{ role: 'user', content: 'give me json' }],
+      response_format: { type: 'json_object' },
+    });
+    expect(r.status).toBe(200);
+    const fs = frames(r.text);
+    const content = fs.map(f => f.choices?.[0]?.delta?.content ?? '').join('');
+    expect(content).toContain('"answer"');
+    expect(content).not.toContain('```');
+    const rows = getDb().prepare("SELECT status FROM requests ORDER BY id").all() as any[];
+    expect(rows[0].status).toBe('success');
+  });
+
+  it('passes a clean JSON stream through untouched for a json_object request (#933)', async () => {
+    mockUpstream([
+      { body: sse(roleChunk, textChunk('{"ok":true,"items":[1,2,3]}'), finishChunk('stop'), '[DONE]') },
+    ]);
+    const r = await request(app, '/v1/chat/completions', {
+      stream: true,
+      messages: [{ role: 'user', content: 'give me json' }],
+      response_format: { type: 'json_object' },
+    });
+    expect(r.status).toBe(200);
+    const content = frames(r.text).map(f => f.choices?.[0]?.delta?.content ?? '').join('');
+    expect(content).toBe('{"ok":true,"items":[1,2,3]}');
+    const rows = getDb().prepare("SELECT status FROM requests ORDER BY id").all() as any[];
+    expect(rows[0].status).toBe('success');
+  });
+
   it('never leaks raw tool_call deltas riding on role/reasoning chunks (OpenRouter shape)', async () => {
     // OpenRouter attaches tool_call fragments to chunks that also carry a
     // role or reasoning key. Those must be accumulated, not forwarded raw —
@@ -300,6 +362,79 @@ describe('proxy stream turn-integrity', () => {
       "SELECT COALESCE(SUM(tokens), 0) AS total FROM rate_limit_usage WHERE kind = 'tokens'",
     ).get() as { total: number };
     expect(ledger.total).toBe(3278);
+  });
+
+  // Not every provider sends usage on a frame of its own: several attach it to
+  // the last choice-bearing frame instead. Reading it only off choice-less
+  // frames silently discarded those real counts and billed the chars/4
+  // estimate.
+  it('records usage bundled onto the final choice-bearing frame', async () => {
+    const usage = { prompt_tokens: 1111, completion_tokens: 22, total_tokens: 1133 };
+    mockUpstream([{
+      body: sse(
+        roleChunk,
+        textChunk('Hello'),
+        { ...finishChunk('stop'), usage },
+        '[DONE]',
+      ),
+    }]);
+
+    const r = await request(app, '/v1/chat/completions', {
+      stream: true,
+      stream_options: { include_usage: true },
+      messages: [{ role: 'user', content: 'bundled usage on the finish frame' }],
+    });
+
+    expect(r.status).toBe(200);
+    const fs = frames(r.text);
+    // Exactly one usage frame, emitted last, and it carries no duplicated turn.
+    const withUsage = fs.filter(f => f.usage);
+    expect(withUsage).toHaveLength(1);
+    expect(withUsage[0].usage).toEqual(usage);
+    expect(fs[fs.length - 1]).toBe(withUsage[0]);
+    expect(withUsage[0].choices).toEqual([]);
+    // The turn itself is unchanged: one terminal finish_reason, text intact.
+    expect(fs.map(f => f.choices?.[0]?.delta?.content ?? '').join('')).toBe('Hello');
+    expect(fs.map(f => f.choices?.[0]?.finish_reason).filter(Boolean)).toEqual(['stop']);
+
+    const row = getDb().prepare(
+      "SELECT input_tokens, output_tokens FROM requests WHERE status = 'success' ORDER BY id DESC LIMIT 1",
+    ).get() as { input_tokens: number; output_tokens: number };
+    expect(row).toEqual({ input_tokens: 1111, output_tokens: 22 });
+
+    const ledger = getDb().prepare(
+      "SELECT COALESCE(SUM(tokens), 0) AS total FROM rate_limit_usage WHERE kind = 'tokens'",
+    ).get() as { total: number };
+    expect(ledger.total).toBe(1133);
+  });
+
+  it('never emits usage twice when it rides a forwarded content frame', async () => {
+    const usage = { prompt_tokens: 7, completion_tokens: 8, total_tokens: 15 };
+    mockUpstream([{
+      body: sse(
+        roleChunk,
+        textChunk('Hello'),
+        { ...textChunk(' world'), usage },
+        finishChunk('stop'),
+        '[DONE]',
+      ),
+    }]);
+
+    const r = await request(app, '/v1/chat/completions', {
+      stream: true,
+      stream_options: { include_usage: true },
+      messages: [{ role: 'user', content: 'usage riding a content frame' }],
+    });
+
+    const fs = frames(r.text);
+    expect(fs.filter(f => f.usage)).toHaveLength(1);
+    expect(fs[fs.length - 1].usage).toEqual(usage);
+    // The content frame it arrived on is forwarded WITHOUT usage — the held
+    // copy is the single, last one the client sees (OpenAI ordering).
+    const contentFrame = fs.find(f => f.choices?.[0]?.delta?.content === ' world');
+    expect(contentFrame).toBeDefined();
+    expect(contentFrame).not.toHaveProperty('usage');
+    expect(fs.map(f => f.choices?.[0]?.delta?.content ?? '').join('')).toBe('Hello world');
   });
 
   it('rescues a non-streaming inline dialect answer into structured tool_calls', async () => {
