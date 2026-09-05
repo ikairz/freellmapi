@@ -706,6 +706,7 @@
     "recentErrors": "最近的错误",
     "noErrors": "无错误",
     "recentCalls": "最近调用",
+    "backToTop": "回到顶部",
     "clientIp": "客户端 IP",
     "clientAgent": "客户端应用",
     "requestedModelHint": "请求了 {model}，由回退模型提供",

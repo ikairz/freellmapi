@@ -883,6 +883,18 @@ export default function AnalyticsPage() {
               title={t('analytics.recentCalls')}
               actions={
                 <div className="flex flex-wrap items-center gap-2">
+                  {/* Jump back to the newest row: the list scrolls inside a
+                      420px viewport, so after digging through a few pages of
+                      rows there is no cheap way back to the top. */}
+                  <button
+                    type="button"
+                    title={t('analytics.backToTop')}
+                    aria-label={t('analytics.backToTop')}
+                    onClick={() => recentCallsScrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+                    className="rounded-lg border p-1.5 text-muted-foreground transition-colors outline-none hover:text-foreground hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    <ArrowUp className="size-3.5" aria-hidden="true" />
+                  </button>
                   <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                     <RefreshCw className="size-3" aria-hidden="true" />
                     5s

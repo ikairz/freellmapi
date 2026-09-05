@@ -741,6 +741,7 @@
     "recentErrors": "Recent errors",
     "noErrors": "No errors",
     "recentCalls": "Recent calls",
+    "backToTop": "Back to top",
     "clientIp": "Client IP",
     "clientAgent": "Client app",
     "requestedModelHint": "Requested {model}, served by fallback",
