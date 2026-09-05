@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, Legend,
@@ -394,8 +395,9 @@ function DetailField({ label, value, mono }: { label: string; value: React.React
 // outcome → timing, with the redacted per-hop error when one was recorded).
 // A dialog (the app's detail-popup idiom, cf. keys/export-keys-dialog) rather
 // than a routed page so the list's range/filter context stays put behind it.
-function RequestDetailDialog({ requestId, onClose }: { requestId: number | null; onClose: () => void }) {
+function RequestDetailDialog({ requestId, onClose, onNavigateAway }: { requestId: number | null; onClose: () => void; onNavigateAway: (id: number) => void }) {
   const { t } = useI18n()
+  const navigate = useNavigate()
 
   const { data: detail, isLoading } = useQuery({
     queryKey: ['analytics', 'request-detail', requestId],
@@ -447,7 +449,28 @@ function RequestDetailDialog({ requestId, onClose }: { requestId: number | null;
                   </span>
                 }
               />
-              <DetailField label={t('common.model')} value={detail.modelId} />
+              {/* Model id doubles as a deep link to the model's routing/config
+                  page (/models/chat/:id) so a request row leads straight to
+                  per-model settings. Before leaving, bake this row's id into
+                  the analytics URL (replace) so coming back can scroll the list
+                  back to it — see bakeAnchor / ?request= handling. */}
+              <DetailField
+                label={t('common.model')}
+                mono
+                value={
+                  <button
+                    type="button"
+                    title={t('analytics.openModelConfig')}
+                    onClick={() => {
+                      if (requestId != null) onNavigateAway(requestId)
+                      navigate(`/models/chat/${encodeURIComponent(detail.modelId)}`)
+                    }}
+                    className="max-w-[280px] truncate font-mono text-xs underline decoration-dotted underline-offset-2 outline-none transition-colors hover:text-foreground hover:decoration-solid focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    {detail.modelId}
+                  </button>
+                }
+              />
               {detail.requestedModel && detail.requestedModel !== detail.modelId && (
                 <DetailField label={t('analytics.requestedModel')} value={detail.requestedModel} />
               )}
@@ -628,7 +651,32 @@ export default function AnalyticsPage() {
   // (and caches) each combination on its own.
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [platformFilter, setPlatformFilter] = useState<string>('all')
+  // Dialog state stays in component state (it must NOT survive history
+  // navigation — coming back from the model deep link should land on the list,
+  // not a reopened dialog). The previously clicked row id instead rides the
+  // URL of THIS page's history entry as ?request=ID: when the dialog's model
+  // button navigates away it first bakes the id into the current entry (replace
+  // mode, so no extra history step), and when the user comes back the parameter
+  // is still there — the effect below reads it as a scroll anchor, strips it,
+  // and highlights the row. A state field won't work here because it lives on
+  // the entry the push created, not on this one.
   const [detailId, setDetailId] = useState<number | null>(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+  // Anchor for the scroll-back-to-row effect (see recentCallsScrollRef below).
+  const [anchorId, setAnchorId] = useState<number | null>(null)
+  // Called from RequestDetailDialog right before navigating to the model page:
+  // bake the open row's id into this entry's URL so the return trip can find it.
+  const bakeAnchor = (id: number | null) => {
+    if (id == null) return
+    setSearchParams(
+      prev => {
+        const next = new URLSearchParams(prev)
+        next.set('request', String(id))
+        return next
+      },
+      { replace: true },
+    )
+  }
 
   const { data: recentCalls } = useQuery({
     queryKey: ['analytics', 'requests', range, statusFilter, platformFilter],
@@ -679,6 +727,37 @@ export default function AnalyticsPage() {
     }, 2500)
     return () => clearTimeout(timer)
   }, [highlightedIds])
+
+  // Return-from-deep-link anchor: on mount, a leftover ?request=ID from before
+  // we navigated away means "the user was inspecting this row". Consume it
+  // immediately (strip from the URL, replace mode) and hand it to the
+  // scroll-anchor effect below — the dialog stays closed, only the list moves.
+  const recentCallsScrollRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const raw = searchParams.get('request')
+    if (raw == null) return
+    const id = Number(raw)
+    if (Number.isFinite(id) && id > 0) setAnchorId(id)
+    setSearchParams(
+      prev => {
+        const next = new URLSearchParams(prev)
+        next.delete('request')
+        return next
+      },
+      { replace: true },
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  // Fires once the anchored row has rendered (react-query may still be loading
+  // on first paint): scroll it into view, pulse the highlight, done.
+  useEffect(() => {
+    if (anchorId == null) return
+    const row = recentCallsScrollRef.current?.querySelector(`[data-request-id="${anchorId}"]`)
+    if (!row) return // rows not rendered yet; retry when they arrive
+    row.scrollIntoView({ block: 'nearest' })
+    setHighlightedIds((prev) => new Set([...prev, anchorId]))
+    setAnchorId(null)
+  }, [anchorId, recentCalls])
 
   // Per-table column sort (client-side, remembered per table). `null` keeps
   // the API order, so the memoised arrays are the query data itself then.
@@ -846,7 +925,7 @@ export default function AnalyticsPage() {
               {!recentCalls?.rows?.length ? (
                 <p className="text-sm text-muted-foreground text-center py-8">{t('common.noData')}</p>
               ) : (
-                <div className="max-h-[420px] overflow-y-auto -mx-4">
+                <div ref={recentCallsScrollRef} className="max-h-[420px] overflow-y-auto -mx-4">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -874,6 +953,7 @@ export default function AnalyticsPage() {
                         return (
                         <TableRow
                           key={r.id}
+                          data-request-id={r.id}
                           onClick={() => setDetailId(r.id)}
                           className={`cursor-pointer transition-all duration-700 ${highlightClass}`}
                         >
@@ -1224,7 +1304,7 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      <RequestDetailDialog requestId={detailId} onClose={() => setDetailId(null)} />
+      <RequestDetailDialog requestId={detailId} onClose={() => setDetailId(null)} onNavigateAway={bakeAnchor} />
     </div>
   )
 }

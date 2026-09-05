@@ -716,6 +716,7 @@
     "tokensPerSec": "词元/秒",
     "allProviders": "全部提供方",
     "requestDetailTitle": "请求 #{id}",
+    "openModelConfig": "打开模型配置页",
     "failoverLadder": "故障转移阶梯",
     "failoverLadderHint": "该请求沿回退链经过的每一跳，按顺序排列。",
     "noAttemptTrace": "此请求未记录尝试轨迹。",

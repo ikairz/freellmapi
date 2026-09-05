@@ -751,6 +751,7 @@
     "tokensPerSec": "Tok/s",
     "allProviders": "All providers",
     "requestDetailTitle": "Request #{id}",
+    "openModelConfig": "Open model configuration",
     "failoverLadder": "Failover ladder",
     "failoverLadderHint": "Each hop this request took through the fallback chain, in order.",
     "noAttemptTrace": "No attempt trace was recorded for this request.",

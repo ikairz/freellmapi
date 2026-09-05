@@ -181,10 +181,20 @@ export default function ModelDetailPage() {
   const isManual = (routing?.strategy ?? 'balanced') === 'priority'
   const scoreById = new Map((routing?.scores ?? []).map(s => [s.modelDbId, s]))
 
-  // Providers serving this model: configured rows whose group matches the id
-  // (canonicalId, or the bare model id for an ungrouped model).
+  // Providers serving this model: configured rows whose group matches the id.
+  // Accepts BOTH id flavors: the group slug (canonicalId, e.g. from the Models
+  // table) and the raw model id (e.g. "moonshotai/kimi-k3" deep-linked from
+  // analytics, where requests log the wire model id). Case-insensitive so the
+  // request's original casing still lands — model ids are not case-significant
+  // anywhere on the wire. A row matches if either id agrees, since the `??`
+  // form would let a group slug shadow a different row's model id inside the
+  // same list.
+  const target = canonicalId.toLowerCase()
   const members: Row[] = entries
-    .filter(e => e.keyCount > 0 && (e.canonicalId ?? e.modelId) === canonicalId)
+    .filter(e =>
+      e.keyCount > 0 &&
+      (e.canonicalId?.toLowerCase() === target || e.modelId.toLowerCase() === target),
+    )
     .map(e => ({ ...(scoreById.get(e.modelDbId) ?? {}), ...e }))
     .sort((a, b) => (isManual ? a.priority - b.priority : (b.score ?? 0) - (a.score ?? 0)))
   // Endpoint disambiguation keys on (platform, model_id) across EVERY configured
