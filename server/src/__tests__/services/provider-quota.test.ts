@@ -40,12 +40,23 @@ describe('provider-quota: pool inference', () => {
 
   it('buckets shared-pool providers per account and openrouter free vs account', () => {
     expect(inferQuotaPoolKey('groq')).toBe('groq::account');
+    expect(inferQuotaPoolKey('electronhub', 'qwen3.8-flash')).toBe('electronhub::weekly-credit');
+    expect(inferQuotaPoolKey('electronhub', 'gpt-oss-120b')).toBe('electronhub::weekly-credit');
+    expect(inferQuotaPoolKey('electronhub', 'some-model:free')).toBe('electronhub::daily-free');
+    expect(inferQuotaPoolKey('experiential', 'glm-5.3')).toBe('experiential::monthly-credit');
+    expect(inferQuotaPoolKey('experiential', 'gpt-5.6-sol')).toBe('experiential::monthly-credit');
+    expect(inferQuotaPoolKey('router9', 'minimax/minimax-m3')).toBe('router9::monthly-credit');
+    expect(inferQuotaPoolKey('router9', 'another-model')).toBe('router9::monthly-credit');
+    expect(inferQuotaPoolKey('septor', 'qwen3-coder-free')).toBe('septor::daily-free');
+    expect(inferQuotaPoolKey('septor', 'minimax-m2.5-free')).toBe('septor::daily-free');
     expect(inferQuotaPoolKey('openrouter', 'meta-llama/llama-3.1-8b-instruct:free')).toBe('openrouter::free');
     expect(inferQuotaPoolKey('openrouter', 'openai/gpt-4o')).toBe('openrouter::account');
     // AnyAPI's 100K tokens/day is one account-wide budget, so every model on
     // the platform shares a single pool.
     expect(inferQuotaPoolKey('anyapi')).toBe('anyapi::free');
     expect(inferQuotaPoolKey('anyapi', 'qwen/qwen3-coder:free')).toBe('anyapi::free');
+    expect(inferQuotaPoolKey('radeon', 'DeepSeek-V4-Flash')).toBe('radeon::daily-free');
+    expect(inferQuotaPoolKey('radeon', 'Qwen3.8-Flash-Next')).toBe('radeon::daily-free');
     // Unknown platform falls back to platform::model or platform::account.
     expect(inferQuotaPoolKey('acme' as any, 'x')).toBe('acme::x');
     expect(inferQuotaPoolKey('acme' as any)).toBe('acme::account');
@@ -217,6 +228,59 @@ describe('provider-quota: parse from response headers (shared parseRetryAfterMs)
     expect(obs.some(o => o.retryAfterMs === 30_000)).toBe(true);
     // A 429 always marks the pool as remaining 0.
     expect(obs.some(o => o.remaining === 0)).toBe(true);
+  });
+
+  it('parses Radeon Cloud RPM and recurring daily allowance headers', () => {
+    const resp = new Response(null, {
+      status: 200,
+      headers: {
+        'x-ratelimit-limit-user-rpm': '30',
+        'x-ratelimit-remaining-user-rpm': '29',
+        'x-ratelimit-reset': '60',
+        'x-ratelimit-limit-user-daily-usd': '10',
+        'x-ratelimit-used-user-daily-usd': '2.5',
+        'x-ratelimit-remaining-user-daily-usd': '7.5',
+        'x-ratelimit-reset-user-daily-usd': '86400',
+      },
+    });
+    const obs = parseQuotaObservationsFromResponse(resp, { platform: 'radeon', keyId: 9 });
+    expect(obs.find(o => o.metric === 'requests')).toMatchObject({
+      quotaPoolKey: 'radeon::daily-free', limit: 30, remaining: 29,
+    });
+    expect(obs.find(o => o.metric === 'credits')).toMatchObject({
+      quotaPoolKey: 'radeon::daily-free', limit: 10, remaining: 7.5,
+    });
+  });
+
+  it('uses ElectronHub account headers without inventing per-model credit limits', () => {
+    const response = new Response(null, { headers: {
+      'x-ratelimit-limit': '5', 'x-ratelimit-remaining': '4', 'x-ratelimit-reset': '1788690000',
+    } });
+    const observations = parseQuotaObservationsFromResponse(response, {
+      platform: 'electronhub', keyId: 9, modelId: 'qwen3.8-flash',
+    });
+    expect(observations.find(o => o.metric === 'requests')).toMatchObject({
+      quotaPoolKey: 'electronhub::weekly-credit', limit: 5, remaining: 4,
+      resetAt: new Date(1788690000000).toISOString(),
+    });
+    expect(observations.some(o => o.metric === 'credits')).toBe(false);
+  });
+
+  it('keeps Router9 decimal credit observations separate from tokens and undocumented request windows', () => {
+    const obs = parseQuotaObservationsFromResponse(new Response(null, { headers: {
+      'x-credits-limit': '50000', 'x-credits-remaining': '49998.4484',
+      'x-ratelimit-limit-4h': '1000', 'x-ratelimit-limit-weekly': '100',
+    } }), { platform: 'router9', modelId: 'minimax/minimax-m3' });
+    expect(obs).toHaveLength(1);
+    expect(obs[0]).toMatchObject({ metric: 'credits', quotaPoolKey: 'router9::monthly-credit', limit: 50000, remaining: 49998.4484, resetAt: null });
+  });
+
+  it('observes Septor reported limits without treating signup credits as a monthly grant', () => {
+    const obs = parseQuotaObservationsFromResponse(new Response(null, { headers: {
+      'x-ratelimit-limit': '60', 'x-ratelimit-remaining': '53', 'x-ratelimit-reset': '1789074787',
+    } }), { platform: 'septor', modelId: 'qwen3-coder-free' });
+    expect(obs[0]).toMatchObject({ metric: 'requests', quotaPoolKey: 'septor::daily-free', limit: 60, remaining: 53 });
+    expect(obs.some(o => o.metric === 'credits')).toBe(false);
   });
 });
 

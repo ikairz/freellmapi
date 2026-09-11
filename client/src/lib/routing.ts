@@ -103,6 +103,9 @@ export interface RoutingData {
   /** Key-selection policy (#919). Required for the same reason as
    *  exploreEnabled: the picker renders straight from GET /routing. */
   keySelectionStrategy: KeySelectionStrategy
+  /** Ceiling on the router's own cooldown guesses in ms (#952); null = no cap
+   *  (ladder tops out at 24h, 402/403 bench a day). */
+  cooldownCeilingMs: number | null
   scores: (RoutingScore & { platform: string; modelId: string; displayName: string; enabled: boolean })[]
 }
 
@@ -377,7 +380,12 @@ export const platformColors: Record<string, string> = {
   groq:        '#f55036',
   cerebras:    '#8b5cf6',
   sail:        '#0ea5e9',
+  electronhub: '#6366f1',
+  experiential: '#14b8a6',
+  router9:      '#8b5cf6',
+  septor:       '#0891b2',
   bai:         '#111827',
+  radeon:      '#ed1c24',
   nvidia:      '#76b900',
   mistral:     '#f59e0b',
   openrouter:  '#ec4899',
