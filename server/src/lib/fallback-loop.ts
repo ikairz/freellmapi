@@ -60,6 +60,7 @@ import { newBreaker, recordBreakerFailure } from './guardrails.js';
 import { getRequestTrace, newRequestTrace, runWithRequestTrace, type AttemptOutcome, type AttemptTraceRecord, type RequestTrace } from './attempt-trace.js';
 import { logRequest, persistRequestAttempts } from './request-log.js';
 import { withKeyProxy } from './proxy.js';
+import { getEndpointTimeBudgetMs } from './ttfb-budget.js';
 
 // Every surface caps failover hops at the same number.
 export const FALLBACK_MAX_RETRIES = 20;
@@ -155,17 +156,16 @@ function benchKeyAcrossPlatform(
 // ── Wall-clock retry budget ──────────────────────────────────────────────────
 // Serial failover has no time bound of its own: the observed worst case was a
 // 38.8s TTFB over 11 attempts, and the theoretical worst is maxRetries x the
-// per-attempt HTTP timeout. The budget is checked before STARTING each retry,
-// so one slow attempt is never aborted mid-flight — it just becomes the last
-// one. The first attempt always runs, and so does the FIRST retry: when
+// per-attempt HTTP timeout. The budget is checked before STARTING each retry
+// and, when abortInFlight is available, while waiting for its first byte.
+// Successful endpoint TTFB history can widen the configured base budget.
+// The first attempt always runs, and so does the FIRST retry: when
 // attempt 0 alone consumes the whole budget (a slow-failing model), refusing
 // attempt 1 would make failover structurally impossible for exactly the
 // requests that need it (#751). The budget stops attempts >= 2 only.
 // 0 disables the budget entirely.
 // Precedence mirrors the response cache: the settings-table value wins when
 // present (runtime-tunable), then the env var, then the default.
-// TODO(fallback-v2): AbortController hedging so a stalled attempt can be
-// abandoned mid-flight instead of only refusing to start the next one.
 export const DEFAULT_FALLBACK_TIME_BUDGET_MS = 45_000;
 // Share of the wall-clock budget an aborted attempt must have been silent for
 // before the hedge abort counts as provider health rather than bad luck. An
@@ -1194,8 +1194,9 @@ export interface ExhaustionInfo {
 export interface FallbackHooks {
   // Defaults to FALLBACK_MAX_RETRIES.
   maxRetries?: number;
-  // Wall-clock retry budget override, mostly for tests. Defaults to
+  // Base wall-clock retry budget override, mostly for tests. Defaults to
   // getFallbackTimeBudgetMs() (setting → env → 45s; 0 disables).
+  // Successful endpoint TTFB history can widen this floor.
   timeBudgetMs?: number;
   // Circuit-breaker threshold override, mostly for tests. Defaults to
   // getMaxConsecutiveUpstreamFails() (setting → env → 0 = disabled).
@@ -1306,7 +1307,7 @@ export async function runFallbackLoop(hooks: FallbackHooks): Promise<void> {
 
 async function runFallbackLoopAttempts(hooks: FallbackHooks, trace: RequestTrace): Promise<void> {
   const maxRetries = hooks.maxRetries ?? FALLBACK_MAX_RETRIES;
-  const budgetMs = hooks.timeBudgetMs ?? getFallbackTimeBudgetMs();
+  const baseBudgetMs = hooks.timeBudgetMs ?? getFallbackTimeBudgetMs();
   const startedAt = Date.now();
   const attempts: AttemptRecord[] = hooks.attemptLog ?? [];
   const keyOrdinals = new Map<string, number>();
@@ -1353,24 +1354,19 @@ async function runFallbackLoopAttempts(hooks: FallbackHooks, trace: RequestTrace
       return;
     }
 
-    // Wall-clock budget: refuse to START another retry once spent. The first
-    // attempt always runs, and so does the first RETRY — when attempt 0 alone
-    // consumed the budget, refusing attempt 1 would make failover impossible
-    // for exactly the slow-failing models that need it (#751). A slow attempt
-    // is never aborted mid-flight (that is the TODO(fallback-v2) hedging
-    // work), it just becomes the last one.
-    if (attempt > 1 && budgetMs > 0 && Date.now() - startedAt >= budgetMs) {
-      hooks.onExhausted(
-        exhaustedRetryError(lastError, maxRetries, { attempts, timedOut: true, budgetMs }),
-        { attempts, timedOut: true },
-      );
-      return;
-    }
-
     let route: RouteResult;
     try {
       route = hooks.route(attempt);
     } catch (routeErr) {
+      // With no candidate to supply an endpoint-specific allowance, retain
+      // the original timeout diagnosis when the base budget is already spent.
+      if (attempt > 1 && baseBudgetMs > 0 && Date.now() - startedAt >= baseBudgetMs) {
+        hooks.onExhausted(
+          exhaustedRetryError(lastError, maxRetries, { attempts, timedOut: true, budgetMs: baseBudgetMs }),
+          { attempts, timedOut: true },
+        );
+        return;
+      }
       const exhaustion = lastError
         ? exhaustedRetryError(lastError, undefined, { attempts })
         : routingExhaustionBody(routeErr);
@@ -1379,6 +1375,25 @@ async function runFallbackLoopAttempts(hooks: FallbackHooks, trace: RequestTrace
       // exhaustion body already explains the failure.
       if (!lastError) logRoutingExhaustion(routeErr, hooks.logIdentity);
       hooks.onRoutingExhausted(lastError, routeErr, exhaustion, { attempts, timedOut: false });
+      return;
+    }
+
+    let hedgeTimer: NodeJS.Timeout | undefined;
+    try {
+    // Select the endpoint before checking the budget: a slow endpoint may
+    // still have time even after the base budget has expired. Recompute from
+    // the base for every candidate so its allowance cannot leak to a faster
+    // endpoint later in the ladder. The clock still starts at loop entry.
+    const budgetMs = attempt > 1
+      ? getEndpointTimeBudgetMs(baseBudgetMs, route.platform, route.endpointScope)
+      : baseBudgetMs;
+    // Attempt 0 and the first retry remain exempt (#751). Routing reserves a
+    // lease, so even a candidate rejected here must pass through finally.
+    if (attempt > 1 && budgetMs > 0 && Date.now() - startedAt >= budgetMs) {
+      hooks.onExhausted(
+        exhaustedRetryError(lastError, maxRetries, { attempts, timedOut: true, budgetMs }),
+        { attempts, timedOut: true },
+      );
       return;
     }
 
@@ -1420,7 +1435,6 @@ async function runFallbackLoopAttempts(hooks: FallbackHooks, trace: RequestTrace
     // because past that point cancelling would truncate a healthy response and
     // buy nothing: a committed stream can no longer fail over anyway. Slow is
     // not the same as stalled, and only stalled is worth killing.
-    let hedgeTimer: NodeJS.Timeout | undefined;
     const disarmHedge = () => {
       if (hedgeTimer) {
         clearTimeout(hedgeTimer);
@@ -1436,7 +1450,6 @@ async function runFallbackLoopAttempts(hooks: FallbackHooks, trace: RequestTrace
         }, remaining);
       }
     }
-    try {
     let outcome: DispatchOutcome;
     try {
       // #590 (per-key proxy): if THIS key carries its own proxy URL, route the
@@ -1514,6 +1527,25 @@ async function runFallbackLoopAttempts(hooks: FallbackHooks, trace: RequestTrace
       }
       if (isRetryableError(err)) {
         const exempt = recordRetryableFailure(route, err, hooks.state);
+        // An in-band provider error that arrives only after the attempt has
+        // silently consumed most of the operator's whole budget (#1218 Gap 3:
+        // nvidia ran 140.7s before surfacing "Service temporarily overloaded",
+        // leaving scraps for the next hop) behaved like a stall for its entire
+        // window — the hedge-abort bench would have fired had the abort landed
+        // first. Give the late error the same treatment the hedge abort gets:
+        // bench the route so the ladder's next hop keeps a usable budget,
+        // instead of re-stalling on this route every request. Errors that
+        // arrive EARLY (the common Groq tool_use_failed shape) stay unbenced —
+        // a fast verdict costs the ladder nothing.
+        const errStr = err?.message ?? '';
+        if (
+          budgetMs > 0
+          && typeof errStr === 'string' && errStr.includes('in-band provider error')
+          && Date.now() - attemptStartedAt >= budgetMs * HEDGE_BENCH_MIN_SILENT_FRACTION
+        ) {
+          setCooldown(route.platform, route.modelId, route.keyId, TRUNCATION_BENCH_MS, 'heuristic');
+          console.warn(`[FallbackLoop] ${route.platform}/${route.modelId}: in-band provider error after ${((Date.now() - attemptStartedAt) / 1000).toFixed(1)}s silent — benching the route ${Math.round(TRUNCATION_BENCH_MS / 1000)}s (#1218 Gap 3)`);
+        }
         const errorClass = classifyAttemptError(err);
         attempts.push({ platform: route.platform, modelId: route.modelId, keyOrdinal: keyOrdinal(route), errorClass });
         traceAttempt(errorClass, err);

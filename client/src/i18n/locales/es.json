@@ -209,6 +209,7 @@
     "noKey": "sin clave",
     "dragToReorder": "Arrastra para reordenar",
     "dragToReorderGroup": "Arrastra para reordenar el modelo",
+    "moveToRank": "Ir a la posición",
     "providerCount": "{count} proveedores",
     "servedBy": "Servido por {providers}",
     "viewProviders": "Ver proveedores",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} de {total} proveedores configurados",
     "checklistKeyless": "no se necesita clave",
     "checklistNoKeyTip": "Aún no se ha añadido ninguna clave. Haz clic para añadir una.",
+    "checklistSignupLink": "Abre {provider} para crear una cuenta y obtener una clave",
     "checklistKeylessTip": "Funciona sin clave.",
     "tabQuotaSignals": "Señales de cuota",
     "tabApiKey": "Clave de API unificada",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Empezar vacía",
     "startEmptyHint": "Crea la cadena sin modelos y mantén fuera los modelos nuevos del catálogo. Sin marcar, empieza como una copia de la cadena predeterminada.",
     "curated": "Curada",
-    "curatedHint": "Los modelos nuevos del catálogo no se añaden a esta cadena automáticamente."
+    "curatedHint": "Los modelos nuevos del catálogo no se añaden a esta cadena automáticamente.",
+    "renameHint": "Cambiar el nombre de esta cadena",
+    "renameConfirm": "¿Cambiar el nombre de la cadena \"{oldName}\" a \"{name}\"? Los clientes que llamen a auto:{oldName} deben pasar a auto:{name}.",
+    "renamePlaceholder": "Nuevo nombre de la cadena",
+    "renameFailed": "No se pudo cambiar el nombre de la cadena."
   }
 }

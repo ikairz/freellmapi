@@ -209,6 +209,7 @@
     "noKey": "Ingen nøgle",
     "dragToReorder": "Træk for at omorganisere",
     "dragToReorderGroup": "Træk for at omarrangere modellen",
+    "moveToRank": "Hop til rang",
     "providerCount": "{count} udbydere",
     "servedBy": "Betjent af {providers}",
     "viewProviders": "Se udbydere",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} af {total} udbydere er konfigureret",
     "checklistKeyless": "ingen nøgle påkrævet",
     "checklistNoKeyTip": "Der er endnu ikke tilføjet en nøgle. Klik for at tilføje en.",
+    "checklistSignupLink": "Åbn {provider} for at oprette en konto og få en nøgle",
     "checklistKeylessTip": "Virker uden nøgle.",
     "tabQuotaSignals": "Kvotesignaler",
     "tabApiKey": "Unified API nøgle",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Omdøb denne kæde",
+    "renameConfirm": "Omdøb kæden \"{oldName}\" til \"{name}\"? Klients, der kalder auto:{oldName}, skal skifte til auto:{name}.",
+    "renamePlaceholder": "Nyt kædenavn",
+    "renameFailed": "Kæden kunne ikke omdøbes."
   }
 }

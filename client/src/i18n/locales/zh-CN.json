@@ -209,6 +209,7 @@
     "noKey": "无密钥",
     "dragToReorder": "拖动以重新排序",
     "dragToReorderGroup": "拖动以重新排序模型",
+    "moveToRank": "跳转到排名",
     "providerCount": "{count} 个提供方",
     "servedBy": "由 {providers} 提供",
     "viewProviders": "查看提供方",
@@ -369,6 +370,7 @@
     "checklistSummary": "已配置 {configured}/{total} 个提供方",
     "checklistKeyless": "无需密钥",
     "checklistNoKeyTip": "尚未添加密钥。点击添加一个。",
+    "checklistSignupLink": "打开 {provider} 注册账户并获取密钥",
     "checklistKeylessTip": "无需密钥即可使用。",
     "tabQuotaSignals": "配额信号",
     "tabApiKey": "统一 API 密钥",
@@ -1203,6 +1205,10 @@
     "startEmpty": "从空链开始",
     "startEmptyHint": "创建时不放入任何模型，之后新增的目录模型也不会自动加入。不勾选则复制默认链。",
     "curated": "手动维护",
-    "curatedHint": "新的目录模型不会自动加入这条链。"
+    "curatedHint": "新的目录模型不会自动加入这条链。",
+    "renameHint": "重命名此链",
+    "renameConfirm": "将链“{oldName}”重命名为“{name}”？调用 auto:{oldName} 的客户端必须改用 auto:{name}。",
+    "renamePlaceholder": "新链名称",
+    "renameFailed": "无法重命名该链。"
   }
 }

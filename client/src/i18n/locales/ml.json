@@ -209,6 +209,7 @@
     "noKey": "താക്കോൽ ഇല്ല",
     "dragToReorder": "പുനഃക്രമീകരിക്കാൻ വലിച്ചിടുക",
     "dragToReorderGroup": "മോഡൽ പുനഃക്രമീകരിക്കാൻ വലിച്ചിടുക",
+    "moveToRank": "റാങ്കിലേക്ക്",
     "providerCount": "{count} ദാതാക്കൾ",
     "servedBy": "{providers} സേവനം നൽകുന്നു",
     "viewProviders": "ദാതാക്കളെ കാണുക",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total}-ൽ {configured} ദാതാക്കൾ കോൺഫിഗർ ചെയ്തു",
     "checklistKeyless": "കീ ആവശ്യമില്ല",
     "checklistNoKeyTip": "ഇതുവരെ കീ ചേർത്തിട്ടില്ല. ചേർക്കാൻ ക്ലിക്ക് ചെയ്യുക.",
+    "checklistSignupLink": "അക്കൗണ്ട് സൃഷ്ടിച്ച് കീ നേടാൻ {provider} തുറക്കുക",
     "checklistKeylessTip": "കീ ഇല്ലാതെ പ്രവർത്തിക്കുന്നു.",
     "tabQuotaSignals": "ക്വാട്ട സിഗ്നലുകൾ",
     "tabApiKey": "ഏകീകൃത API കീ",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "ഈ ചെയിനിന്റെ പേരു മാറ്റുക",
+    "renameConfirm": "ചെയിൻ \"{oldName}\" എന്നതിന്റെ പേരു \"{name}\" ആക്കണോ? auto:{oldName} വിളിക്കുന്ന ക്ലയന്റുകൾ auto:{name} ലേക്ക് മാറണം.",
+    "renamePlaceholder": "പുതിയ ചെയിൻ പേര്",
+    "renameFailed": "ചെയിനിന്റെ പേരു മാറ്റാനായില്ല."
   }
 }

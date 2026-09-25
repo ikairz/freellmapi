@@ -209,6 +209,7 @@
     "noKey": "Be rakto",
     "dragToReorder": "Vilkimas į pertvarką",
     "dragToReorderGroup": "Vilkimas į pertvarkos modelį",
+    "moveToRank": "Peršokti į poziciją",
     "providerCount": "{count} teikėjai",
     "servedBy": "Aptarnavo {providers}",
     "viewProviders": "Peržiūrėti tiekėjai",
@@ -369,6 +370,7 @@
     "checklistSummary": "Sukonfigūruota {configured} iš {total} tiekėjų",
     "checklistKeyless": "rakto nereikia",
     "checklistNoKeyTip": "Raktas dar nepridėtas. Spustelėkite, kad pridėtumėte.",
+    "checklistSignupLink": "Atidarykite {provider}, kad sukurtumėte paskyrą ir gautumėte raktą",
     "checklistKeylessTip": "Veikia be rakto.",
     "tabQuotaSignals": "Kvotų signalai",
     "tabApiKey": "Vieningas API raktas",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Pervadinti šią grandinę",
+    "renameConfirm": "Pervadinti grandinę „{oldName}“ į „{name}“? Klientai, kviečianti auto:{oldName}, turi pereiti prie auto:{name}.",
+    "renamePlaceholder": "Naujas grandinės pavadinimas",
+    "renameFailed": "Nepavyko pervadinti šios grandinės."
   }
 }

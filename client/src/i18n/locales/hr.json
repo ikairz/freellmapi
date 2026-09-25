@@ -209,6 +209,7 @@
     "noKey": "Nema ključa",
     "dragToReorder": "Povlačenje radi ponovnog redoslijeda",
     "dragToReorderGroup": "Povlačenje za promjenu redoslijeda modela",
+    "moveToRank": "Skoči na plasman",
     "providerCount": "{count} pružatelji usluga",
     "servedBy": "Služio {providers}",
     "viewProviders": "Pogledajte pružatelje usluga",
@@ -369,6 +370,7 @@
     "checklistSummary": "Konfigurirano {configured} od {total} pružatelja usluga",
     "checklistKeyless": "ključ nije potreban",
     "checklistNoKeyTip": "Ključ još nije dodan. Kliknite za dodavanje.",
+    "checklistSignupLink": "Otvorite {provider} za izradu računa i dobivanje ključa",
     "checklistKeylessTip": "Radi bez ključa.",
     "tabQuotaSignals": "Kvotni signali",
     "tabApiKey": "Ujedinjeni API ključ",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Preimenuj ovaj lanac",
+    "renameConfirm": "Preimenovati lanac \"{oldName}\" u \"{name}\"? Klijenti koji zovu auto:{oldName} moraju prijeći na auto:{name}.",
+    "renamePlaceholder": "Novi naziv lanca",
+    "renameFailed": "Nije moguće preimenovati lanac."
   }
 }

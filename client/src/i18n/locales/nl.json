@@ -209,6 +209,7 @@
     "noKey": "Geen sleutel",
     "dragToReorder": "Slepen om te herschikken",
     "dragToReorderGroup": "Sleep om model te herschikken",
+    "moveToRank": "Ga naar positie",
     "providerCount": "{count} aanbieders",
     "servedBy": "Bediend door {providers}",
     "viewProviders": "Bekijk aanbieders",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} van {total} aanbieders ingesteld",
     "checklistKeyless": "geen sleutel nodig",
     "checklistNoKeyTip": "Nog geen sleutel toegevoegd. Klik om er een toe te voegen.",
+    "checklistSignupLink": "Open {provider} om een account aan te maken en een sleutel te krijgen",
     "checklistKeylessTip": "Werkt zonder sleutel.",
     "tabQuotaSignals": "Quotasignalen",
     "tabApiKey": "Unified API sleutel",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Leeg beginnen",
     "startEmptyHint": "Maakt de keten zonder modellen aan en houdt nieuwe catalogusmodellen erbuiten. Niet aangevinkt begint hij als kopie van de standaardketen.",
     "curated": "Handmatig",
-    "curatedHint": "Nieuwe catalogusmodellen worden niet automatisch aan deze keten toegevoegd."
+    "curatedHint": "Nieuwe catalogusmodellen worden niet automatisch aan deze keten toegevoegd.",
+    "renameHint": "Deze keten hernoemen",
+    "renameConfirm": "Keten \"{oldName}\" hernoemen naar \"{name}\"? Clients die auto:{oldName} aanroepen moeten overstappen op auto:{name}.",
+    "renamePlaceholder": "Nieuwe ketennaam",
+    "renameFailed": "Kan de naam van die keten niet wijzigen."
   }
 }

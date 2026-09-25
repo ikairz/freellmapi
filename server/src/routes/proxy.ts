@@ -6,6 +6,7 @@ import type { ChatMessage, ChatToolCall, TokenUsage } from '@freellmapi/shared/t
 import { type RouteResult, type ResolvedChain, type ChainRow, routeRequest, resolveRoutingChain, resolveModelGroupCandidates, resolveStickyPreference, hasEnabledVisionModel, hasEnabledToolsModel, routingReserveTokens } from '../services/router.js';
 import { secondsUntilNextMonth } from '../services/key-budget.js';
 import { runEmbeddings, EmbeddingsError } from '../services/embeddings.js';
+import { retryAfterSeconds } from '../lib/retry-hint.js';
 import { runImageGeneration, runVideoGeneration, runSpeech, runTranscription, MediaError, MAX_TRANSCRIPTION_BYTES } from '../services/media.js';
 import multer from 'multer';
 import { getDb } from '../db/index.js';
@@ -708,8 +709,12 @@ const ImageBody = z.object({
   response_format: z.enum(['url', 'b64_json']).optional(),
 });
 
-function inferenceBudgetCode(error: { code?: string }, res: Response): { code?: string } {
-  if (error.code === 'quota_exceeded') res.setHeader('Retry-After', secondsUntilNextMonth());
+function inferenceBudgetCode(error: { code?: string; retryAfterMs?: number }, res: Response): { code?: string } {
+  // retryAfterMs is set by the embeddings/media services only when the whole
+  // chain was rate limited (soonest stated back-off, budget resets included),
+  // so it wins over the month-long budget reset when a sibling returns sooner.
+  if (error.retryAfterMs !== undefined) res.setHeader('Retry-After', retryAfterSeconds(error.retryAfterMs));
+  else if (error.code === 'quota_exceeded') res.setHeader('Retry-After', secondsUntilNextMonth());
   return error.code ? { code: error.code } : {};
 }
 
@@ -1187,6 +1192,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
       );
     },
     dispatch: async (route, attempt, ctx) => {
+      const contextBudget = route.contextWindow != null ? route.contextWindow - estimatedInputTokens : undefined;
       traceRouteEvent('Proxy', {
         event: attempt === 0 ? 'start' : 'next',
         requestId: requestGroupId,
@@ -1234,7 +1240,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
             route.apiKey,
             dispatchMessages,
             route.modelId,
-            { temperature, max_tokens, top_p, stop, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
+            { temperature, max_tokens, top_p, stop, contextBudget, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
             quotaContextForRoute(route, 'chat/completions'),
           );
 
@@ -1334,7 +1340,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
         route.apiKey,
         dispatchMessages,
         route.modelId,
-        { temperature, max_tokens, top_p, stop, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
+        { temperature, max_tokens, top_p, stop, contextBudget, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
         quotaContextForRoute(route, 'chat/completions'),
       );
 
@@ -2106,6 +2112,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
       return routeRequest(routingEstimate, state.skipKeys.size > 0 ? state.skipKeys : undefined, preferredModel, hasImage, wantsTools, state.skipModels.size > 0 ? state.skipModels : undefined, groupChain ?? resolvedChain?.chain, samplingParams.response_format !== undefined, state.skipPlatforms.size > 0 ? state.skipPlatforms : undefined, outputReserve, taskType);
     },
     dispatch: async (route, attempt, ctx) => {
+    const contextBudget = route.contextWindow != null ? route.contextWindow - estimatedInputTokens : undefined;
     const modelKey = `${route.platform}:${route.modelId}`;
     traceRouteEvent('Proxy', {
       event: attempt === 0 ? 'start' : 'next',
@@ -2248,7 +2255,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
         try {
           const gen = route.provider.streamChatCompletion(
             route.apiKey, outboundMessages, route.modelId,
-            { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, stream_options: parsed.data.stream_options, ...samplingParams, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
+            { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, stream_options: parsed.data.stream_options, ...samplingParams, contextBudget, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
             quotaContextForRoute(route, 'chat/completions'),
           );
 
@@ -2630,7 +2637,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
       } else {
         const result = await route.provider.chatCompletion(
           route.apiKey, outboundMessages, route.modelId,
-          { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
+          { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams, contextBudget, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
           quotaContextForRoute(route, 'chat/completions'),
         );
 

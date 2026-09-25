@@ -209,6 +209,7 @@
     "noKey": "ಕೀ ಇಲ್ಲ",
     "dragToReorder": "ಮರುಕ್ರಮಗೊಳಿಸಲು ಎಳೆಯಿರಿ",
     "dragToReorderGroup": "ಮಾದರಿಯನ್ನು ಮರುಕ್ರಮಗೊಳಿಸಲು ಎಳೆಯಿರಿ",
+    "moveToRank": "ರೆಂಕ್‌ಗೆ ಹೋಗಿ",
     "providerCount": "{count} ಪೂರೈಕೆದಾರರು",
     "servedBy": "{providers} ಮೂಲಕ ಸೇವೆ ಸಲ್ಲಿಸಲಾಗಿದೆ",
     "viewProviders": "ಪೂರೈಕೆದಾರರನ್ನು ವೀಕ್ಷಿಸಿ",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total} ರಲ್ಲಿ {configured} ಪೂರೈಕೆದಾರರನ್ನು ಕಾನ್ಫಿಗರ್ ಮಾಡಲಾಗಿದೆ",
     "checklistKeyless": "ಕೀ ಅಗತ್ಯವಿಲ್ಲ",
     "checklistNoKeyTip": "ಇನ್ನೂ ಯಾವುದೇ ಕೀ ಸೇರಿಸಿಲ್ಲ. ಸೇರಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ.",
+    "checklistSignupLink": "ಖಾತೆ ರಚಿಸಿ ಕೀ ಪಡೆಯಲು {provider} ತೆರೆಯಿರಿ",
     "checklistKeylessTip": "ಕೀ ಇಲ್ಲದೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ.",
     "tabQuotaSignals": "ಕೋಟಾ ಸಂಕೇತಗಳು",
     "tabApiKey": "ಏಕೀಕೃತ API ಕೀ",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "ಈ ಚೈನ್ ಹೆಸರನ್ನು ಮಾರ್ಪಡಿಸಿ",
+    "renameConfirm": "ಚೈನ್ \"{oldName}\" ಹೆಸರನ್ನು \"{name}\" ಗೆ ಬದಲಾಯಿಸುವುದೇ? auto:{oldName} ಕರೆ ಮಾಡುವ ಕ್ಲೈಂಟ್‌ಗಳು auto:{name} ಗೆ ಬದಲಾಗಬೇಕು.",
+    "renamePlaceholder": "ಹೊಸ ಚೈನ್ ಹೆಸರು",
+    "renameFailed": "ಚೈನ್ ಹೆಸರನ್ನು ಮರುಹೆಸರಿಸಲಾಗಲಿಲ್ಲ."
   }
 }

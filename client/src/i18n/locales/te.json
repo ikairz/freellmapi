@@ -209,6 +209,7 @@
     "noKey": "కీ లేదు",
     "dragToReorder": "క్రమాన్ని మార్చడానికి లాగండి",
     "dragToReorderGroup": "మోడల్ క్రమాన్ని మార్చడానికి లాగండి",
+    "moveToRank": "ర్్యాంక్‌కు వెళ్లండి",
     "providerCount": "{count} ప్రొవైడర్లు",
     "servedBy": "{providers} ద్వారా అందించబడింది",
     "viewProviders": "ప్రొవైడర్లను వీక్షించండి",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total}లో {configured} ప్రొవైడర్లు కాన్ఫిగర్ చేయబడ్డాయి",
     "checklistKeyless": "కీ అవసరం లేదు",
     "checklistNoKeyTip": "ఇంకా కీ జోడించలేదు. జోడించడానికి క్లిక్ చేయండి.",
+    "checklistSignupLink": "ఖాతా సృష్టించి కీ పొందడానికి {provider} తెరవండి",
     "checklistKeylessTip": "కీ లేకుండా పనిచేస్తుంది.",
     "tabQuotaSignals": "కోటా సంకేతాలు",
     "tabApiKey": "ఏకీకృత API కీ",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "ఈ చైన్ పేరును మార్చండి",
+    "renameConfirm": "చైన్ \"{oldName}\" పేరును \"{name}\" గా మార్చాలా? auto:{oldName} ని కాల్ చేసే క్లయింట్లు auto:{name} కి మారాలి.",
+    "renamePlaceholder": "కొత్త చైన్ పేరు",
+    "renameFailed": "చైన్ పేరును మార్చడం సాధ్యం కాలేదు."
   }
 }

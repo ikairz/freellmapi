@@ -209,6 +209,7 @@
     "noKey": "لا يوجد مفتاح",
     "dragToReorder": "اسحب لإعادة الترتيب",
     "dragToReorderGroup": "اسحب لإعادة ترتيب النموذج",
+    "moveToRank": "الانتقال إلى الترتيب",
     "providerCount": "مقدمي {count}",
     "servedBy": "يخدمها {providers}",
     "viewProviders": "عرض مقدمي الخدمة",
@@ -369,6 +370,7 @@
     "checklistSummary": "تم إعداد {configured} من {total} من مقدمي الخدمات",
     "checklistKeyless": "لا حاجة لمفتاح",
     "checklistNoKeyTip": "لم تتم إضافة أي مفتاح بعد. انقر لإضافة مفتاح.",
+    "checklistSignupLink": "افتح {provider} لإنشاء حساب والحصول على مفتاح",
     "checklistKeylessTip": "يعمل بدون مفتاح.",
     "tabQuotaSignals": "إشارات الحصص",
     "tabApiKey": "مفتاح API الموحد",
@@ -1191,6 +1193,10 @@
     "startEmpty": "ابدأ فارغة",
     "startEmptyHint": "ينشئ السلسلة بلا أي نماذج، ولا يضيف إليها نماذج الفهرس الجديدة. عند إلغاء التحديد تبدأ كنسخة من السلسلة الافتراضية.",
     "curated": "مُنسّقة يدويًا",
-    "curatedHint": "لا تُضاف نماذج الفهرس الجديدة إلى هذه السلسلة تلقائيًا."
+    "curatedHint": "لا تُضاف نماذج الفهرس الجديدة إلى هذه السلسلة تلقائيًا.",
+    "renameHint": "إعادة تسمية هذه السلسلة",
+    "renameConfirm": "إعادة تسمية السلسلة \"{oldName}\" إلى \"{name}\"؟ يجب على العملاء الذين يستدعون auto:{oldName} التحول إلى auto:{name}.",
+    "renamePlaceholder": "الاسم الجديد للسلسلة",
+    "renameFailed": "تعذّرت إعادة تسمية السلسلة."
   }
 }

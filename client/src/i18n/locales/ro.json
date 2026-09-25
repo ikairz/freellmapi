@@ -209,6 +209,7 @@
     "noKey": "fără cheie",
     "dragToReorder": "Rezistența la reordonare",
     "dragToReorderGroup": "Drag la reordonare a modelului",
+    "moveToRank": "Sari la poziția",
     "providerCount": "{count} furnizori",
     "servedBy": "Deservit de {providers}",
     "viewProviders": "Vezi furnizorii",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} din {total} furnizori configurați",
     "checklistKeyless": "nu necesită cheie",
     "checklistNoKeyTip": "Nicio cheie adăugată încă. Faceți clic pentru a adăuga una.",
+    "checklistSignupLink": "Deschideți {provider} pentru a crea un cont și a obține o cheie",
     "checklistKeylessTip": "Funcționează fără cheie.",
     "tabQuotaSignals": "Semnale de cotă",
     "tabApiKey": "Cheia API unificată",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Redenumește acest lanț",
+    "renameConfirm": "Redenumiți lanțul \"{oldName}\" în \"{name}\"? Clienții care apelau auto:{oldName} trebuie să treacă la auto:{name}.",
+    "renamePlaceholder": "Numele nou al lanțului",
+    "renameFailed": "Nu s-a putut redenumi lanțul."
   }
 }

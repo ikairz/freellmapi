@@ -209,6 +209,7 @@
     "noKey": "tidak ada kunci",
     "dragToReorder": "Tarik untuk menyusun ulang",
     "dragToReorderGroup": "Seret untuk menyusun ulang model",
+    "moveToRank": "Lompat ke peringkat",
     "providerCount": "Penyedia {count}",
     "servedBy": "Dilayani oleh {providers}",
     "viewProviders": "Lihat penyedia",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} dari {total} penyedia telah dikonfigurasi",
     "checklistKeyless": "tidak perlu kunci",
     "checklistNoKeyTip": "Belum ada kunci yang ditambahkan. Klik untuk menambahkan.",
+    "checklistSignupLink": "Buka {provider} untuk membuat akun dan mendapatkan kunci",
     "checklistKeylessTip": "Berfungsi tanpa kunci.",
     "tabQuotaSignals": "Sinyal kuota",
     "tabApiKey": "Kunci API terpadu",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Mulai kosong",
     "startEmptyHint": "Membuat rantai tanpa model dan menjauhkan model katalog baru darinya. Jika tidak dicentang, rantai dimulai sebagai salinan rantai bawaan.",
     "curated": "Dikurasi",
-    "curatedHint": "Model katalog baru tidak ditambahkan ke rantai ini secara otomatis."
+    "curatedHint": "Model katalog baru tidak ditambahkan ke rantai ini secara otomatis.",
+    "renameHint": "Ganti nama rantai ini",
+    "renameConfirm": "Ganti nama rantai \"{oldName}\" menjadi \"{name}\"? Klien yang memanggil auto:{oldName} harus beralih ke auto:{name}.",
+    "renamePlaceholder": "Nama rantai baru",
+    "renameFailed": "Tidak dapat mengganti nama rantai."
   }
 }

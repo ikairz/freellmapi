@@ -209,6 +209,7 @@
     "noKey": "열쇠 없음",
     "dragToReorder": "드래그하여 재정렬하세요.",
     "dragToReorderGroup": "드래그하여 모델 재정렬",
+    "moveToRank": "순위이동",
     "providerCount": "{count} 제공업체",
     "servedBy": "{providers} 제공",
     "viewProviders": "공급자 보기",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total}개 공급자 중 {configured}개 설정됨",
     "checklistKeyless": "키 필요 없음",
     "checklistNoKeyTip": "아직 키를 추가하지 않았습니다. 클릭하여 추가하세요.",
+    "checklistSignupLink": "{provider}를(를) 열어 계정을 만들고 키를 받으세요",
     "checklistKeylessTip": "키 없이 작동합니다.",
     "tabQuotaSignals": "할당량 신호",
     "tabApiKey": "통합 API 키",
@@ -1191,6 +1193,10 @@
     "startEmpty": "비어 있는 상태로 만들기",
     "startEmptyHint": "모델 없이 체인을 만들고, 새로 추가되는 카탈로그 모델도 넣지 않습니다. 해제하면 기본 체인의 복사본으로 시작합니다.",
     "curated": "직접 관리",
-    "curatedHint": "새 카탈로그 모델이 이 체인에 자동으로 추가되지 않습니다."
+    "curatedHint": "새 카탈로그 모델이 이 체인에 자동으로 추가되지 않습니다.",
+    "renameHint": "이 체인의 이름 변경",
+    "renameConfirm": "체인 \"{oldName}\"의 이름을 \"{name}\"(으)로 변경하시겠습니까? auto:{oldName}을(를) 호출하는 클라이언트는 auto:{name}(으)로 전환해야 합니다.",
+    "renamePlaceholder": "새 체인 이름",
+    "renameFailed": "체인 이름을 변경하지 못했습니다."
   }
 }

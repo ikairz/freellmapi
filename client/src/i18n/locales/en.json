@@ -209,6 +209,7 @@
     "noKey": "no key",
     "dragToReorder": "Drag to reorder",
     "dragToReorderGroup": "Drag to reorder model",
+    "moveToRank": "Jump to rank",
     "providerCount": "{count} providers",
     "servedBy": "Served by {providers}",
     "viewProviders": "View providers",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} of {total} providers configured",
     "checklistKeyless": "no key needed",
     "checklistNoKeyTip": "No key added yet. Click to add one.",
+    "checklistSignupLink": "Open {provider} to create an account and get a key",
     "checklistKeylessTip": "Works without a key.",
     "tabQuotaSignals": "Quota signals",
     "tabApiKey": "Unified API key",
@@ -1203,6 +1205,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Rename this chain",
+    "renameConfirm": "Rename chain \"{oldName}\" to \"{name}\"? Clients calling auto:{oldName} must switch to auto:{name}.",
+    "renamePlaceholder": "New chain name",
+    "renameFailed": "Couldn't rename the chain."
   }
 }

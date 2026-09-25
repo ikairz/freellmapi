@@ -209,6 +209,7 @@
     "noKey": "babu makulli",
     "dragToReorder": "Ja don sake yin oda",
     "dragToReorderGroup": "Ja don sake yin tsari",
+    "moveToRank": "Tsallawa zu matsayi",
     "providerCount": "{count} masu samarwa",
     "servedBy": "{providers} ya yi aiki",
     "viewProviders": "Duba masu samarwa",
@@ -369,6 +370,7 @@
     "checklistSummary": "An saita {configured} daga cikin {total} masu bayarwa",
     "checklistKeyless": "ba a buƙatar maɓalli",
     "checklistNoKeyTip": "Ba a ƙara maɓalli ba tukuna. Danna don ƙarawa.",
+    "checklistSignupLink": "Buɗe {provider} don ƙirƙirar asusua da samun mabuɗi",
     "checklistKeylessTip": "Yana aiki ba tare da maɓalli ba.",
     "tabQuotaSignals": "Alamun ƙididdiga",
     "tabApiKey": "Maɓallin API haɗe",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Sauya sunan wannan sarƙa",
+    "renameConfirm": "Sauya sunan sarƙa \"{oldName}\" zuwa \"{name}\"? Abokan cinikin da ke kira auto:{oldName} dole su koma auto:{name}.",
+    "renamePlaceholder": "Sabon sunan sarƙa",
+    "renameFailed": "Ba a iya sauya sunan sarƙar ba."
   }
 }

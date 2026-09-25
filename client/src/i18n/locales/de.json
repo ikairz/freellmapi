@@ -209,6 +209,7 @@
     "noKey": "kein Schlüssel",
     "dragToReorder": "Zum Neuanordnen ziehen",
     "dragToReorderGroup": "Ziehen Sie, um das Modell neu anzuordnen",
+    "moveToRank": "Zu Rang springen",
     "providerCount": "{count}-Anbieter",
     "servedBy": "Bereitgestellt von {providers}",
     "viewProviders": "Anbieter anzeigen",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} von {total} Anbietern eingerichtet",
     "checklistKeyless": "kein Schlüssel nötig",
     "checklistNoKeyTip": "Noch kein Schlüssel hinzugefügt. Zum Hinzufügen klicken.",
+    "checklistSignupLink": "{provider} öffnen, um ein Konto zu erstellen und einen Schlüssel zu erhalten",
     "checklistKeylessTip": "Funktioniert ohne Schlüssel.",
     "tabQuotaSignals": "Quotensignale",
     "tabApiKey": "Einheitlicher API-Schlüssel",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Leer beginnen",
     "startEmptyHint": "Legt die Kette ohne Modelle an und hält neue Katalogmodelle heraus. Ohne Haken startet sie als Kopie der Standardkette.",
     "curated": "Kuratiert",
-    "curatedHint": "Neue Katalogmodelle werden dieser Kette nicht automatisch hinzugefügt."
+    "curatedHint": "Neue Katalogmodelle werden dieser Kette nicht automatisch hinzugefügt.",
+    "renameHint": "Diese Kette umbenennen",
+    "renameConfirm": "Kette \"{oldName}\" in \"{name}\" umbenennen? Clients, die auto:{oldName} aufrufen, müssen auf auto:{name} wechseln.",
+    "renamePlaceholder": "Neuer Kettenname",
+    "renameFailed": "Die Kette konnte nicht umbenannt werden."
   }
 }

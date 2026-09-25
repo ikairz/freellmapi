@@ -209,6 +209,7 @@
     "noKey": "Без ключ",
     "dragToReorder": "Съпротивление за пренареждане",
     "dragToReorderGroup": "Модел за пренареждане на влачене",
+    "moveToRank": "Към позиция",
     "providerCount": "{count} доставчици",
     "servedBy": "Обслужван от {providers}",
     "viewProviders": "Вижте доставчиците",
@@ -369,6 +370,7 @@
     "checklistSummary": "Настроени са {configured} от {total} доставчици",
     "checklistKeyless": "не е нужен ключ",
     "checklistNoKeyTip": "Все още не е добавен ключ. Щракнете, за да добавите.",
+    "checklistSignupLink": "Отворете {provider}, за да създадете акаунт и да получите ключ",
     "checklistKeylessTip": "Работи без ключ.",
     "tabQuotaSignals": "Квотни сигнали",
     "tabApiKey": "Унифициран API ключ",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Преименувай тази верига",
+    "renameConfirm": "Преименуване на верига \"{oldName}\" на \"{name}\"? Клиенти, извикващи auto:{oldName}, трябва да преминат към auto:{name}.",
+    "renamePlaceholder": "Ново име на веригата",
+    "renameFailed": "Веригата не можа да бъде преименувана."
   }
 }

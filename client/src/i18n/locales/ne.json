@@ -209,6 +209,7 @@
     "noKey": "कुञ्जी छैन",
     "dragToReorder": "पुन: क्रमबद्ध गर्न तान्नुहोस्",
     "dragToReorderGroup": "नमूना पुन: क्रमबद्ध गर्न तान्नुहोस्",
+    "moveToRank": "र्याङ्कमा जानुहोस्",
     "providerCount": "प्रदायकहरू {count} गर्नुहोस्",
     "servedBy": "{providers} द्वारा सेवा गरिएको",
     "viewProviders": "प्रदायक हेर्नुहोस्",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total} मध्ये {configured} प्रदायकहरू कन्फिगर गरिएको",
     "checklistKeyless": "कुञ्जी आवश्यक छैन",
     "checklistNoKeyTip": "अहिलेसम्म कुनै कुञ्जी थपिएको छैन। थप्न क्लिक गर्नुहोस्।",
+    "checklistSignupLink": "खाता बनाउन र कुञ्जी प्राप्त गर्न {provider} खोल्नुहोस्",
     "checklistKeylessTip": "कुञ्जी बिना काम गर्छ।",
     "tabQuotaSignals": "कोटा सङ्केतहरू",
     "tabApiKey": "एकीकृत API कुञ्जी",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "यो चेनको नाम बदल्नुहोस्",
+    "renameConfirm": "चेन \"{oldName}\" को नाम \"{name}\" मा बदल्ने? auto:{oldName} बोलाउने क्लाइन्टहरूले auto:{name} मा जानुपर्छ।",
+    "renamePlaceholder": "नयाँ चेन नाम",
+    "renameFailed": "चेनको नाम बदल्न सकिएन।"
   }
 }

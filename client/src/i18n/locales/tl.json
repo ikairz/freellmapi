@@ -209,6 +209,7 @@
     "noKey": "walang susi",
     "dragToReorder": "I-drag para mag-ayos muli",
     "dragToReorderGroup": "I-drag upang ayusin muli ang modelo",
+    "moveToRank": "Tumalon sa ranggo",
     "providerCount": "{count} mga tagapagbigay",
     "servedBy": "Pinagsilbihan ni {providers}",
     "viewProviders": "Tingnan ang mga provider",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} sa {total} tagapagbigay ang naka-configure",
     "checklistKeyless": "hindi kailangan ng key",
     "checklistNoKeyTip": "Wala pang key na naidagdag. I-click para magdagdag.",
+    "checklistSignupLink": "Buksan ang {provider} upang gumawa ng account at kumuha ng key",
     "checklistKeylessTip": "Gumagana nang walang key.",
     "tabQuotaSignals": "Mga senyales ng quota",
     "tabApiKey": "Pinag-isang API key",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Palitan ang pangalan ng chain na ito",
+    "renameConfirm": "Palitan ang pangalan ng chain \"{oldName}\" sa \"{name}\"? Ang mga client na tumatawag ng auto:{oldName} ay dapat lumipat sa auto:{name}.",
+    "renamePlaceholder": "Bagong pangalan ng chain",
+    "renameFailed": "Hindi mapalitan ang pangalan ng chain."
   }
 }

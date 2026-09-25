@@ -209,6 +209,7 @@
     "noKey": "anahtar yok",
     "dragToReorder": "Yeniden sıralamak için sürükleyin",
     "dragToReorderGroup": "Modeli yeniden sıralamak için sürükleyin",
+    "moveToRank": "Rütbeye git",
     "providerCount": "{count} sağlayıcıları",
     "servedBy": "{providers} tarafından sunulmaktadır",
     "viewProviders": "Sağlayıcıları görüntüle",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total} sağlayıcıdan {configured} tanesi yapılandırıldı",
     "checklistKeyless": "anahtar gerekmez",
     "checklistNoKeyTip": "Henüz anahtar eklenmedi. Eklemek için tıklayın.",
+    "checklistSignupLink": "Hesap oluşturmak ve anahtar almak için {provider} adresini açın",
     "checklistKeylessTip": "Anahtarsız çalışır.",
     "tabQuotaSignals": "Kota sinyalleri",
     "tabApiKey": "Birleşik API anahtarı",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Boş başlat",
     "startEmptyHint": "Zinciri hiç model olmadan oluşturur ve yeni katalog modellerini dışarıda tutar. İşaretlenmezse varsayılan zincirin kopyası olarak başlar.",
     "curated": "Elle düzenli",
-    "curatedHint": "Yeni katalog modelleri bu zincire otomatik eklenmez."
+    "curatedHint": "Yeni katalog modelleri bu zincire otomatik eklenmez.",
+    "renameHint": "Bu zinciri yeniden adlandır",
+    "renameConfirm": "\"{oldName}\" zincirinin adı \"{name}\" olarak değiştirilsin mi? auto:{oldName} çağıran istemciler auto:{name} kullanmalı.",
+    "renamePlaceholder": "Yeni zincir adı",
+    "renameFailed": "Zincir yeniden adlandırılamadı."
   }
 }

@@ -209,6 +209,7 @@
     "noKey": "بدون کلید",
     "dragToReorder": "برای سفارش مجدد بکشید",
     "dragToReorderGroup": "برای سفارش مجدد مدل بکشید",
+    "moveToRank": "پرش به رتبه",
     "providerCount": "ارائه دهندگان {count}",
     "servedBy": "ارائه شده توسط {providers}",
     "viewProviders": "ارائه دهندگان را مشاهده کنید",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} از {total} ارائه‌دهنده پیکربندی شده است",
     "checklistKeyless": "بدون نیاز به کلید",
     "checklistNoKeyTip": "هنوز کلیدی اضافه نشده است. برای افزودن کلیک کنید.",
+    "checklistSignupLink": "{provider} را باز کنید تا حساب بسازید و کلید بگیرید",
     "checklistKeylessTip": "بدون کلید کار می‌کند.",
     "tabQuotaSignals": "سیگنال های سهمیه ای",
     "tabApiKey": "کلید یکپارچه API",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "تغییر نام این زنجیره",
+    "renameConfirm": "نام زنجیره \"{oldName}\" به \"{name}\" تغییر کند؟ کلاینت‌هایی که auto:{oldName} را صدا می‌زنند باید به auto:{name} بروند.",
+    "renamePlaceholder": "نام جدید زنجیره",
+    "renameFailed": "تغییر نام زنجیره انجام نشد."
   }
 }

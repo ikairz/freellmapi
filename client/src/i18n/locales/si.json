@@ -209,6 +209,7 @@
     "noKey": "යතුරක් නැත",
     "dragToReorder": "නැවත ඇණවුම් කිරීමට අදින්න",
     "dragToReorderGroup": "ආකෘතිය නැවත ඇණවුම් කිරීමට අදින්න",
+    "moveToRank": "රැන්ක් එකට යන්න",
     "providerCount": "{count} සපයන්නන්",
     "servedBy": "{providers} විසින් සේවය කරන ලදී",
     "viewProviders": "සපයන්නන් බලන්න",
@@ -369,6 +370,7 @@
     "checklistSummary": "සපයන්නන් {total} දෙනාගෙන් {configured} ක් වින්‍යාස කර ඇත",
     "checklistKeyless": "යතුරක් අවශ්‍ය නැත",
     "checklistNoKeyTip": "තවම යතුරක් එක් කර නැත. එක් කිරීමට ක්ලික් කරන්න.",
+    "checklistSignupLink": "ගණනයක් සාදා යතුරක් ලබා ගැනීමට {provider} විවෘත කරන්න",
     "checklistKeylessTip": "යතුරක් නොමැතිව ක්‍රියා කරයි.",
     "tabQuotaSignals": "කෝටා සංඥා",
     "tabApiKey": "ඒකාබද්ධ API යතුර",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "මෙම දාමයේ නම වෙනස් කරන්න",
+    "renameConfirm": "දාමය \"{oldName}\" හි නම \"{name}\" ලෙස වෙනස් කරන්නද? auto:{oldName} අමතන සේවාදායකයින් auto:{name} වෙත යා යුතුය.",
+    "renamePlaceholder": "නව දාම නම",
+    "renameFailed": "එම දාමයේ නම වෙනස් කළ නොහැකි විය."
   }
 }

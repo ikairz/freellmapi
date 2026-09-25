@@ -209,6 +209,7 @@
     "noKey": "χωρίς κλειδί",
     "dragToReorder": "Σύρετε για αναδιάταξη",
     "dragToReorderGroup": "Σύρετε για να αλλάξετε τη σειρά του μοντέλου",
+    "moveToRank": "Μετάβαση στην κατάταξη",
     "providerCount": "{count} παρόχων",
     "servedBy": "Σερβίρεται από {providers}",
     "viewProviders": "Προβολή παρόχων",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} από {total} παρόχους έχουν ρυθμιστεί",
     "checklistKeyless": "δεν απαιτείται κλειδί",
     "checklistNoKeyTip": "Δεν έχει προστεθεί κλειδί ακόμη. Κάντε κλικ για να προσθέσετε ένα.",
+    "checklistSignupLink": "Ανοίξτε το {provider} για να δημιουργήσετε λογαριασμό και να λάβετε κλειδί",
     "checklistKeylessTip": "Λειτουργεί χωρίς κλειδί.",
     "tabQuotaSignals": "Σήματα ποσοστώσεων",
     "tabApiKey": "Ενοποιημένο κλειδί API",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Μετονομασία αυτής της αλυσίδας",
+    "renameConfirm": "Μετονομασία της αλυσίδας \"{oldName}\" σε \"{name}\"; Οι πελάτες που καλούν auto:{oldName} πρέπει να μεταβούν σε auto:{name}.",
+    "renamePlaceholder": "Νέο όνομα αλυσίδας",
+    "renameFailed": "Δεν ήταν δυνατή η μετονομασία της αλυσίδας."
   }
 }

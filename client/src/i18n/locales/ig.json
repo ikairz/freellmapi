@@ -209,6 +209,7 @@
     "noKey": "enweghị igodo",
     "dragToReorder": "Dọrọ ka ị hazie",
     "dragToReorderGroup": "Dọrọ ka ị hazie ihe nlereanya",
+    "moveToRank": "Gaa na ọkwa",
     "providerCount": "Ndị na-eweta {count}",
     "servedBy": "{providers} na-ejere ya ozi",
     "viewProviders": "Lelee ndị na-eweta ya",
@@ -369,6 +370,7 @@
     "checklistSummary": "Ahaziela {configured} n'ime {total} ndị na-enye ihe",
     "checklistKeyless": "achọghị igodo",
     "checklistNoKeyTip": "Etinyebeghị igodo. Pịa iji tinye otu.",
+    "checklistSignupLink": "Meghe {provider} iji mepụta akaụntụ ma nweta igodo",
     "checklistKeylessTip": "Ọ na-arụ ọrụ na-enweghị igodo.",
     "tabQuotaSignals": "Ngosipụta oke",
     "tabApiKey": "Igodo API jikọtara ọnụ",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Gbanwee aha chain a",
+    "renameConfirm": "Gbanwee aha chain \"{oldName}\" ka ọ bụrụ \"{name}\"? Ndị ahịa na-akpọ auto:{oldName} ga-agbanwe gaa auto:{name}.",
+    "renamePlaceholder": "Aha chain ọhụrụ",
+    "renameFailed": "Enweghị ike ịgbanwe aha chain ahụ."
   }
 }

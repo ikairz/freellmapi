@@ -209,6 +209,7 @@
     "noKey": "გასაღების გარეშე",
     "dragToReorder": "გადაიტანეთ ხელახლა შეკვეთისთვის",
     "dragToReorderGroup": "გადაიტანეთ მოდელის ხელახლა შეკვეთისთვის",
+    "moveToRank": "გადასვლა რანგზე",
     "providerCount": "{count} პროვაიდერები",
     "servedBy": "ემსახურება {providers}",
     "viewProviders": "პროვაიდერების ნახვა",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total}-დან {configured} პროვაიდერი კონფიგურირებულია",
     "checklistKeyless": "გასაღები არ არის საჭირო",
     "checklistNoKeyTip": "გასაღები ჯერ არ დამატებულა. დააწკაპუნეთ დასამატებლად.",
+    "checklistSignupLink": "გახსენით {provider} ანგარიშის შესაქმნელად და გასაღების მისაღებად",
     "checklistKeylessTip": "მუშაობს გასაღების გარეშე.",
     "tabQuotaSignals": "კვოტის სიგნალები",
     "tabApiKey": "ერთიანი API გასაღები",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "ამ ჯაჭვის გადარქმევა",
+    "renameConfirm": "გადარქვათ ჯაჭვს \"{oldName}\" სახელი \"{name}\"? კლიენტებმა, რომლებიც იძახიან auto:{oldName}, უნდა გადავიდნენ auto:{name}-ზე.",
+    "renamePlaceholder": "ახალი ჯაჭვის სახელი",
+    "renameFailed": "ამ ჯაჭვის გადარქმევა ვერ მოხერხდა."
   }
 }

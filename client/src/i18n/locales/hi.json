@@ -209,6 +209,7 @@
     "noKey": "कोई कुंजी नहीं",
     "dragToReorder": "पुनः व्यवस्थित करने के लिए खींचें",
     "dragToReorderGroup": "मॉडल को पुनः व्यवस्थित करने के लिए खींचें",
+    "moveToRank": "रैंक पर जाएँ",
     "providerCount": "{count} प्रदाता",
     "servedBy": "{providers} द्वारा सेवा प्रदान की गई",
     "viewProviders": "प्रदाताओं को देखें",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total} में से {configured} प्रदाता कॉन्फ़िगर किए गए",
     "checklistKeyless": "कुंजी की आवश्यकता नहीं",
     "checklistNoKeyTip": "अभी तक कोई कुंजी नहीं जोड़ी गई। जोड़ने के लिए क्लिक करें।",
+    "checklistSignupLink": "खाता बनाने और कुंजी पाने के लिए {provider} खोलें",
     "checklistKeylessTip": "कुंजी के बिना काम करता है।",
     "tabQuotaSignals": "कोटा संकेत",
     "tabApiKey": "एकीकृत API कुंजी",
@@ -1191,6 +1193,10 @@
     "startEmpty": "खाली शुरू करें",
     "startEmptyHint": "चेन को बिना किसी मॉडल के बनाएँ और नए कैटलॉग मॉडल भी इसमें न जोड़ें। अनचेक करने पर यह डिफ़ॉल्ट चेन की नकल से शुरू होती है।",
     "curated": "हस्तचयनित",
-    "curatedHint": "नए कैटलॉग मॉडल इस चेन में अपने आप नहीं जुड़ते।"
+    "curatedHint": "नए कैटलॉग मॉडल इस चेन में अपने आप नहीं जुड़ते।",
+    "renameHint": "इस चेन का नाम बदलें",
+    "renameConfirm": "चेन \"{oldName}\" का नाम \"{name}\" करें? auto:{oldName} कॉल करने वाले क्लाइंट्स को auto:{name} पर जाना होगा।",
+    "renamePlaceholder": "नया चेन नाम",
+    "renameFailed": "चेन का नाम नहीं बदला जा सका।"
   }
 }

@@ -209,6 +209,7 @@
     "noKey": "brak klucza",
     "dragToReorder": "Przeciągnij, aby zmienić kolejność",
     "dragToReorderGroup": "Przeciągnij, aby zmienić kolejność modelu",
+    "moveToRank": "Przejdź do rangi",
     "providerCount": "Dostawcy {count}",
     "servedBy": "Obsługiwane przez {providers}",
     "viewProviders": "Zobacz dostawców",
@@ -369,6 +370,7 @@
     "checklistSummary": "Skonfigurowano {configured} z {total} dostawców",
     "checklistKeyless": "klucz niepotrzebny",
     "checklistNoKeyTip": "Nie dodano jeszcze klucza. Kliknij, aby dodać.",
+    "checklistSignupLink": "Otwórz {provider}, aby utworzyć konto i uzyskać klucz",
     "checklistKeylessTip": "Działa bez klucza.",
     "tabQuotaSignals": "Sygnały kwotowe",
     "tabApiKey": "Ujednolicony klucz API",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Zacznij pusty",
     "startEmptyHint": "Tworzy łańcuch bez modeli i nie dodaje do niego nowych modeli z katalogu. Bez zaznaczenia zaczyna jako kopia łańcucha domyślnego.",
     "curated": "Ręczny",
-    "curatedHint": "Nowe modele z katalogu nie są automatycznie dodawane do tego łańcucha."
+    "curatedHint": "Nowe modele z katalogu nie są automatycznie dodawane do tego łańcucha.",
+    "renameHint": "Zmień nazwę tego łańcucha",
+    "renameConfirm": "Zmienić nazwę łańcucha \"{oldName}\" na \"{name}\"? Klienci wywołujący auto:{oldName} muszą przejść na auto:{name}.",
+    "renamePlaceholder": "Nowa nazwa łańcucha",
+    "renameFailed": "Nie udało się zmienić nazwy łańcucha."
   }
 }

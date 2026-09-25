@@ -209,6 +209,7 @@
     "noKey": "không có chìa khóa",
     "dragToReorder": "Kéo để sắp xếp lại",
     "dragToReorderGroup": "Kéo để sắp xếp lại mô hình",
+    "moveToRank": "Nhảy đến hạng",
     "providerCount": "Nhà cung cấp {count}",
     "servedBy": "Được phục vụ bởi {providers}",
     "viewProviders": "Xem nhà cung cấp",
@@ -369,6 +370,7 @@
     "checklistSummary": "Đã cấu hình {configured} trong {total} nhà cung cấp",
     "checklistKeyless": "không cần khóa",
     "checklistNoKeyTip": "Chưa thêm khóa nào. Nhấp để thêm.",
+    "checklistSignupLink": "Mở {provider} để tạo tài khoản và lấy khóa",
     "checklistKeylessTip": "Hoạt động mà không cần khóa.",
     "tabQuotaSignals": "tín hiệu hạn ngạch",
     "tabApiKey": "Khóa API hợp nhất",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Bắt đầu rỗng",
     "startEmptyHint": "Tạo chuỗi không có mô hình nào và không tự thêm mô hình mới từ danh mục. Bỏ chọn thì chuỗi bắt đầu như bản sao của chuỗi mặc định.",
     "curated": "Tự chọn",
-    "curatedHint": "Mô hình mới trong danh mục không được thêm tự động vào chuỗi này."
+    "curatedHint": "Mô hình mới trong danh mục không được thêm tự động vào chuỗi này.",
+    "renameHint": "Đổi tên chuỗi này",
+    "renameConfirm": "Đổi tên chuỗi \"{oldName}\" thành \"{name}\"? Các client gọi auto:{oldName} phải chuyển sang auto:{name}.",
+    "renamePlaceholder": "Tên chuỗi mới",
+    "renameFailed": "Không thể đổi tên chuỗi."
   }
 }

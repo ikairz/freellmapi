@@ -209,6 +209,7 @@
     "noKey": "ቁልፍ የለም",
     "dragToReorder": "እንደገና ለማዘዝ ይጎትቱ",
     "dragToReorderGroup": "ሞዴሉን እንደገና ለማዘዝ ይጎትቱ",
+    "moveToRank": "ወደ ደረጃ ዘልለው",
     "providerCount": "{count} አቅራቢዎች",
     "servedBy": "በ {providers} አገልግሏል",
     "viewProviders": "አቅራቢዎችን ይመልከቱ",
@@ -369,6 +370,7 @@
     "checklistSummary": "ከ{total} አቅራቢዎች {configured} ተዋቅረዋል",
     "checklistKeyless": "ቁልፍ አያስፈልግም",
     "checklistNoKeyTip": "እስካሁን ቁልፍ አልታከለም። ለመጨመር ጠቅ ያድርጉ።",
+    "checklistSignupLink": "መለያ ለመፍጠር እና ቁልፍ ለማግኘት {provider} ክፈት",
     "checklistKeylessTip": "ያለ ቁልፍ ይሠራል።",
     "tabQuotaSignals": "የኮታ ምልክቶች",
     "tabApiKey": "የተዋሃደ API ቁልፍ",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "የዚህ ሰንሰለት ስም ቀይር",
+    "renameConfirm": "ሰንሰለት \"{oldName}\" ስሙን ወደ \"{name}\" ቀይር? auto:{oldName} የሚጠሩ ደንበኞች ወደ auto:{name} ማለፍ አለባቸው።",
+    "renamePlaceholder": "አዲስ የሰንሰለት ስም",
+    "renameFailed": "የሰንሰለቱን ስም መቀየር አልተቻለም።"
   }
 }

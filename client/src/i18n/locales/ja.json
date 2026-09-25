@@ -209,6 +209,7 @@
     "noKey": "鍵がありません",
     "dragToReorder": "ドラッグして並べ替えます",
     "dragToReorderGroup": "ドラッグしてモデルを並べ替えます",
+    "moveToRank": "ランクへ移動",
     "providerCount": "{count}プロバイダー",
     "servedBy": "{providers}が提供",
     "viewProviders": "プロバイダーを表示する",
@@ -369,6 +370,7 @@
     "checklistSummary": "{total}件中{configured}件のプロバイダーを設定済み",
     "checklistKeyless": "キー不要",
     "checklistNoKeyTip": "キーがまだ追加されていません。クリックして追加します。",
+    "checklistSignupLink": "アカウントを作成してキーを取得するには {provider} を開きます",
     "checklistKeylessTip": "キーなしで利用できます。",
     "tabQuotaSignals": "クォータ信号",
     "tabApiKey": "統一されたAPIキー",
@@ -1191,6 +1193,10 @@
     "startEmpty": "空の状態で作成",
     "startEmptyHint": "モデルを入れずにチェーンを作り、新しいカタログモデルも自動では追加しません。チェックを外すと既定のチェーンの複製になります。",
     "curated": "手動管理",
-    "curatedHint": "新しいカタログモデルはこのチェーンに自動追加されません。"
+    "curatedHint": "新しいカタログモデルはこのチェーンに自動追加されません。",
+    "renameHint": "このチェーンの名前を変更",
+    "renameConfirm": "チェーン「{oldName}」を「{name}」に名前を変更しますか？ auto:{oldName} を呼び出しているクライアントは auto:{name} に切り替える必要があります。",
+    "renamePlaceholder": "新しいチェーン名",
+    "renameFailed": "チェーンの名前を変更できませんでした。"
   }
 }

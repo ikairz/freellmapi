@@ -209,6 +209,7 @@
     "noKey": "nessuna chiave",
     "dragToReorder": "Trascina per riordinare",
     "dragToReorderGroup": "Trascina per riordinare il modello",
+    "moveToRank": "Vai alla posizione",
     "providerCount": "{count} fornitori",
     "servedBy": "Servito da {providers}",
     "viewProviders": "Vedi fornitori",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} fornitori su {total} configurati",
     "checklistKeyless": "nessuna chiave richiesta",
     "checklistNoKeyTip": "Nessuna chiave aggiunta. Clicca per aggiungerne una.",
+    "checklistSignupLink": "Apri {provider} per creare un account e ottenere una chiave",
     "checklistKeylessTip": "Funziona senza chiave.",
     "tabQuotaSignals": "Segnali quota",
     "tabApiKey": "Chiave API unificata",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Inizia vuota",
     "startEmptyHint": "Crea la catena senza modelli e tiene fuori i nuovi modelli del catalogo. Se non selezionato, parte come copia della catena predefinita.",
     "curated": "Curata",
-    "curatedHint": "I nuovi modelli del catalogo non vengono aggiunti automaticamente a questa catena."
+    "curatedHint": "I nuovi modelli del catalogo non vengono aggiunti automaticamente a questa catena.",
+    "renameHint": "Rinomina questa catena",
+    "renameConfirm": "Rinominare la catena \"{oldName}\" in \"{name}\"? I client che chiamano auto:{oldName} devono passare a auto:{name}.",
+    "renamePlaceholder": "Nuovo nome della catena",
+    "renameFailed": "Impossibile rinominare la catena."
   }
 }

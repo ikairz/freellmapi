@@ -209,6 +209,7 @@
     "noKey": "aucune clé",
     "dragToReorder": "Glisser pour réordonner",
     "dragToReorderGroup": "Glisser pour réorganiser le modèle",
+    "moveToRank": "Aller au rang",
     "providerCount": "{count} fournisseurs",
     "servedBy": "Fourni par {providers}",
     "viewProviders": "Voir les fournisseurs",
@@ -369,6 +370,7 @@
     "checklistSummary": "{configured} fournisseurs sur {total} configurés",
     "checklistKeyless": "aucune clé requise",
     "checklistNoKeyTip": "Aucune clé ajoutée pour l'instant. Cliquez pour en ajouter une.",
+    "checklistSignupLink": "Ouvrir {provider} pour créer un compte et obtenir une clé",
     "checklistKeylessTip": "Fonctionne sans clé.",
     "tabQuotaSignals": "Signaux de quota",
     "tabApiKey": "Clé d'API unifiée",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Démarrer vide",
     "startEmptyHint": "Crée la chaîne sans aucun modèle et en tient les nouveaux modèles du catalogue à l'écart. Décoché, elle démarre comme une copie de la chaîne par défaut.",
     "curated": "Curatée",
-    "curatedHint": "Les nouveaux modèles du catalogue ne sont pas ajoutés automatiquement à cette chaîne."
+    "curatedHint": "Les nouveaux modèles du catalogue ne sont pas ajoutés automatiquement à cette chaîne.",
+    "renameHint": "Renommer cette chaîne",
+    "renameConfirm": "Renommer la chaîne « {oldName} » en « {name} » ? Les clients appelant auto:{oldName} doivent passer à auto:{name}.",
+    "renamePlaceholder": "Nouveau nom de la chaîne",
+    "renameFailed": "Impossible de renommer cette chaîne."
   }
 }

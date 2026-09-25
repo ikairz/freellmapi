@@ -209,6 +209,7 @@
     "noKey": "без кључа",
     "dragToReorder": "Превуците да бисте променили редослед",
     "dragToReorderGroup": "Превуците да бисте променили редослед модела",
+    "moveToRank": "Скочи на ранг",
     "providerCount": "{count} провајдери",
     "servedBy": "Служи {providers}",
     "viewProviders": "Погледајте добављаче",
@@ -369,6 +370,7 @@
     "checklistSummary": "Подешено {configured} од {total} провајдера",
     "checklistKeyless": "кључ није потребан",
     "checklistNoKeyTip": "Кључ још није додат. Кликните да бисте га додали.",
+    "checklistSignupLink": "Отворите {provider} да бисте направили налог и добили кључ",
     "checklistKeylessTip": "Ради без кључа.",
     "tabQuotaSignals": "Квотни сигнали",
     "tabApiKey": "Обједињени кључ API",
@@ -1191,6 +1193,10 @@
     "startEmpty": "Start empty",
     "startEmptyHint": "Create the chain with no models in it, and keep new catalog models out of it. Unchecked, it starts as a copy of the default chain.",
     "curated": "Curated",
-    "curatedHint": "New catalog models are not added to this chain automatically."
+    "curatedHint": "New catalog models are not added to this chain automatically.",
+    "renameHint": "Преименуј овај ланац",
+    "renameConfirm": "Преименовати ланац „{oldName}“ у „{name}“? Клијенти који зову auto:{oldName} морају прећи на auto:{name}.",
+    "renamePlaceholder": "Нови назив ланца",
+    "renameFailed": "Није могуће преименовати тај ланац."
   }
 }
