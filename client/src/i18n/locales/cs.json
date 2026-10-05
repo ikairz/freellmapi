@@ -224,6 +224,7 @@
     "settingsHint": "Lokální úpravy katalogových modelů jsou uchovávány napříč synchronizacemi katalogu. Smazané katalogové modely zůstávají smazané, dokud je znovu nepřidáte přes konfiguraci.",
     "catalogModel": "Katalog",
     "customModel": "Zvyk",
+    "discoveredModel": "nalezený",
     "localOverride": "Místní přepsání",
     "displayName": "Zobrazovací název",
     "sizeLabel": "Úroveň schopností",
@@ -497,11 +498,11 @@
     "platform": "Platforma",
     "hideAdded": "Skrýt přidané poskytovatele",
     "apiToken": "API žeton",
-    "noKeyNeededPlaceholder": "Klíč API není potřeba",
+    "keyOptionalPlaceholder": "Volitelné",
     "bearerTokenPlaceholder": "Token na doručitele",
     "pasteKeyPlaceholder": "Vložte zde klíč",
     "pasteSeveral": "Vložit více",
-    "keylessHint": "Není potřeba API klíč: bezplatná úroveň tohoto poskytovatele je anonymní (omezená rychlostí na IP adresu).",
+    "keyOptionalHint": "Volitelné: nechte prázdné pro anonymní bezplatnou úroveň (omezení na IP), nebo vložte vlastní klíč a použijte svůj účet.",
     "enable": "Povolit",
     "noProviderKeys": "Klíče od poskytovatele zatím neexistují. Přidejte jeden výše, abyste mohli začít směrovat.",
     "filterPlaceholder": "Poskytovatelé filtrů nebo klíče",
@@ -679,7 +680,12 @@
     "testFailed": "Test modelu selhal",
     "testThrottled": "Před dalším testem tohoto modelu počkejte {seconds} s.",
     "noModelsForProvider": "Pro tohoto poskytovatele nejsou nakonfigurovány žádné modely.",
-    "testModels": "Otestovat modely"
+    "testModels": "Otestovat modely",
+    "monthlyRequestCapLabel": "Měsíční limit požadavků",
+    "monthlyTokenCapLabel": "Měsíční limit tokenů",
+    "capUnlimitedPlaceholder": "Neomezeno",
+    "capEditHint": "Limity se resetují 1. dne v 00:00 UTC. Nechte prázdné pro neomezeno.",
+    "monthlyUsageLine": "{requests} požadavků, {tokens} tokenů tento měsíc"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "Osobní asistent, který je neustále k dispozici a z vašeho vlastního počítače odpovídá v aplikacích WhatsApp, Telegram, Discord a dalších.",
-      "hermes": "Samozdokonalující se agent od Nous Research s trvalou pamětí a dovednostmi, v terminálu nebo v chatovacích aplikacích."
+      "hermes": "Samozdokonalující se agent od Nous Research s trvalou pamětí a dovednostmi, v terminálu nebo v chatovacích aplikacích.",
+      "pi": "Minimalistický terminálový agent, který si přizpůsobíte vlastními rozšířeními, dovednostmi a šablonami promptů."
     }
   },
   "update": {

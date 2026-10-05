@@ -224,6 +224,7 @@
     "settingsHint": "A na-edowe ndezi mpaghara na ụdị katalọgụ n'ofe mmekọrịta katalọgụ. Ụdị katalọgụ ehichapụrụ na-anọ na-ehichapụ ruo mgbe ị gbakwunyere ha ọzọ site na nhazi.",
     "catalogModel": "katalọgụ",
     "customModel": "omenala",
+    "discoveredModel": "achọpụtara",
     "localOverride": "mkpochapụ mpaghara",
     "displayName": "Aha ngosi",
     "sizeLabel": "Ọkwa ikike",
@@ -497,11 +498,11 @@
     "platform": "Platform",
     "hideAdded": "Zoo ndị na-eweta agbakwunyere",
     "apiToken": "API akara ngosi",
-    "noKeyNeededPlaceholder": "Enweghị igodo API achọrọ",
+    "keyOptionalPlaceholder": "Nhọrọ",
     "bearerTokenPlaceholder": "Ihe nrịbama ebu",
     "pasteKeyPlaceholder": "mado igodo ebe a",
     "pasteSeveral": "Mado ọtụtụ",
-    "keylessHint": "Enweghị igodo API achọrọ: ọkwa n'efu nke onye na-eweta nke a bụ nke amaghị aha (oke-oke IP ọ bụla).",
+    "keyOptionalHint": "Nhọrọ: hapụ ya efu maka ọkwa efu na-enweghị aha (oke ọnụego kwa IP), ma ọ bụ mado igodo nke gị iji jiri akaụntụ gị.",
     "enable": "Kwado",
     "noProviderKeys": "Enweghị igodo ndị na-eweta ya. Tinye otu n'elu ka ịmalite ịkwọgharị.",
     "filterPlaceholder": "Ndị na-eweta ma ọ bụ igodo",
@@ -679,7 +680,12 @@
     "testFailed": "Nnwale ụdị dara",
     "testThrottled": "Biko chere {seconds}s tupu ị nwalee ụdị a ọzọ.",
     "noModelsForProvider": "Enweghị ụdị ahaziri maka onye na-enye ọrụ a.",
-    "testModels": "Nwalee ụdị"
+    "testModels": "Nwalee ụdị",
+    "monthlyRequestCapLabel": "Oke arịrịọ ọnwa",
+    "monthlyTokenCapLabel": "Oke token ọnwa",
+    "capUnlimitedPlaceholder": "Enweghị oke",
+    "capEditHint": "A na-ebugharị oke ụbọchị nke 1, 00:00 UTC. Hapụ oghere maka enweghị oke.",
+    "monthlyUsageLine": "Arịrịọ {requests}, token {tokens} ọnwa a"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "Onye enyemaka nkeonwe na-arụ ọrụ mgbe niile, nke na-aza na WhatsApp, Telegram, Discord na ndị ọzọ site na igwe nke gị.",
-      "hermes": "Onye ọrụ Nous Research na-emeziwanye onwe ya, nwere ebe nchekwa na-adịgide na nkà, na terminal ma ọ bụ na ngwa mkparịta ụka."
+      "hermes": "Onye ọrụ Nous Research na-emeziwanye onwe ya, nwere ebe nchekwa na-adịgide na nkà, na terminal ma ọ bụ na ngwa mkparịta ụka.",
+      "pi": "Obere onye ọrụ terminal ị na-akpụ site na ndọtị, nkà na ndebiri ajụjụ nke gị."
     }
   },
   "update": {

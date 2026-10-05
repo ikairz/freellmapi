@@ -15,6 +15,11 @@ import { recordQuotaObservationsFromResponse, type QuotaObservationContext } fro
 import { providerTimeoutMs } from '../lib/provider-timeout.js';
 import { isAbortLikeError } from '../lib/error-classify.js';
 import { contentToString } from '../lib/content.js';
+import { bearerAuthHeader } from '../lib/credential.js';
+
+// Shared with the media/embeddings custom-endpoint paths; re-exported so
+// existing imports keep working (#1331).
+export { isAnonymousCredential } from '../lib/credential.js';
 
 /** Hosts that ARE Moonshot's OpenAI-compatible API (api.moonshot.ai,
  * api.moonshot.cn, api.kimi.com and their subdomains). */
@@ -162,11 +167,16 @@ export class OpenAICompatProvider extends BaseProvider {
     return res.statusText;
   }
 
-  /** Keyless providers (Kilo's anonymous free tier) must send NO Authorization
-   * header — a stored sentinel like `Bearer no-key` could be treated as an
-   * invalid key. Everyone else sends the bearer as usual. */
+  /** Anonymous access sends NO Authorization header: keyless providers
+   * (Kilo's anonymous free tier) holding the stored `no-key` sentinel, and
+   * custom endpoints whose stored credential is the same sentinel with auth
+   * off. Sending `Bearer no-key` upstream is never right — upstreams read it
+   * as an invalid key. A REAL key saved on a keyless platform is used instead
+   * of the anonymous path, and a real key on a custom endpoint still gets its
+   * bearer (#1331): the presence of a credential decides at request time —
+   * Kilo, OVH and AI Horde all accept both modes per their docs. */
   private authHeader(apiKey: string): Record<string, string> {
-    return this.keyless ? {} : { 'Authorization': `Bearer ${apiKey}` };
+    return bearerAuthHeader(apiKey);
   }
 
   /** Requesty's Leanstral route rejects greedy sampling when temperature=0.

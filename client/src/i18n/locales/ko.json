@@ -224,6 +224,7 @@
     "settingsHint": "카탈로그 모델에 대한 로컬 편집 내용은 카탈로그 동기화 전반에 걸쳐 유지됩니다. 삭제된 카탈로그 모델은 구성을 통해 다시 추가할 때까지 삭제된 상태로 유지됩니다.",
     "catalogModel": "카탈로그",
     "customModel": "관습",
+    "discoveredModel": "검색됨",
     "localOverride": "로컬 재정의",
     "displayName": "표시 이름",
     "sizeLabel": "역량 티어",
@@ -497,11 +498,11 @@
     "platform": "플랫폼",
     "hideAdded": "추가된 제공업체 숨기기",
     "apiToken": "API 토큰",
-    "noKeyNeededPlaceholder": "API 키가 필요하지 않습니다.",
+    "keyOptionalPlaceholder": "선택 사항",
     "bearerTokenPlaceholder": "무기명 토큰",
     "pasteKeyPlaceholder": "여기에 키를 붙여넣으세요",
     "pasteSeveral": "여러 개 붙여넣기",
-    "keylessHint": "API 키가 필요하지 않습니다. 이 공급자의 무료 등급은 익명입니다(IP당 속도 제한).",
+    "keyOptionalHint": "선택 사항: 비워 두면 익명 무료 등급(IP별 속도 제한)을 사용합니다. 본인 계정을 사용하려면 키를 붙여넣으세요.",
     "enable": "활성화",
     "noProviderKeys": "아직 제공업체 키가 없습니다. 라우팅을 시작하려면 위에 하나를 추가하세요.",
     "filterPlaceholder": "필터 공급자 또는 키",
@@ -679,7 +680,12 @@
     "testFailed": "모델 테스트에 실패했습니다",
     "testThrottled": "이 모델을 다시 테스트하기 전에 {seconds}초 동안 기다려 주세요.",
     "noModelsForProvider": "이 제공자에 구성된 모델이 없습니다.",
-    "testModels": "모델 테스트"
+    "testModels": "모델 테스트",
+    "monthlyRequestCapLabel": "월 요청 한도",
+    "monthlyTokenCapLabel": "월 토큰 한도",
+    "capUnlimitedPlaceholder": "무제한",
+    "capEditHint": "한도는 매월 1일 00:00 UTC에 초기화됩니다. 무제한이려면 비워 두세요.",
+    "monthlyUsageLine": "이번 달 요청 {requests}회, 토큰 {tokens}"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "OpenAI API를 쓰는 다른 모든 도구. 기본 URL과 키로 직접 설정합니다.",
       "atomcode": "AtomGit의 터미널 에이전트. Rust로 작성되었으며 OpenAI 호환 엔드포인트를 모두 받습니다.",
       "openclaw": "내 컴퓨터에서 WhatsApp, Telegram, Discord 등으로 응답하는 상시 가동 개인 비서입니다.",
-      "hermes": "Nous Research의 자기 개선형 에이전트. 지속되는 메모리와 스킬을 갖추고 터미널이나 채팅 앱에서 사용할 수 있습니다."
+      "hermes": "Nous Research의 자기 개선형 에이전트. 지속되는 메모리와 스킬을 갖추고 터미널이나 채팅 앱에서 사용할 수 있습니다.",
+      "pi": "직접 만든 확장, 스킬, 프롬프트 템플릿으로 다듬어 쓰는 미니멀한 터미널 에이전트."
     }
   },
   "update": {

@@ -224,6 +224,7 @@
     "settingsHint": "對目錄模型的本地修改會在目錄同步後保留。已刪除的目錄模型會保持刪除狀態，直到您透過設定重新新增。",
     "catalogModel": "目錄",
     "customModel": "自訂",
+    "discoveredModel": "已發現",
     "localOverride": "本地覆蓋",
     "displayName": "顯示名稱",
     "sizeLabel": "能力檔位",
@@ -501,11 +502,11 @@
     "platform": "平台",
     "hideAdded": "隱藏已新增的提供者",
     "apiToken": "API Token",
-    "noKeyNeededPlaceholder": "無需 API 金鑰",
+    "keyOptionalPlaceholder": "選填",
     "bearerTokenPlaceholder": "Bearer Token",
     "pasteKeyPlaceholder": "在此貼上金鑰",
     "pasteSeveral": "貼上多個",
-    "keylessHint": "無需 API 金鑰：該提供者的免費層是匿名的（按 IP 限制速率）。",
+    "keyOptionalHint": "選填：留空則使用匿名免費方案（依 IP 限速），或貼上您自己的金鑰以使用您的帳戶。",
     "enable": "啟用",
     "noProviderKeys": "尚無提供者金鑰。在上方新增一個即可開始路由。",
     "filterPlaceholder": "篩選提供者或金鑰",
@@ -679,7 +680,12 @@
     "testFailed": "模型測試失敗",
     "testThrottled": "請等待 {seconds} 秒後再測試此模型。",
     "noModelsForProvider": "此提供商尚未設定任何模型。",
-    "testModels": "測試模型"
+    "testModels": "測試模型",
+    "monthlyRequestCapLabel": "每月請求上限",
+    "monthlyTokenCapLabel": "每月 Token 上限",
+    "capUnlimitedPlaceholder": "無限制",
+    "capEditHint": "配額在每月 1 日 00:00 UTC 重設。留空表示無限制。",
+    "monthlyUsageLine": "本月 {requests} 次請求，{tokens} tokens"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "一個常駐運作的個人助理，從你自己的機器上透過 WhatsApp、Telegram、Discord 等回應。",
-      "hermes": "Nous Research 的自我改進代理，具備持久記憶與技能，可在終端機或聊天應用程式中使用。"
+      "hermes": "Nous Research 的自我改進代理，具備持久記憶與技能，可在終端機或聊天應用程式中使用。",
+      "pi": "一個極簡的終端機代理，用你自己的擴充功能、技能與提示詞範本來塑造它。"
     }
   },
   "update": {

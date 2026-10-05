@@ -224,6 +224,7 @@
     "settingsHint": "क्याटलग मोडेलहरूमा स्थानीय सम्पादनहरू क्याटलग समक्रमणहरूमा राखिन्छ। मेटाइएको क्याटलग मोडेलहरू मेटिन्छन् जबसम्म तपाईं तिनीहरूलाई कन्फिगरेसन मार्फत फेरि थप्नुहुन्न।",
     "catalogModel": "विवरणिका",
     "customModel": "अनुकूल",
+    "discoveredModel": "पत्ता लागेको",
     "localOverride": "स्थानीय अधिरोहण",
     "displayName": "नाम प्रदर्शन गर्नुहोस्",
     "sizeLabel": "क्षमता तह",
@@ -497,11 +498,11 @@
     "platform": "प्लेटफर्म",
     "hideAdded": "थपिएका प्रदायकहरू लुकाउनुहोस्",
     "apiToken": "API टोकन",
-    "noKeyNeededPlaceholder": "कुनै API कुञ्जी आवश्यक पर्दैन",
+    "keyOptionalPlaceholder": "वैकल्पिक",
     "bearerTokenPlaceholder": "वाहक टोकन",
     "pasteKeyPlaceholder": "यहाँ कुञ्जी टाँस्नुहोस्",
     "pasteSeveral": "धेरै टाँस्नुहोस्",
-    "keylessHint": "कुनै API कुञ्जी आवश्यक छैन: यस प्रदायकको नि: शुल्क स्तर अज्ञात छ (प्रति आईपी दर-सीमित)।",
+    "keyOptionalHint": "वैकल्पिक: अज्ञात निःशुल्क तहका लागि खाली छोड्नुहोस् (प्रति IP दर-सीमित), वा आफ्नो खाता प्रयोग गर्न आफ्नै कुञ्जी टाँस्नुहोस्।",
     "enable": "सक्षम पार्नुहोस्",
     "noProviderKeys": "अहिले सम्म प्रदायक कुञ्जी छैन । मार्ग सुरु गर्न माथि एउटा थप्नुहोस्।",
     "filterPlaceholder": "प्रदायक वा कुञ्जीहरू फिल्टर गर्नुहोस्",
@@ -679,7 +680,12 @@
     "testFailed": "मोडेल परीक्षण असफल भयो",
     "testThrottled": "कृपया यो मोडेल पुन: परीक्षण गर्नु अघि {seconds} सेकेन्ड पर्खनुहोस्।",
     "noModelsForProvider": "यस प्रदायकको लागि कुनै मोडेल कन्फिगर गरिएको छैन।",
-    "testModels": "मोडेलहरू परीक्षण गर्नुहोस्"
+    "testModels": "मोडेलहरू परीक्षण गर्नुहोस्",
+    "monthlyRequestCapLabel": "मासिक अनुरोध सीमा",
+    "monthlyTokenCapLabel": "मासिक टोकन सीमा",
+    "capUnlimitedPlaceholder": "असीमित",
+    "capEditHint": "सीमा हरेक महिनाको १ गते ००:०० UTC मा रिसेट हुन्छ। असीमितका लागि खाली राख्नुहोस्।",
+    "monthlyUsageLine": "यस महिना {requests} अनुरोध, {tokens} टोकन"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "तपाईंको आफ्नै मेसिनबाट WhatsApp, Telegram, Discord र अन्यमा जवाफ दिने, सधैं चालु रहने व्यक्तिगत सहायक।",
-      "hermes": "Nous Research को आफैं सुधारिने एजेन्ट, स्थायी मेमोरी र सीपहरूसहित, टर्मिनलमा वा च्याट एपहरूमा।"
+      "hermes": "Nous Research को आफैं सुधारिने एजेन्ट, स्थायी मेमोरी र सीपहरूसहित, टर्मिनलमा वा च्याट एपहरूमा।",
+      "pi": "एक न्यूनतम टर्मिनल एजेन्ट, जसलाई तपाईं आफ्नै एक्सटेन्सन, सीप र प्रम्प्ट टेम्प्लेटले आकार दिनुहुन्छ।"
     }
   },
   "update": {

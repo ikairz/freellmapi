@@ -224,6 +224,7 @@
     "settingsHint": "ਕੈਟਾਲਾਗ ਮਾਡਲਾਂ ਦੇ ਸਥਾਨਕ ਸੰਪਾਦਨਾਂ ਨੂੰ ਕੈਟਾਲਾਗ ਸਮਕਾਲੀਕਰਨ ਵਿੱਚ ਰੱਖਿਆ ਜਾਂਦਾ ਹੈ। ਮਿਟਾਏ ਗਏ ਕੈਟਾਲਾਗ ਮਾਡਲ ਉਦੋਂ ਤੱਕ ਮਿਟਾਏ ਜਾਂਦੇ ਹਨ ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਨੂੰ ਸੰਰਚਨਾ ਰਾਹੀਂ ਦੁਬਾਰਾ ਨਹੀਂ ਜੋੜਦੇ।",
     "catalogModel": "ਕੈਟਾਲਾਗ",
     "customModel": "ਕਸਟਮ",
+    "discoveredModel": "ਲੱਭਿਆ ਗਿਆ",
     "localOverride": "ਸਥਾਨਕ ਓਵਰਰਾਈਡ",
     "displayName": "ਡਿਸਪਲੇ ਨਾਮ",
     "sizeLabel": "ਸਮਰੱਥਾ ਪੱਧਰ",
@@ -497,11 +498,11 @@
     "platform": "ਪਲੇਟਫਾਰਮ",
     "hideAdded": "ਸ਼ਾਮਲ ਕੀਤੇ ਪ੍ਰਦਾਤਾ ਲੁਕਾਓ",
     "apiToken": "API ਟੋਕਨ",
-    "noKeyNeededPlaceholder": "API ਕੁੰਜੀ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ",
+    "keyOptionalPlaceholder": "ਵਿਕਲਪਿਕ",
     "bearerTokenPlaceholder": "ਬੇਅਰਰ ਟੋਕਨ",
     "pasteKeyPlaceholder": "ਇੱਥੇ ਕੁੰਜੀ ਪੇਸਟ ਕਰੋ",
     "pasteSeveral": "ਕਈ ਪੇਸਟ ਕਰੋ",
-    "keylessHint": "ਕੋਈ API ਕੁੰਜੀ ਦੀ ਲੋੜ ਨਹੀਂ: ਇਸ ਪ੍ਰਦਾਤਾ ਦਾ ਮੁਫਤ ਟੀਅਰ ਅਗਿਆਤ ਹੈ (ਦਰ-ਸੀਮਤ ਪ੍ਰਤੀ IP)।",
+    "keyOptionalHint": "ਵਿਕਲਪਿਕ: ਗੁਮਨਾਮ ਮੁਫ਼ਤ ਪੱਧਰ ਲਈ ਖਾਲੀ ਛੱਡੋ (ਪ੍ਰਤੀ IP ਦਰ-ਸੀਮਤ), ਜਾਂ ਆਪਣਾ ਖਾਤਾ ਵਰਤਣ ਲਈ ਆਪਣੀ ਕੁੰਜੀ ਪੇਸਟ ਕਰੋ।",
     "enable": "ਯੋਗ ਕਰੋ",
     "noProviderKeys": "ਅਜੇ ਤੱਕ ਕੋਈ ਪ੍ਰਦਾਤਾ ਕੁੰਜੀਆਂ ਨਹੀਂ ਹਨ। ਰੂਟਿੰਗ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਉੱਪਰ ਇੱਕ ਜੋੜੋ।",
     "filterPlaceholder": "ਫਿਲਟਰ ਪ੍ਰਦਾਤਾ ਜਾਂ ਕੁੰਜੀਆਂ",
@@ -679,7 +680,12 @@
     "testFailed": "ਮਾਡਲ ਟੈਸਟ ਅਸਫਲ ਰਿਹਾ",
     "testThrottled": "ਇਸ ਮਾਡਲ ਦੀ ਦੁਬਾਰਾ ਜਾਂਚ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਕਿਰਪਾ ਕਰਕੇ {seconds} ਸਕਿੰਟ ਉਡੀਕ ਕਰੋ।",
     "noModelsForProvider": "ਇਸ ਪ੍ਰਦਾਤਾ ਲਈ ਕੋਈ ਮਾਡਲ ਕੌਂਫਿਗਰ ਨਹੀਂ ਕੀਤਾ ਗਿਆ ਹੈ।",
-    "testModels": "ਮਾਡਲ ਟੈਸਟ ਕਰੋ"
+    "testModels": "ਮਾਡਲ ਟੈਸਟ ਕਰੋ",
+    "monthlyRequestCapLabel": "ਮਹੀਨਾਵਾਰੀ ਬੇਨਤੀ ਸੀਮਾ",
+    "monthlyTokenCapLabel": "ਮਹੀਨਾਵਾਰੀ ਟੋਕਨ ਸੀਮਾ",
+    "capUnlimitedPlaceholder": "ਅਸੀਮਤ",
+    "capEditHint": "ਸੀਮਾਵਾਂ ਹਰ ਮਹੀਨੇ 1 ਤਾਰੀਖ਼ ਨੂੰ 00:00 UTC 'ਤੇ ਰੀਸੈੱਟ ਹੁੰਦੀਆਂ ਹਨ। ਅਸੀਮਤ ਲਈ ਖਾਲੀ ਛੱਡੋ।",
+    "monthlyUsageLine": "ਇਸ ਮਹੀਨੇ {requests} ਬੇਨਤੀਆਂ, {tokens} ਟੋਕਨ"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "ਇੱਕ ਹਮੇਸ਼ਾ ਚਾਲੂ ਰਹਿਣ ਵਾਲਾ ਨਿੱਜੀ ਸਹਾਇਕ ਜੋ ਤੁਹਾਡੀ ਆਪਣੀ ਮਸ਼ੀਨ ਤੋਂ WhatsApp, Telegram, Discord ਅਤੇ ਹੋਰਾਂ 'ਤੇ ਜਵਾਬ ਦਿੰਦਾ ਹੈ।",
-      "hermes": "Nous Research ਦਾ ਆਪਣੇ ਆਪ ਨੂੰ ਬਿਹਤਰ ਬਣਾਉਣ ਵਾਲਾ ਏਜੰਟ, ਸਥਾਈ ਮੈਮੋਰੀ ਅਤੇ ਹੁਨਰਾਂ ਨਾਲ, ਟਰਮੀਨਲ ਵਿੱਚ ਜਾਂ ਚੈਟ ਐਪਾਂ 'ਤੇ।"
+      "hermes": "Nous Research ਦਾ ਆਪਣੇ ਆਪ ਨੂੰ ਬਿਹਤਰ ਬਣਾਉਣ ਵਾਲਾ ਏਜੰਟ, ਸਥਾਈ ਮੈਮੋਰੀ ਅਤੇ ਹੁਨਰਾਂ ਨਾਲ, ਟਰਮੀਨਲ ਵਿੱਚ ਜਾਂ ਚੈਟ ਐਪਾਂ 'ਤੇ।",
+      "pi": "ਇੱਕ ਘੱਟੋ-ਘੱਟ ਟਰਮੀਨਲ ਏਜੰਟ, ਜਿਸਨੂੰ ਤੁਸੀਂ ਆਪਣੇ ਐਕਸਟੈਂਸ਼ਨਾਂ, ਹੁਨਰਾਂ ਅਤੇ ਪ੍ਰੌਂਪਟ ਟੈਮਪਲੇਟਾਂ ਨਾਲ ਘੜਦੇ ਹੋ।"
     }
   },
   "update": {

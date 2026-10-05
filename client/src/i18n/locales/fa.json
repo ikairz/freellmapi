@@ -224,6 +224,7 @@
     "settingsHint": "ویرایش‌های محلی مدل‌های کاتالوگ در همگام‌سازی کاتالوگ نگهداری می‌شوند. مدل‌های کاتالوگ حذف‌شده تا زمانی که دوباره آنها را از طریق پیکربندی اضافه نکنید، حذف می‌شوند.",
     "catalogModel": "کاتالوگ",
     "customModel": "سفارشی",
+    "discoveredModel": "کشف‌شده",
     "localOverride": "نادیده گرفتن محلی",
     "displayName": "نام نمایشی",
     "sizeLabel": "رده توانایی",
@@ -497,11 +498,11 @@
     "platform": "پلت فرم",
     "hideAdded": "پنهان کردن ارائه‌دهندگان افزوده‌شده",
     "apiToken": "رمز API",
-    "noKeyNeededPlaceholder": "کلید API مورد نیاز نیست",
+    "keyOptionalPlaceholder": "اختیاری",
     "bearerTokenPlaceholder": "نشان حامل",
     "pasteKeyPlaceholder": "کلید را اینجا بچسبانید",
     "pasteSeveral": "چند تا را جای‌گذاری کنید",
-    "keylessHint": "کلید API مورد نیاز نیست: ردیف رایگان این ارائه دهنده ناشناس است (محدود به نرخ برای هر IP).",
+    "keyOptionalHint": "اختیاری: برای استفاده از سطح رایگان ناشناس (محدودیت نرخ برای هر IP) خالی بگذارید، یا کلید خود را برای استفاده از حسابتان وارد کنید.",
     "enable": "فعال کردن",
     "noProviderKeys": "هنوز کلید ارائه دهنده وجود ندارد. برای شروع مسیریابی یکی از بالا را اضافه کنید.",
     "filterPlaceholder": "ارائه دهندگان یا کلیدها را فیلتر کنید",
@@ -679,7 +680,12 @@
     "testFailed": "آزمایش مدل با شکست مواجه شد",
     "testThrottled": "لطفاً قبل از آزمایش مجدد این مدل {seconds} ثانیه صبر کنید.",
     "noModelsForProvider": "هیچ مدلی برای این ارائه‌دهنده تنظیم نشده است.",
-    "testModels": "آزمایش مدل‌ها"
+    "testModels": "آزمایش مدل‌ها",
+    "monthlyRequestCapLabel": "سقف ماهانه درخواست‌ها",
+    "monthlyTokenCapLabel": "سقف ماهانه توکن‌ها",
+    "capUnlimitedPlaceholder": "نامحدود",
+    "capEditHint": "سقف‌ها در اول هر ماه ساعت ۰۰:۰۰ UTC بازنشانی می‌شوند. برای نامحدود خالی بگذارید.",
+    "monthlyUsageLine": "{requests} درخواست، {tokens} توکن در این ماه"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "دستیار شخصی همیشه‌فعالی که از روی دستگاه خودتان در WhatsApp، Telegram، Discord و موارد دیگر پاسخ می‌دهد.",
-      "hermes": "عامل خودبهبود Nous Research با حافظهٔ ماندگار و مهارت‌ها، در ترمینال یا در اپ‌های چت."
+      "hermes": "عامل خودبهبود Nous Research با حافظهٔ ماندگار و مهارت‌ها، در ترمینال یا در اپ‌های چت.",
+      "pi": "یک عامل مینیمال ترمینال که با افزونه‌ها، مهارت‌ها و قالب‌های پرامپت خودتان شکلش می‌دهید."
     }
   },
   "update": {

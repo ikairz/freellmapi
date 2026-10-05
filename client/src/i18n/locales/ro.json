@@ -224,6 +224,7 @@
     "settingsHint": "Editările locale la modelele de catalog sunt păstrate între sincronizările de catalog. Modelele șterse din catalog rămân șterse până când le adaugi din nou prin configurare.",
     "catalogModel": "Catalog",
     "customModel": "Personalizat",
+    "discoveredModel": "descoperit",
     "localOverride": "Suprascriere locală",
     "displayName": "Nume afișat",
     "sizeLabel": "Nivel de capacitate",
@@ -497,11 +498,11 @@
     "platform": "Peronul",
     "hideAdded": "Ascunde furnizorii adăugați",
     "apiToken": "API token",
-    "noKeyNeededPlaceholder": "Nu e nevoie de API cheie",
+    "keyOptionalPlaceholder": "Opțional",
     "bearerTokenPlaceholder": "Jeton de purtător",
     "pasteKeyPlaceholder": "Lipește cheia aici",
     "pasteSeveral": "Lipiți mai multe",
-    "keylessHint": "Nu este nevoie de API cheie: nivelul gratuit al acestui furnizor este anonim (cu tarif limitat pe IP).",
+    "keyOptionalHint": "Opțional: lăsați gol pentru nivelul gratuit anonim (limitat per IP) sau lipiți propria cheie pentru a folosi contul dvs.",
     "enable": "Activează",
     "noProviderKeys": "Încă nu am chei de furnizor. Adaugă unul mai sus pentru a începe rutarea.",
     "filterPlaceholder": "Furnizori sau chei de filtrare",
@@ -679,7 +680,12 @@
     "testFailed": "Testul modelului a eșuat",
     "testThrottled": "Așteptați {seconds}s înainte de a retesta acest model.",
     "noModelsForProvider": "Niciun model configurat pentru acest furnizor.",
-    "testModels": "Testează modelele"
+    "testModels": "Testează modelele",
+    "monthlyRequestCapLabel": "Limită lunară de cereri",
+    "monthlyTokenCapLabel": "Limită lunară de tokeni",
+    "capUnlimitedPlaceholder": "Nelimitat",
+    "capEditHint": "Limitele se resetează în ziua 1 la 00:00 UTC. Lasă gol pentru nelimitat.",
+    "monthlyUsageLine": "{requests} cereri, {tokens} tokeni luna aceasta"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "Un asistent personal mereu activ care răspunde pe WhatsApp, Telegram, Discord și altele, de pe propria ta mașină.",
-      "hermes": "Agentul auto-perfecționabil de la Nous Research, cu memorie persistentă și abilități, în terminal sau în aplicațiile de chat."
+      "hermes": "Agentul auto-perfecționabil de la Nous Research, cu memorie persistentă și abilități, în terminal sau în aplicațiile de chat.",
+      "pi": "Un agent de terminal minimalist pe care îl modelezi cu propriile extensii, abilități și șabloane de prompturi."
     }
   },
   "update": {

@@ -11,6 +11,9 @@ import { ZhipuProvider } from './zhipu.js';
 import { SailProvider } from './sail.js';
 import { AclideProvider } from './aclide.js';
 import { SpekaProvider } from './speka.js';
+import { LlmtrProvider } from './llmtr.js';
+import { GizmoProvider } from './gizmo.js';
+import { BlockRunProvider } from './blockrun.js';
 import { MoondreamProvider } from './moondream.js';
 import { ElectronHubProvider } from './electronhub.js';
 import { ExperientialProvider } from './experiential.js';
@@ -59,6 +62,9 @@ register(new OpenAICompatProvider({
 register(new SailProvider());
 register(new AclideProvider());
 register(new SpekaProvider());
+register(new LlmtrProvider());
+register(new GizmoProvider());
+register(new BlockRunProvider());
 register(new MoondreamProvider());
 
 // Free-plan grants are shared wallets, not free credits per model. Eligibility

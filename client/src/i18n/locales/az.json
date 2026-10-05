@@ -224,6 +224,7 @@
     "settingsHint": "Kataloq modellərinə lokal redaktələr kataloq sinxronizasiyaları arasında saxlanılır. Silinmiş kataloq modelləri yenidən konfiqurasiya vasitəsilə əlavə edənə qədər silinmiş qalır.",
     "catalogModel": "Kataloq",
     "customModel": "Adət",
+    "discoveredModel": "aşkarlanmış",
     "localOverride": "Lokal Üstünlüklər",
     "displayName": "Göstərilmə adı",
     "sizeLabel": "Qabiliyyət səviyyəsi",
@@ -497,11 +498,11 @@
     "platform": "Platforma",
     "hideAdded": "Əlavə edilmiş provayderləri gizlət",
     "apiToken": "API tokeni",
-    "noKeyNeededPlaceholder": "Heç API açar lazım deyil",
+    "keyOptionalPlaceholder": "İstəyə bağlı",
     "bearerTokenPlaceholder": "Daşıyıcı token",
     "pasteKeyPlaceholder": "Burada açarı yapışdır",
     "pasteSeveral": "Bir neçəsini yapışdır",
-    "keylessHint": "API açar tələb olunmur: bu provayderin pulsuz səviyyəsi anonimdir (IP üçün tarif məhdudiyyəti ilə).",
+    "keyOptionalHint": "İstəyə bağlı: anonim pulsuz səviyyə üçün boş buraxın (hər IP üzrə məhdud) və ya hesabınızdan istifadə etmək üçün öz açarınızı yapışdırın.",
     "enable": "Aktiv et",
     "noProviderKeys": "Hələ provayder açarları yoxdur. Marşrutlaşdırmaya başlamaq üçün yuxarıda birini əlavə edin.",
     "filterPlaceholder": "Filtr təminatçıları və ya açarlar",
@@ -679,7 +680,12 @@
     "testFailed": "Model sınağı uğursuz oldu",
     "testThrottled": "Bu modeli yenidən sınaqdan keçirməzdən əvvəl {seconds} san gözləyin.",
     "noModelsForProvider": "Bu təminatçı üçün heç bir model tənzimlənməyib.",
-    "testModels": "Modelləri test et"
+    "testModels": "Modelləri test et",
+    "monthlyRequestCapLabel": "Aylıq sorğu limiti",
+    "monthlyTokenCapLabel": "Aylıq token limiti",
+    "capUnlimitedPlaceholder": "Limitsiz",
+    "capEditHint": "Limitlər hər ayın 1-i 00:00 UTC-də sıfırlanır. Limitsiz üçün boş buraxın.",
+    "monthlyUsageLine": "Bu ay {requests} sorğu, {tokens} token"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "Öz maşınınızdan WhatsApp, Telegram, Discord və digərlərində cavab verən, həmişə aktiv şəxsi köməkçi.",
-      "hermes": "Nous Research-in özünü təkmilləşdirən agenti; daimi yaddaş və bacarıqlarla, terminalda və ya söhbət tətbiqlərində."
+      "hermes": "Nous Research-in özünü təkmilləşdirən agenti; daimi yaddaş və bacarıqlarla, terminalda və ya söhbət tətbiqlərində.",
+      "pi": "Öz genişləndirmələriniz, bacarıqlarınız və sorğu şablonlarınızla formalaşdırdığınız minimal terminal agenti."
     }
   },
   "update": {

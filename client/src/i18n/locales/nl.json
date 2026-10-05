@@ -224,6 +224,7 @@
     "settingsHint": "Lokale bewerkingen van catalogusmodellen worden behouden over catalogus-synchronisaties. Verwijderde catalogusmodellen blijven verwijderd totdat je ze opnieuw toevoegt via de configuratie.",
     "catalogModel": "Catalogus",
     "customModel": "Gewoonte",
+    "discoveredModel": "ontdekt",
     "localOverride": "Lokale overruling",
     "displayName": "Weergavenaam",
     "sizeLabel": "Capaciteitsniveau",
@@ -497,11 +498,11 @@
     "platform": "Platform",
     "hideAdded": "Toegevoegde providers verbergen",
     "apiToken": "API token",
-    "noKeyNeededPlaceholder": "Geen API sleutel nodig",
+    "keyOptionalPlaceholder": "Optioneel",
     "bearerTokenPlaceholder": "Dragertoken",
     "pasteKeyPlaceholder": "Hier plak de toets",
     "pasteSeveral": "Meerdere plakken",
-    "keylessHint": "Geen API sleutel nodig: de gratis laag van deze provider is anoniem (tariefbeperkt per IP).",
+    "keyOptionalHint": "Optioneel: laat leeg voor de anonieme gratis laag (rate-limited per IP), of plak je eigen sleutel om je account te gebruiken.",
     "enable": "Enable",
     "noProviderKeys": "Nog geen provider-sleutels. Voeg er hierboven één toe om te beginnen met routeren.",
     "filterPlaceholder": "Filterproviders of sleutels",
@@ -679,7 +680,12 @@
     "testFailed": "Modeltest mislukt",
     "testThrottled": "Wacht {seconds}s voordat u dit model opnieuw test.",
     "noModelsForProvider": "Geen modellen geconfigureerd voor deze provider.",
-    "testModels": "Modellen testen"
+    "testModels": "Modellen testen",
+    "monthlyRequestCapLabel": "Maandelijke limiet verzoeken",
+    "monthlyTokenCapLabel": "Maandelijke limiet tokens",
+    "capUnlimitedPlaceholder": "Onbeperkt",
+    "capEditHint": "Limieten worden op de 1e om 00:00 UTC gereset. Laat leeg voor onbeperkt.",
+    "monthlyUsageLine": "{requests} verzoeken, {tokens} tokens deze maand"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Elk ander hulpmiddel dat de OpenAI-API spreekt, met de hand ingesteld via basis-URL en sleutel.",
       "atomcode": "AtomGit's terminalagent, geschreven in Rust, die elk OpenAI-compatibel endpoint aankan.",
       "openclaw": "Een altijd actieve persoonlijke assistent die vanaf je eigen machine antwoordt op WhatsApp, Telegram, Discord en meer.",
-      "hermes": "De zelfverbeterende agent van Nous Research met blijvend geheugen en skills, in de terminal of in chat-apps."
+      "hermes": "De zelfverbeterende agent van Nous Research met blijvend geheugen en skills, in de terminal of in chat-apps.",
+      "pi": "Een minimalistische terminal-agent die je vormgeeft met je eigen extensies, skills en promptsjablonen."
     }
   },
   "update": {

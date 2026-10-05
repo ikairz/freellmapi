@@ -224,6 +224,7 @@
     "settingsHint": "Edições locais em modelos do catálogo são mantidas entre sincronizações do catálogo. Modelos do catálogo excluídos permanecem excluídos até que você os adicione novamente pela configuração.",
     "catalogModel": "catálogo",
     "customModel": "personalizado",
+    "discoveredModel": "descoberto",
     "localOverride": "substituição local",
     "displayName": "Nome de exibição",
     "sizeLabel": "Nível de capacidade",
@@ -497,11 +498,11 @@
     "platform": "Plataforma",
     "hideAdded": "Ocultar provedores adicionados",
     "apiToken": "Token de API",
-    "noKeyNeededPlaceholder": "Nenhuma chave de API necessária",
+    "keyOptionalPlaceholder": "Opcional",
     "bearerTokenPlaceholder": "Token Bearer",
     "pasteKeyPlaceholder": "cole a chave aqui",
     "pasteSeveral": "Colar várias",
-    "keylessHint": "Nenhuma chave de API necessária: o nível gratuito deste provedor é anônimo (com limite por IP).",
+    "keyOptionalHint": "Opcional: deixe em branco para usar o nível gratuito anônimo (limitado por IP) ou cole sua própria chave para usar sua conta.",
     "enable": "Habilitar",
     "noProviderKeys": "Ainda não há chaves de provedor. Adicione uma acima para começar o roteamento.",
     "filterPlaceholder": "Filtrar provedores ou chaves",
@@ -679,7 +680,12 @@
     "testFailed": "Teste do modelo falhou",
     "testThrottled": "Aguarde {seconds}s antes de testar este modelo novamente.",
     "noModelsForProvider": "Nenhum modelo configurado para este provedor.",
-    "testModels": "Testar modelos"
+    "testModels": "Testar modelos",
+    "monthlyRequestCapLabel": "Limite mensal de solicitações",
+    "monthlyTokenCapLabel": "Limite mensal de tokens",
+    "capUnlimitedPlaceholder": "Ilimitado",
+    "capEditHint": "Os limites são redefinidos no dia 1 às 00:00 UTC. Deixe em branco para ilimitado.",
+    "monthlyUsageLine": "{requests} solicitações, {tokens} tokens este mês"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Qualquer outra ferramenta que fale a API da OpenAI, configurada à mão com URL base e chave.",
       "atomcode": "O agente de terminal da AtomGit, escrito em Rust, que aceita qualquer endpoint compatível com OpenAI.",
       "openclaw": "Um assistente pessoal sempre ativo que responde no WhatsApp, Telegram, Discord e outros a partir da sua própria máquina.",
-      "hermes": "O agente autoaperfeiçoável da Nous Research, com memória persistente e habilidades, no terminal ou em apps de chat."
+      "hermes": "O agente autoaperfeiçoável da Nous Research, com memória persistente e habilidades, no terminal ou em apps de chat.",
+      "pi": "Um agente de terminal minimalista que você molda com suas próprias extensões, habilidades e modelos de prompt."
     }
   },
   "update": {

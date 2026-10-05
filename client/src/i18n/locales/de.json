@@ -224,6 +224,7 @@
     "settingsHint": "Lokale Änderungen an Katalogmodellen bleiben bei allen Katalogsynchronisierungen erhalten. Gelöschte Katalogmodelle bleiben gelöscht, bis Sie sie über die Konfiguration erneut hinzufügen.",
     "catalogModel": "Katalog",
     "customModel": "Brauch",
+    "discoveredModel": "entdeckt",
     "localOverride": "lokale Überschreibung",
     "displayName": "Anzeigename",
     "sizeLabel": "Fähigkeitsstufe",
@@ -497,11 +498,11 @@
     "platform": "Plattform",
     "hideAdded": "Hinzugefügte Anbieter ausblenden",
     "apiToken": "API-Token",
-    "noKeyNeededPlaceholder": "Kein API-Schlüssel erforderlich",
+    "keyOptionalPlaceholder": "Optional",
     "bearerTokenPlaceholder": "Inhabertoken",
     "pasteKeyPlaceholder": "Schlüssel hier einfügen",
     "pasteSeveral": "Mehrere einfügen",
-    "keylessHint": "Kein API-Schlüssel erforderlich: Das kostenlose Kontingent dieses Anbieters ist anonym (Ratenbegrenzung pro IP).",
+    "keyOptionalHint": "Optional: Leer lassen für das anonyme Gratiskontingent (Ratenbegrenzung pro IP) oder eigenen Schlüssel einfügen, um Ihr Konto zu nutzen.",
     "enable": "Aktivieren",
     "noProviderKeys": "Noch keine Anbieterschlüssel. Fügen Sie oben eines hinzu, um mit dem Routing zu beginnen.",
     "filterPlaceholder": "Filtern Sie Anbieter oder Schlüssel",
@@ -679,7 +680,12 @@
     "testFailed": "Modelltest fehlgeschlagen",
     "testThrottled": "Bitte warten Sie {seconds}s, bevor Sie dieses Modell erneut testen.",
     "noModelsForProvider": "Keine Modelle für diesen Anbieter konfiguriert.",
-    "testModels": "Modelle testen"
+    "testModels": "Modelle testen",
+    "monthlyRequestCapLabel": "Monatliches Anfrage-Limit",
+    "monthlyTokenCapLabel": "Monatliches Token-Limit",
+    "capUnlimitedPlaceholder": "Unbegrenzt",
+    "capEditHint": "Limits werden am 1. um 00:00 UTC zurückgesetzt. Leer lassen für unbegrenzt.",
+    "monthlyUsageLine": "{requests} Anfragen, {tokens} Tokens diesen Monat"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Alles andere, was die OpenAI-API spricht — von Hand mit Basis-URL und Schlüssel eingerichtet.",
       "atomcode": "AtomGits Terminal-Agent, in Rust geschrieben, für jeden OpenAI-kompatiblen Endpunkt.",
       "openclaw": "Ein ständig verfügbarer persönlicher Assistent, der von deinem eigenen Rechner aus auf WhatsApp, Telegram, Discord und mehr antwortet.",
-      "hermes": "Der selbstverbessernde Agent von Nous Research mit dauerhaftem Gedächtnis und Skills, im Terminal oder in Chat-Apps."
+      "hermes": "Der selbstverbessernde Agent von Nous Research mit dauerhaftem Gedächtnis und Skills, im Terminal oder in Chat-Apps.",
+      "pi": "Ein minimaler Terminal-Agent, den du mit eigenen Erweiterungen, Skills und Prompt-Vorlagen formst."
     }
   },
   "update": {

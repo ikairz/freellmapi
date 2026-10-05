@@ -224,6 +224,7 @@
     "settingsHint": "การแก้ไขโมเดลแค็ตตาล็อกในเครื่องจะถูกเก็บไว้ระหว่างการซิงค์แค็ตตาล็อก โมเดลแคตตาล็อกที่ถูกลบจะถูกลบจนกว่าคุณจะเพิ่มอีกครั้งผ่านการกำหนดค่า",
     "catalogModel": "แคตตาล็อก",
     "customModel": "กำหนดเอง",
+    "discoveredModel": "ค้นพบ",
     "localOverride": "การแทนที่ในท้องถิ่น",
     "displayName": "ชื่อที่แสดง",
     "sizeLabel": "ระดับความสามารถ",
@@ -497,11 +498,11 @@
     "platform": "แพลตฟอร์ม",
     "hideAdded": "ซ่อนผู้ให้บริการที่เพิ่มแล้ว",
     "apiToken": "โทเค็น API",
-    "noKeyNeededPlaceholder": "ไม่จำเป็นต้องใช้คีย์ API",
+    "keyOptionalPlaceholder": "ไม่บังคับ",
     "bearerTokenPlaceholder": "โทเค็นผู้ถือ",
     "pasteKeyPlaceholder": "วางคีย์ที่นี่",
     "pasteSeveral": "วางหลายรายการ",
-    "keylessHint": "ไม่จำเป็นต้องมีคีย์ API: Free Tier ของผู้ให้บริการรายนี้ไม่เปิดเผยตัวตน (จำกัดอัตราต่อ IP)",
+    "keyOptionalHint": "ไม่บังคับ: เว้นว่างไว้เพื่อใช้ระดับฟรีแบบไม่ระบุตัวตน (จำกัดอัตราต่อ IP) หรือวางคีย์ของคุณเองเพื่อใช้บัญชีของคุณ",
     "enable": "เปิดใช้งาน",
     "noProviderKeys": "ยังไม่มีคีย์ผู้ให้บริการ เพิ่มหนึ่งรายการด้านบนเพื่อเริ่มการกำหนดเส้นทาง",
     "filterPlaceholder": "กรองผู้ให้บริการหรือคีย์",
@@ -679,7 +680,12 @@
     "testFailed": "การทดสอบโมเดลล้มเหลว",
     "testThrottled": "โปรดรอ {seconds} วินาทีก่อนที่จะทดสอบโมเดลนี้อีกครั้ง",
     "noModelsForProvider": "ไม่มีการกำหนดค่าโมเดลสำหรับผู้ให้บริการนี้",
-    "testModels": "ทดสอบโมเดล"
+    "testModels": "ทดสอบโมเดล",
+    "monthlyRequestCapLabel": "ขีดจำกัดคำขอรายเดือน",
+    "monthlyTokenCapLabel": "ขีดจำกัดโทเคนรายเดือน",
+    "capUnlimitedPlaceholder": "ไม่จำกัด",
+    "capEditHint": "ขีดจำกัดจะรีเซ็ตวันที่ 1 เวลา 00:00 UTC เว้นว่างไว้หากไม่จำกัด",
+    "monthlyUsageLine": "เดือนนี้ {requests} คำขอ {tokens} โทเคน"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "ผู้ช่วยส่วนตัวที่พร้อมตลอดเวลา ตอบกลับบน WhatsApp, Telegram, Discord และอื่น ๆ จากเครื่องของคุณเอง",
-      "hermes": "เอเจนต์ที่พัฒนาตัวเองได้ของ Nous Research พร้อมหน่วยความจำถาวรและทักษะ ใช้ได้ทั้งในเทอร์มินัลและบนแอปแชต"
+      "hermes": "เอเจนต์ที่พัฒนาตัวเองได้ของ Nous Research พร้อมหน่วยความจำถาวรและทักษะ ใช้ได้ทั้งในเทอร์มินัลและบนแอปแชต",
+      "pi": "เอเจนต์เทอร์มินัลแบบมินิมอลที่คุณปรับแต่งได้ด้วยส่วนขยาย ทักษะ และเทมเพลตพรอมต์ของคุณเอง"
     }
   },
   "update": {

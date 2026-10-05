@@ -224,6 +224,7 @@
     "settingsHint": "ការកែសម្រួលមូលដ្ឋានទៅលើម៉ូដែលកាតាឡុកត្រូវបានរក្សាទុកឆ្លងកាត់ការសមកាលកម្មកាតាឡុក។ ម៉ូដែលកាតាឡុកដែលបានលុបនឹងនៅតែត្រូវបានលុបរហូតដល់អ្នកបន្ថែមវាឡើងវិញតាមរយៈការកំណត់រចនាសម្ព័ន្ធ។",
     "catalogModel": "កាតាឡុក",
     "customModel": "ទម្លាប់",
+    "discoveredModel": "បានរកឃើញ",
     "localOverride": "ការបដិសេធមូលដ្ឋាន",
     "displayName": "ឈ្មោះបង្ហាញ",
     "sizeLabel": "កម្រិតសមត្ថភាព",
@@ -497,11 +498,11 @@
     "platform": "វេទិកា",
     "hideAdded": "លាក់អ្នកផ្គត់ផ្គង់ដែលបានបន្ថែម",
     "apiToken": "API",
-    "noKeyNeededPlaceholder": "មិនចាំបាច់ប្រើកូនសោ API",
+    "keyOptionalPlaceholder": "ស្រេចចិត្ត",
     "bearerTokenPlaceholder": "សញ្ញាអ្នកកាន់",
     "pasteKeyPlaceholder": "បិទសោនៅទីនេះ",
     "pasteSeveral": "បិទភ្ជាប់ច្រើន",
-    "keylessHint": "មិនចាំបាច់មានកូនសោ API ទេ៖ ថ្នាក់ឥតគិតថ្លៃរបស់អ្នកផ្គត់ផ្គង់នេះគឺអនាមិក (កំណត់អត្រាតាម IP)។",
+    "keyOptionalHint": "ស្រេចចិត្ត៖ ទុកទទេសម្រាប់កម្រិតឥតគិតថ្លៃអនាមិក (កំណត់អត្រាតាម IP) ឬបិទភ្ជាប់សោផ្ទាល់ខ្លួនរបស់អ្នកដើម្បីប្រើគណនីរបស់អ្នក។",
     "enable": "បើក",
     "noProviderKeys": "មិនទាន់មានកូនសោអ្នកផ្គត់ផ្គង់ទេ។ បន្ថែមមួយខាងលើដើម្បីចាប់ផ្តើមផ្លូវ។",
     "filterPlaceholder": "តម្រងអ្នកផ្គត់ផ្គង់ ឬកូនសោ",
@@ -679,7 +680,12 @@
     "testFailed": "ការសាកល្បងម៉ូដែលបានបរាជ័យ",
     "testThrottled": "សូមរង់ចាំ {seconds}វិនាទី មុនពេលសាកល្បងម៉ូដែលនេះម្តងទៀត។",
     "noModelsForProvider": "មិនមានម៉ូដែលត្រូវបានកំណត់រចនាសម្ព័ន្ធសម្រាប់អ្នកផ្តល់សេវានេះទេ។",
-    "testModels": "សាកល្បងម៉ូដែល"
+    "testModels": "សាកល្បងម៉ូដែល",
+    "monthlyRequestCapLabel": "ដែនកំណត់ស្នើសុំប្រចាំខែ",
+    "monthlyTokenCapLabel": "ដែនកំណត់តូខិនប្រចាំខែ",
+    "capUnlimitedPlaceholder": "គ្មានដែនកំណត់",
+    "capEditHint": "ដែនកំណត់កំណត់ឡើងវិញនៅថ្ងៃទី 1 ម៉ោង 00:00 UTC ទុកទទេប្រសិនបើគ្មានដែនកំណត់។",
+    "monthlyUsageLine": "ខែនេះ {requests} ស្នើសុំ {tokens} តូខិន"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "ជំនួយការផ្ទាល់ខ្លួនដែលដំណើរការជានិច្ច ហើយឆ្លើយតបនៅលើ WhatsApp, Telegram, Discord និងផ្សេងទៀត ពីម៉ាស៊ីនរបស់អ្នកផ្ទាល់។",
-      "hermes": "ភ្នាក់ងាររបស់ Nous Research ដែលកែលម្អខ្លួនឯង មានអង្គចងចាំអចិន្ត្រៃយ៍ និងជំនាញ នៅក្នុង terminal ឬលើកម្មវិធីជជែក។"
+      "hermes": "ភ្នាក់ងាររបស់ Nous Research ដែលកែលម្អខ្លួនឯង មានអង្គចងចាំអចិន្ត្រៃយ៍ និងជំនាញ នៅក្នុង terminal ឬលើកម្មវិធីជជែក។",
+      "pi": "ភ្នាក់ងារ terminal តូចចង្អៀត ដែលអ្នករៀបចំដោយផ្នែកបន្ថែម ជំនាញ និងគំរូ prompt ផ្ទាល់ខ្លួន។"
     }
   },
   "update": {

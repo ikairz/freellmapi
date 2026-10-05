@@ -224,6 +224,7 @@
     "settingsHint": "עריכות מקומיות למודלים של קטלוג נשמרות לאורך סנכרוני קטלוג. דגמי קטלוג שנמחקו נשארים מחוקים עד שמוסיפים אותם שוב דרך ההגדרה.",
     "catalogModel": "קטלוג",
     "customModel": "מנהג",
+    "discoveredModel": "שהתגלה",
     "localOverride": "עקיפה מקומית",
     "displayName": "שם תצוגה",
     "sizeLabel": "דרגת יכולת",
@@ -497,11 +498,11 @@
     "platform": "פלטפורמה",
     "hideAdded": "הסתר ספקים שנוספו",
     "apiToken": "אסימון API",
-    "noKeyNeededPlaceholder": "אין צורך במפתח API",
+    "keyOptionalPlaceholder": "אופציונלי",
     "bearerTokenPlaceholder": "אסימון נושא",
     "pasteKeyPlaceholder": "הדביק כאן מקש",
     "pasteSeveral": "הדבקת כמה",
-    "keylessHint": "אין צורך במפתח API: השכבה החינמית של הספק הזה היא אנונימית (מוגבלת בקצב לכל כתובת IP).",
+    "keyOptionalHint": "אופציונלי: השאירו ריק לשימוש בשכבה החינמית האנונימית (מוגבלת לפי IP), או הדביקו מפתח משלכם כדי להשתמש בחשבון שלכם.",
     "enable": "הפעל",
     "noProviderKeys": "עדיין אין מפתחות לספק. הוסף אחד למעלה כדי להתחיל לנתב.",
     "filterPlaceholder": "ספקי סינון או מפתחות",
@@ -679,7 +680,12 @@
     "testFailed": "בדיקת הדגם נכשלה",
     "testThrottled": "אנא המתן {seconds} שניות לפני בדיקת דגם זה שוב.",
     "noModelsForProvider": "לא הוגדרו דגמים עבור ספק זה.",
-    "testModels": "בדיקת מודלים"
+    "testModels": "בדיקת מודלים",
+    "monthlyRequestCapLabel": "מכסת בקשות חודשית",
+    "monthlyTokenCapLabel": "מכסת טוקנים חודשית",
+    "capUnlimitedPlaceholder": "ללא הגבלה",
+    "capEditHint": "המכסות מתאפסות ב-1 בחודש ב-00:00 UTC. השאירו ריק כדי להישאר ללא הגבלה.",
+    "monthlyUsageLine": "{requests} בקשות, {tokens} טוקנים החודש"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "עוזר אישי שפועל תמיד ועונה ב-WhatsApp, Telegram, Discord ועוד מהמחשב שלכם.",
-      "hermes": "הסוכן המשתפר-מעצמו של Nous Research עם זיכרון מתמשך וכישורים, בטרמינל או באפליקציות צ'אט."
+      "hermes": "הסוכן המשתפר-מעצמו של Nous Research עם זיכרון מתמשך וכישורים, בטרמינל או באפליקציות צ'אט.",
+      "pi": "סוכן טרמינל מינימלי שאתם מעצבים בעזרת הרחבות, כישורים ותבניות פרומפט משלכם."
     }
   },
   "update": {

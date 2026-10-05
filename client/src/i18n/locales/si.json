@@ -224,6 +224,7 @@
     "settingsHint": "නාමාවලි ආකෘති වෙත දේශීය සංස්කරණ නාමාවලි සමමුහුර්ත කිරීම් හරහා තබා ඇත. මකා දැමූ නාමාවලි ආකෘති ඔබ නැවත වින්‍යාසය හරහා එකතු කරන තෙක් මකා දැමෙනු ඇත.",
     "catalogModel": "නාමාවලිය",
     "customModel": "චාරිත්රය",
+    "discoveredModel": "සොයාගත්",
     "localOverride": "දේශීය අභිබවා යාම",
     "displayName": "සංදර්ශක නම",
     "sizeLabel": "හැකියා මට්ටම",
@@ -497,11 +498,11 @@
     "platform": "වේදිකාව",
     "hideAdded": "එකතු කළ සපයන්නන් සඟවන්න",
     "apiToken": "API ටෝකනය",
-    "noKeyNeededPlaceholder": "API යතුර අවශ්‍ය නොවේ",
+    "keyOptionalPlaceholder": "විකල්ප",
     "bearerTokenPlaceholder": "දරන්නා සංකේතය",
     "pasteKeyPlaceholder": "මෙහි යතුර අලවන්න",
     "pasteSeveral": "කිහිපයක් අලවන්න",
-    "keylessHint": "API යතුරක් අවශ්‍ය නොවේ: මෙම සැපයුම්කරුගේ නිදහස් ස්ථරය නිර්නාමිකයි (IP එකකට අනුපාතය-සීමිත).",
+    "keyOptionalHint": "විකල්ප: නිර්නාමික නොමිලේ ස්ථරය සඳහා හිස්ව තබන්න (IP එකකට අනුපාත සීමිත), නැතහොත් ඔබේ ගිණුම භාවිත කිරීමට ඔබේම යතුර අලවන්න.",
     "enable": "සබල කරන්න",
     "noProviderKeys": "තවමත් සපයන්නාගේ යතුරු නොමැත. මාර්ගගත කිරීම ආරම්භ කිරීමට ඉහත එකක් එක් කරන්න.",
     "filterPlaceholder": "පෙරහන් සපයන්නන් හෝ යතුරු",
@@ -679,7 +680,12 @@
     "testFailed": "ආකෘති පරීක්ෂණය අසමත් විය",
     "testThrottled": "මෙම ආකෘතිය නැවත පරීක්ෂා කිරීමට පෙර කරුණාකර තත්පර {seconds} ක් රැඳී සිටින්න.",
     "noModelsForProvider": "මෙම සපයන්නා සඳහා ආකෘති වින්‍යාස කර නොමැත.",
-    "testModels": "මාදිලි පරීක්ෂා කරන්න"
+    "testModels": "මාදිලි පරීක්ෂා කරන්න",
+    "monthlyRequestCapLabel": "මාසික ඉල්ලීම් සීමාව",
+    "monthlyTokenCapLabel": "මාසික ටෝකන් සීමාව",
+    "capUnlimitedPlaceholder": "සීමා රහිත",
+    "capEditHint": "සීමාවන් සෑම මාසයකම 1 වන දා 00:00 UTC ට යළි සකසයි. සීමා රහිතට හිස්ව තබන්න.",
+    "monthlyUsageLine": "මෙම මාසය ඉල්ලීම් {requests}, ටෝකන් {tokens}"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "ඔබේම යන්ත්‍රයෙන් WhatsApp, Telegram, Discord සහ තවත් ඒවායේ පිළිතුරු දෙන, සැමවිටම ක්‍රියාත්මක පුද්ගලික සහායකයෙක්.",
-      "hermes": "Nous Research හි ස්වයං-වැඩිදියුණු වන ඒජන්තය, ස්ථිර මතකය සහ කුසලතා සමඟ, ටර්මිනලයේ හෝ චැට් යෙදුම්වල."
+      "hermes": "Nous Research හි ස්වයං-වැඩිදියුණු වන ඒජන්තය, ස්ථිර මතකය සහ කුසලතා සමඟ, ටර්මිනලයේ හෝ චැට් යෙදුම්වල.",
+      "pi": "ඔබේම දිගු, කුසලතා සහ prompt සැකිලි සමඟ හැඩගස්වන අවම ටර්මිනල් ඒජන්තයක්."
     }
   },
   "update": {

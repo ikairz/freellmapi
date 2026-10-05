@@ -224,6 +224,7 @@
     "settingsHint": "gyare-gyare na gida zuwa ƙirar kasida ana kiyaye su a cikin daidaitawar kasida. Samfurin kasidar da aka goge suna kasancewa a goge har sai kun sake ƙara su ta hanyar daidaitawa.",
     "catalogModel": "kasida",
     "customModel": "al'ada",
+    "discoveredModel": "an gano",
     "localOverride": "wuce gona da iri",
     "displayName": "Sunan nuni",
     "sizeLabel": "Matakin iyawa",
@@ -497,11 +498,11 @@
     "platform": "Dandalin",
     "hideAdded": "Ɓoye masu bayarwa da aka ƙara",
     "apiToken": "Farashin API",
-    "noKeyNeededPlaceholder": "Babu maɓallin API da ake buƙata",
+    "keyOptionalPlaceholder": "Na zaɓi",
     "bearerTokenPlaceholder": "Alamar mai ɗaukar nauyi",
     "pasteKeyPlaceholder": "manna makullin nan",
     "pasteSeveral": "Liƙa da yawa",
-    "keylessHint": "Babu maɓallin API da ake buƙata: wannan matakin kyauta na mai bayarwa ba a san shi ba (mai-iyakantaccen ƙimar kowane IP).",
+    "keyOptionalHint": "Na zaɓi: bar shi babu komai don amfani da matakin kyauta na ɓoye (iyakar ƙima ga kowane IP), ko liƙa maɓallinka don amfani da asusunka.",
     "enable": "Kunna",
     "noProviderKeys": "Babu maɓallan mai bayarwa tukuna. Ƙara ɗaya a sama don fara kewayawa.",
     "filterPlaceholder": "Tace masu samarwa ko maɓalli",
@@ -679,7 +680,12 @@
     "testFailed": "Gwajin samfurin ya fadi",
     "testThrottled": "Da fatan za a jira {seconds}s kafin sake gwada wannan samfurin.",
     "noModelsForProvider": "Babu samfuran da aka saita don wannan mai ba da sabis.",
-    "testModels": "Gwada samfura"
+    "testModels": "Gwada samfura",
+    "monthlyRequestCapLabel": "Iyakar buƙatota ta wata",
+    "monthlyTokenCapLabel": "Iyakar token ta wata",
+    "capUnlimitedPlaceholder": "Ba iyaka ba",
+    "capEditHint": "Ana saita iyakoki a ranar 1 00:00 UTC. Bara komai don mara iyaka.",
+    "monthlyUsageLine": "Buƙatotu {requests}, token {tokens} wannan wata"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "Mataimaki na kai da ke aiki koyaushe, yana amsawa a WhatsApp, Telegram, Discord da sauransu daga na'urarka.",
-      "hermes": "Wakilin Nous Research mai inganta kansa, da ƙwaƙwalwa mai dorewa da ƙwarewa, a cikin terminal ko a manhajojin hira."
+      "hermes": "Wakilin Nous Research mai inganta kansa, da ƙwaƙwalwa mai dorewa da ƙwarewa, a cikin terminal ko a manhajojin hira.",
+      "pi": "Ƙaramin wakilin terminal da kuke tsara shi da naku ƙarin abubuwa, ƙwarewa da samfuran umarni."
     }
   },
   "update": {

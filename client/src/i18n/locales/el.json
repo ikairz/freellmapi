@@ -224,6 +224,7 @@
     "settingsHint": "Οι τοπικές αλλαγές σε μοντέλα καταλόγων διατηρούνται σε όλους τους συγχρονισμούς καταλόγων. Τα διαγραμμένα μοντέλα καταλόγου παραμένουν διαγραμμένα μέχρι να τα προσθέσετε ξανά μέσω της διαμόρφωσης.",
     "catalogModel": "Κατάλογος",
     "customModel": "έθιμο",
+    "discoveredModel": "εντοπισμένο",
     "localOverride": "τοπική παράκαμψη",
     "displayName": "Εμφανιζόμενο όνομα",
     "sizeLabel": "Βαθμίδα ικανοτήτων",
@@ -497,11 +498,11 @@
     "platform": "Πλατφόρμα",
     "hideAdded": "Απόκρυψη προστιθέμενων παρόχων",
     "apiToken": "API διακριτικό",
-    "noKeyNeededPlaceholder": "Δεν χρειάζεται API κλειδί",
+    "keyOptionalPlaceholder": "Προαιρετικό",
     "bearerTokenPlaceholder": "Διακριτικό κομιστή",
     "pasteKeyPlaceholder": "Επικόλληση κλειδιού εδώ",
     "pasteSeveral": "Επικόλληση πολλών",
-    "keylessHint": "Δεν απαιτείται API κλειδί: η δωρεάν βαθμίδα αυτού του παρόχου είναι ανώνυμη (περιορισμένη τιμή ανά IP).",
+    "keyOptionalHint": "Προαιρετικό: αφήστε το κενό για το ανώνυμο δωρεάν επίπεδο (όριο ανά IP) ή επικολλήστε το δικό σας κλειδί για να χρησιμοποιήσετε τον λογαριασμό σας.",
     "enable": "Ενεργοποίηση",
     "noProviderKeys": "Δεν υπάρχουν ακόμη κλειδιά παρόχου. Προσθέστε ένα παραπάνω για να ξεκινήσετε τη δρομολόγηση.",
     "filterPlaceholder": "Πάροχοι ή κλειδιά φίλτρων",
@@ -679,7 +680,12 @@
     "testFailed": "Η δοκιμή μοντέλου απέτυχε",
     "testThrottled": "Περιμένετε {seconds}δ πριν δοκιμάσετε ξανά αυτό το μοντέλο.",
     "noModelsForProvider": "Δεν έχουν διαμορφωθεί μοντέλα για αυτόν τον πάροχο.",
-    "testModels": "Δοκιμή μοντέλων"
+    "testModels": "Δοκιμή μοντέλων",
+    "monthlyRequestCapLabel": "Μηνιαίο όριο αιτημάτων",
+    "monthlyTokenCapLabel": "Μηνιαίο όριο tokens",
+    "capUnlimitedPlaceholder": "Απεριόριστο",
+    "capEditHint": "Τα όρια μηδενίζονται την 1η στις 00:00 UTC. Αφήστε κενό για απεριόριστο.",
+    "monthlyUsageLine": "{requests} αιτήματα, {tokens} tokens αυτόν τον μήνα"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "Ένας πάντα διαθέσιμος προσωπικός βοηθός που απαντά σε WhatsApp, Telegram, Discord και άλλα από το δικό σας μηχάνημα.",
-      "hermes": "Ο αυτοβελτιούμενος πράκτορας της Nous Research με μόνιμη μνήμη και δεξιότητες, στο τερματικό ή σε εφαρμογές συνομιλίας."
+      "hermes": "Ο αυτοβελτιούμενος πράκτορας της Nous Research με μόνιμη μνήμη και δεξιότητες, στο τερματικό ή σε εφαρμογές συνομιλίας.",
+      "pi": "Ένας μινιμαλιστικός πράκτορας τερματικού που διαμορφώνετε με δικές σας επεκτάσεις, δεξιότητες και πρότυπα προτροπών."
     }
   },
   "update": {

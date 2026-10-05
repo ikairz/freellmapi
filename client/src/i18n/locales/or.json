@@ -224,6 +224,7 @@
     "settingsHint": "କାଟାଲଗ୍ ମଡେଲଗୁଡିକ ପାଇଁ ସ୍ଥାନୀୟ ସମ୍ପାଦନାଗୁଡିକ କାଟାଲଗ୍ ସିଙ୍କ୍ରୋନାଇଜ୍ ରେ ରଖାଯାଇଛି । ବିଲୋପିତ କ୍ୟାଟଲଗ୍ ମଡେଲଗୁଡିକ ବିଲୋପିତ ରହିବ ଯେପର୍ଯ୍ୟନ୍ତ ଆପଣ ସେଗୁଡିକୁ ପୁନଃ କନଫିଗର୍ ମାଧ୍ୟମରେ ଯୋଡିବେ।",
     "catalogModel": "କାଟାଲଗ୍",
     "customModel": "କଷ୍ଟମ୍",
+    "discoveredModel": "ଆବିଷ୍କୃତ",
     "localOverride": "ସ୍ଥାନୀୟ ଓଭରରାଇଡ୍",
     "displayName": "ପ୍ରଦର୍ଶନ ନାମ",
     "sizeLabel": "ସାମର୍ଥ୍ୟ ସ୍ତର",
@@ -497,11 +498,11 @@
     "platform": "ପ୍ଲାଟଫର୍ମ",
     "hideAdded": "ଯୋଡ଼ାଯାଇଥିବା ପ୍ରଦାନକାରୀଙ୍କୁ ଲୁଚାନ୍ତୁ",
     "apiToken": "API ଟୋକେନ୍",
-    "noKeyNeededPlaceholder": "କୌଣସି API କୀ ଆବଶ୍ୟକ ନାହିଁ",
+    "keyOptionalPlaceholder": "ବୈକଳ୍ପିକ",
     "bearerTokenPlaceholder": "ବିୟରର୍ ଟୋକେନ୍",
     "pasteKeyPlaceholder": "ଏଠାରେ କୀ ଲେପନ କରନ୍ତୁ",
     "pasteSeveral": "ଏକାଧିକ ପେଷ୍ଟ କରନ୍ତୁ",
-    "keylessHint": "କୌଣସି API ଚାବି ଆବଶ୍ୟକ ନାହିଁ: ଏହି ପ୍ରଦାନକାରୀଙ୍କ ମାଗଣା ସ୍ତର ବେନାମୀ (ଆଇପି ପ୍ରତି ହାର-ସୀମିତ) ।",
+    "keyOptionalHint": "ବୈକଳ୍ପିକ: ଅଜ୍ଞାତ ମାଗଣା ସ୍ତର ପାଇଁ ଖାଲି ଛାଡନ୍ତୁ (ପ୍ରତି IP ହାର-ସୀମିତ), କିମ୍ବା ଆପଣଙ୍କ ଆକାଉଣ୍ଟ ବ୍ୟବହାର କରିବାକୁ ନିଜ କି ପେଷ୍ଟ କରନ୍ତୁ।",
     "enable": "ସକ୍ଷମ କରନ୍ତୁ",
     "noProviderKeys": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ପ୍ରଦାନକାରୀ କୀ ନାହିଁ। ରାଉଟିଂ ଆରମ୍ଭ କରିବାକୁ ଉପରୋକ୍ତ ଏକ ଯୋଡନ୍ତୁ।",
     "filterPlaceholder": "ଫିଲ୍ଟର୍ ପ୍ରଦାନକାରୀ କିମ୍ୱା କୀଗୁଡିକ",
@@ -679,7 +680,12 @@
     "testFailed": "ମଡେଲ୍ ପରୀକ୍ଷା ବିଫଳ ହେଲା",
     "testThrottled": "ଦୟାକରି ଏହି ମଡେଲ୍ ପୁନର୍ବାର ପରୀକ୍ଷା କରିବା ପୂର୍ବରୁ {seconds}s ଅପେକ୍ଷା କରନ୍ତୁ।",
     "noModelsForProvider": "ଏହି ପ୍ରଦାନକାରୀ ପାଇଁ କୌଣସି ମଡେଲ୍ କନଫିଗର୍ ହୋଇନାହିଁ।",
-    "testModels": "ମଡେଲ ପରୀକ୍ଷା କରନ୍ତୁ"
+    "testModels": "ମଡେଲ ପରୀକ୍ଷା କରନ୍ତୁ",
+    "monthlyRequestCapLabel": "ମାସିକ ଅନୁରୋଧ ସୀମା",
+    "monthlyTokenCapLabel": "ମାସିକ ଟୋକେନ୍ ସୀମା",
+    "capUnlimitedPlaceholder": "ଅସୀମିତ",
+    "capEditHint": "ସୀମା ପ୍ରତି ମାସର ୧ ତାରିଖରେ ୦୦:୦୦ UTC ରେ ରିସେଟ୍ ହୁଏ। ଅସୀମିତ ପାଇଁ ଖାଲି ରଖନ୍ତୁ।",
+    "monthlyUsageLine": "ଏହି ମାସରେ {requests} ଅନୁରୋଧ, {tokens} ଟୋକେନ୍"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "ଆପଣଙ୍କ ନିଜ ମେସିନରୁ WhatsApp, Telegram, Discord ଓ ଆହୁରି ଅନେକ ସ୍ଥାନରେ ଉତ୍ତର ଦେଉଥିବା, ସବୁବେଳେ ଚାଲୁ ରହୁଥିବା ବ୍ୟକ୍ତିଗତ ସହାୟକ।",
-      "hermes": "Nous Research ର ନିଜକୁ ଉନ୍ନତ କରୁଥିବା ଏଜେଣ୍ଟ, ସ୍ଥାୟୀ ମେମୋରୀ ଓ ଦକ୍ଷତା ସହିତ, ଟର୍ମିନାଲରେ କିମ୍ବା ଚାଟ୍ ଆପ୍‌ରେ।"
+      "hermes": "Nous Research ର ନିଜକୁ ଉନ୍ନତ କରୁଥିବା ଏଜେଣ୍ଟ, ସ୍ଥାୟୀ ମେମୋରୀ ଓ ଦକ୍ଷତା ସହିତ, ଟର୍ମିନାଲରେ କିମ୍ବା ଚାଟ୍ ଆପ୍‌ରେ।",
+      "pi": "ଏକ ସର୍ବନିମ୍ନ ଟର୍ମିନାଲ ଏଜେଣ୍ଟ, ଯାହାକୁ ଆପଣ ନିଜର ଏକ୍ସଟେନସନ, ଦକ୍ଷତା ଓ ପ୍ରମ୍ପ୍ଟ ଟେମ୍ପଲେଟରେ ଗଢ଼ନ୍ତି।"
     }
   },
   "update": {

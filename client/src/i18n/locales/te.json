@@ -224,6 +224,7 @@
     "settingsHint": "కేటలాగ్ మోడల్‌లకు స్థానిక సవరణలు కేటలాగ్ సింక్‌లలో ఉంచబడతాయి. మీరు వాటిని కాన్ఫిగరేషన్ ద్వారా మళ్లీ జోడించే వరకు తొలగించబడిన కేటలాగ్ మోడల్‌లు తొలగించబడతాయి.",
     "catalogModel": "కేటలాగ్",
     "customModel": "ఆచారం",
+    "discoveredModel": "కనుగొనబడింది",
     "localOverride": "స్థానిక ఓవర్‌రైడ్",
     "displayName": "ప్రదర్శన పేరు",
     "sizeLabel": "సామర్థ్య స్థాయి",
@@ -497,11 +498,11 @@
     "platform": "వేదిక",
     "hideAdded": "జోడించిన ప్రొవైడర్‌లను దాచు",
     "apiToken": "API టోకెన్",
-    "noKeyNeededPlaceholder": "API కీ అవసరం లేదు",
+    "keyOptionalPlaceholder": "ఐచ్ఛికం",
     "bearerTokenPlaceholder": "బేరర్ టోకెన్",
     "pasteKeyPlaceholder": "కీని ఇక్కడ అతికించండి",
     "pasteSeveral": "అనేకం అతికించండి",
-    "keylessHint": "API కీ అవసరం లేదు: ఈ ప్రొవైడర్ యొక్క ఉచిత శ్రేణి అనామకం (ప్రతి IPకి రేటు-పరిమితం).",
+    "keyOptionalHint": "ఐచ్ఛికం: అనామక ఉచిత శ్రేణి కోసం (ప్రతి IPకి రేట్ పరిమితి) ఖాళీగా ఉంచండి, లేదా మీ ఖాతాను ఉపయోగించడానికి మీ స్వంత కీని అతికించండి.",
     "enable": "ప్రారంభించు",
     "noProviderKeys": "ఇంకా ప్రొవైడర్ కీలు లేవు. రూటింగ్ ప్రారంభించడానికి పైన ఒకదాన్ని జోడించండి.",
     "filterPlaceholder": "ఫిల్టర్ ప్రొవైడర్లు లేదా కీలు",
@@ -679,7 +680,12 @@
     "testFailed": "మోడల్ పరీక్ష విఫలమైంది",
     "testThrottled": "ఈ మోడల్‌ని మళ్లీ పరీక్షించే ముందు దయచేసి {seconds}సె వేచి ఉండండి.",
     "noModelsForProvider": "ఈ ప్రొవైడర్ కోసం మోడల్స్ ఏవీ కాన్ఫిగర్ చేయబడలేదు.",
-    "testModels": "మోడల్‌లను పరీక్షించండి"
+    "testModels": "మోడల్‌లను పరీక్షించండి",
+    "monthlyRequestCapLabel": "నెలవారీ అభ్యర్థన పరిమితి",
+    "monthlyTokenCapLabel": "నెలవారీ టోకెన్ పరిమితి",
+    "capUnlimitedPlaceholder": "అపరిమితం",
+    "capEditHint": "ప్రతి నెలా 1వ తేదీన 00:00 UTCకు పరిమితులు రీసెట్ అవుతాయి. అపరిమితంగా కావాలంటే ఖాళీగా వదిలండి.",
+    "monthlyUsageLine": "ఈ నెల {requests} అభ్యర్థనలు, {tokens} టోకెన్లు"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "మీ సొంత మెషీన్ నుండి WhatsApp, Telegram, Discord మరియు మరిన్నింటిలో సమాధానం ఇచ్చే, ఎప్పుడూ పనిచేసే వ్యక్తిగత సహాయకుడు.",
-      "hermes": "Nous Research యొక్క స్వీయ-మెరుగుదల ఏజెంట్, శాశ్వత మెమరీ మరియు నైపుణ్యాలతో, టెర్మినల్‌లో లేదా చాట్ యాప్‌లలో."
+      "hermes": "Nous Research యొక్క స్వీయ-మెరుగుదల ఏజెంట్, శాశ్వత మెమరీ మరియు నైపుణ్యాలతో, టెర్మినల్‌లో లేదా చాట్ యాప్‌లలో.",
+      "pi": "మీ సొంత ఎక్స్‌టెన్షన్‌లు, నైపుణ్యాలు, ప్రాంప్ట్ టెంప్లేట్‌లతో మీరు తీర్చిదిద్దే కనీస టెర్మినల్ ఏజెంట్."
     }
   },
   "update": {

@@ -224,6 +224,7 @@
     "settingsHint": "对目录模型的本地修改会在目录同步后保留。已删除的目录模型会保持删除状态，直到您通过配置重新添加。",
     "catalogModel": "目录",
     "customModel": "自定义",
+    "discoveredModel": "已发现",
     "localOverride": "本地覆盖",
     "displayName": "显示名称",
     "sizeLabel": "能力档位",
@@ -511,11 +512,11 @@
     "platform": "平台",
     "hideAdded": "隐藏已添加的提供方",
     "apiToken": "API 令牌",
-    "noKeyNeededPlaceholder": "无需 API 密钥",
+    "keyOptionalPlaceholder": "可选",
     "bearerTokenPlaceholder": "Bearer 令牌",
     "pasteKeyPlaceholder": "在此粘贴密钥",
     "pasteSeveral": "粘贴多个",
-    "keylessHint": "无需 API 密钥：该提供方的免费层是匿名的（按 IP 限流）。",
+    "keyOptionalHint": "可选：留空则使用匿名免费层级（按 IP 限速），或粘贴您自己的密钥以使用您的账户。",
     "enable": "启用",
     "noProviderKeys": "尚无提供方密钥。在上方添加一个即可开始路由。",
     "filterPlaceholder": "筛选提供方或密钥",
@@ -686,7 +687,12 @@
     "testFailed": "模型测试失败",
     "testThrottled": "请等待 {seconds} 秒后再测试此模型。",
     "noModelsForProvider": "此提供方尚未配置任何模型。",
-    "testModels": "测试模型"
+    "testModels": "测试模型",
+    "monthlyRequestCapLabel": "每月请求上限",
+    "monthlyTokenCapLabel": "每月 Token 上限",
+    "capUnlimitedPlaceholder": "无限制",
+    "capEditHint": "配额在每月 1 日 00:00 UTC 重置。留空表示无限制。",
+    "monthlyUsageLine": "本月 {requests} 次请求，{tokens} tokens"
   },
   "backups": {
     "title": "备份",
@@ -1147,7 +1153,8 @@
       "generic": "其他任何说 OpenAI 接口的工具，用基础 URL 和密钥手动配置。",
       "atomcode": "AtomGit 的终端智能体，用 Rust 编写，可接任意 OpenAI 兼容端点。",
       "openclaw": "一个常驻运行的个人助理，在你自己的机器上通过 WhatsApp、Telegram、Discord 等应答。",
-      "hermes": "Nous Research 的自我改进智能体，拥有持久记忆和技能，可在终端或聊天应用中使用。"
+      "hermes": "Nous Research 的自我改进智能体，拥有持久记忆和技能，可在终端或聊天应用中使用。",
+      "pi": "一个极简的终端智能体，用你自己的扩展、技能和提示词模板来塑造它。"
     }
   },
   "update": {

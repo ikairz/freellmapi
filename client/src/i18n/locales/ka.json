@@ -224,6 +224,7 @@
     "settingsHint": "კატალოგის მოდელების ადგილობრივი რედაქტირება ინახება კატალოგის სინქრონიზაციაში. კატალოგის წაშლილი მოდელები წაშლილია მანამ, სანამ არ დაამატებთ მათ ხელახლა კონფიგურაციის საშუალებით.",
     "catalogModel": "კატალოგი",
     "customModel": "საბაჟო",
+    "discoveredModel": "აღმოჩენილი",
     "localOverride": "ადგილობრივი გადაფარვა",
     "displayName": "საჩვენებელი სახელი",
     "sizeLabel": "შესაძლებლობების დონე",
@@ -497,11 +498,11 @@
     "platform": "პლატფორმა",
     "hideAdded": "დამატებული პროვაიდერების დამალვა",
     "apiToken": "API ჟეტონი",
-    "noKeyNeededPlaceholder": "API გასაღები არ არის საჭირო",
+    "keyOptionalPlaceholder": "არასავალდებულო",
     "bearerTokenPlaceholder": "მატარებლის ნიშანი",
     "pasteKeyPlaceholder": "ჩასვით გასაღები აქ",
     "pasteSeveral": "რამდენიმეს ჩასმა",
-    "keylessHint": "API გასაღები არ არის საჭირო: ამ პროვაიდერის უფასო დონე ანონიმურია (ფასი შეზღუდულია IP-ზე).",
+    "keyOptionalHint": "არასავალდებულო: დატოვეთ ცარიელი ანონიმური უფასო დონისთვის (IP-ზე შეზღუდული), ან ჩასვით საკუთარი გასაღები თქვენი ანგარიშის გამოსაყენებლად.",
     "enable": "ჩართვა",
     "noProviderKeys": "პროვაიდერის გასაღებები ჯერ არ არის. დაამატეთ ერთი ზემოთ მარშრუტის დასაწყებად.",
     "filterPlaceholder": "გაფილტრეთ პროვაიდერები ან გასაღებები",
@@ -679,7 +680,12 @@
     "testFailed": "მოდელის ტესტირება ჩაიშალა",
     "testThrottled": "გთხოვთ მოიცადოთ {seconds}წმ ამ მოდელის ხელახლა შემოწმებამდე.",
     "noModelsForProvider": "ამ პროვაიდერისთვის მოდელები არ არის კონფიგურირებული.",
-    "testModels": "მოდელების ტესტირება"
+    "testModels": "მოდელების ტესტირება",
+    "monthlyRequestCapLabel": "თვიური მოთხოვნების ლიმიტი",
+    "monthlyTokenCapLabel": "თვიური ტოკენების ლიმიტი",
+    "capUnlimitedPlaceholder": "შეუზღუდავი",
+    "capEditHint": "ლიმიტები სათითაო თვის 1-ს 00:00 UTC აღდგება. დატოვეთ ცარიელი შეუზღუდავისთვის.",
+    "monthlyUsageLine": "ამ თვეში {requests} მოთხოვნა, {tokens} ტოკენი"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "მუდამ ჩართული პირადი ასისტენტი, რომელიც თქვენივე მანქანიდან პასუხობს WhatsApp-ში, Telegram-ში, Discord-სა და სხვაგან.",
-      "hermes": "Nous Research-ის თვითგანვითარებადი აგენტი მუდმივი მეხსიერებითა და უნარებით, ტერმინალში ან ჩატის აპებში."
+      "hermes": "Nous Research-ის თვითგანვითარებადი აგენტი მუდმივი მეხსიერებითა და უნარებით, ტერმინალში ან ჩატის აპებში.",
+      "pi": "მინიმალისტური ტერმინალის აგენტი, რომელსაც საკუთარი გაფართოებებით, უნარებითა და მოთხოვნის შაბლონებით აწყობთ."
     }
   },
   "update": {

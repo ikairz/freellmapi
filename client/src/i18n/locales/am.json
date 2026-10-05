@@ -224,6 +224,7 @@
     "settingsHint": "በካታሎግ ሞዴሎች ላይ የአካባቢ አርትዖቶች በካታሎግ ማመሳሰል ላይ ይቀመጣሉ። የተሰረዙ የካታሎግ ሞዴሎች በማዋቀር እንደገና እስኪጨምሯቸው ድረስ ተሰርዘዋል።",
     "catalogModel": "የመጽሐፍ ዓይነት ዝርዝር",
     "customModel": "ብጁ",
+    "discoveredModel": "የተገኘ",
     "localOverride": "የአካባቢ መሻር",
     "displayName": "የማሳያ ስም",
     "sizeLabel": "የአቅም ደረጃ",
@@ -497,11 +498,11 @@
     "platform": "መድረክ",
     "hideAdded": "የተጨመሩ አቅራቢዎችን ደብቅ",
     "apiToken": "API ማስመሰያ",
-    "noKeyNeededPlaceholder": "ምንም API ቁልፍ አያስፈልግም",
+    "keyOptionalPlaceholder": "አማራጭ",
     "bearerTokenPlaceholder": "ተሸካሚ ማስመሰያ",
     "pasteKeyPlaceholder": "ቁልፍ እዚህ ይለጥፉ",
     "pasteSeveral": "ብዙ ለጥፍ",
-    "keylessHint": "ምንም API ቁልፍ አያስፈልግም የዚህ አቅራቢ ነፃ ደረጃ ስም-አልባ ነው (በአይፒ ተመን የተገደበ)።",
+    "keyOptionalHint": "አማራጭ: ለስም-አልባ ነፃ ደረጃ (በእያንዳንዱ IP የተገደበ) ባዶ ይተዉት፣ ወይም መለያዎን ለመጠቀም የራስዎን ቁልፍ ይለጥፉ።",
     "enable": "አንቃ",
     "noProviderKeys": "እስካሁን ምንም የአቅራቢ ቁልፎች የሉም። ማዘዋወር ለመጀመር ከላይ ያለውን ያክሉ።",
     "filterPlaceholder": "አቅራቢዎችን ወይም ቁልፎችን አጣራ",
@@ -679,7 +680,12 @@
     "testFailed": "የሞዴል ሙከራ አልተሳካም",
     "testThrottled": "ይህን ሞዴል እንደገና ከመሞከርዎ በፊት እባክዎ {seconds} ሰከንድ ይጠብቁ።",
     "noModelsForProvider": "ለዚህ አቅራቢ የተዋቀረ ሞዴል የለም።",
-    "testModels": "ሞዴሎችን ይሞክሩ"
+    "testModels": "ሞዴሎችን ይሞክሩ",
+    "monthlyRequestCapLabel": "ወርሃዊ የጥያቄ ገደብ",
+    "monthlyTokenCapLabel": "ወርሃዊ የቶከን ገደብ",
+    "capUnlimitedPlaceholder": "ወሰን የለሽ",
+    "capEditHint": "ገደቦች በእያንዳንዱ ወር 1 ቀን 00:00 UTC ዳግም ይጀምራሉ። ለወሰን አልባ ባዶ ይተዉ።",
+    "monthlyUsageLine": "በዚህ ወር {requests} ጥያቄዎች፣ {tokens} ቶከኖች"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "ከራስዎ ማሽን ሆኖ በ WhatsApp፣ Telegram፣ Discord እና በሌሎችም ላይ የሚመልስ፣ ሁልጊዜ የሚሠራ የግል ረዳት።",
-      "hermes": "የ Nous Research ራሱን የሚያሻሽል ኤጀንት፣ ቋሚ ማህደረ ትውስታ እና ክህሎቶች ያሉት፣ በተርሚናል ወይም በቻት መተግበሪያዎች ላይ።"
+      "hermes": "የ Nous Research ራሱን የሚያሻሽል ኤጀንት፣ ቋሚ ማህደረ ትውስታ እና ክህሎቶች ያሉት፣ በተርሚናል ወይም በቻት መተግበሪያዎች ላይ።",
+      "pi": "በራስዎ ቅጥያዎች፣ ክህሎቶች እና የጥያቄ አብነቶች የሚቀርጹት አነስተኛ የተርሚናል ኤጀንት።"
     }
   },
   "update": {

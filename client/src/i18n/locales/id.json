@@ -224,6 +224,7 @@
     "settingsHint": "Pengeditan lokal pada model katalog disimpan di seluruh sinkronisasi katalog. Model katalog yang dihapus tetap terhapus sampai Anda menambahkannya lagi melalui konfigurasi.",
     "catalogModel": "katalog",
     "customModel": "adat",
+    "discoveredModel": "ditemukan",
     "localOverride": "penggantian lokal",
     "displayName": "Nama tampilan",
     "sizeLabel": "Tingkat kemampuan",
@@ -497,11 +498,11 @@
     "platform": "Peron",
     "hideAdded": "Sembunyikan penyedia yang sudah ditambahkan",
     "apiToken": "Token API",
-    "noKeyNeededPlaceholder": "Tidak diperlukan kunci API",
+    "keyOptionalPlaceholder": "Opsional",
     "bearerTokenPlaceholder": "Token pembawa",
     "pasteKeyPlaceholder": "tempelkan kunci di sini",
     "pasteSeveral": "Tempel beberapa",
-    "keylessHint": "Tidak diperlukan kunci API: tingkat gratis penyedia ini bersifat anonim (dibatasi tarif per IP).",
+    "keyOptionalHint": "Opsional: biarkan kosong untuk tingkat gratis anonim (dibatasi per IP), atau tempel kunci Anda sendiri untuk menggunakan akun Anda.",
     "enable": "Aktifkan",
     "noProviderKeys": "Belum ada kunci penyedia. Tambahkan satu di atas untuk memulai perutean.",
     "filterPlaceholder": "Filter penyedia atau kunci",
@@ -679,7 +680,12 @@
     "testFailed": "Pengujian model gagal",
     "testThrottled": "Harap tunggu {seconds} detik sebelum menguji model ini lagi.",
     "noModelsForProvider": "Tidak ada model yang dikonfigurasi untuk penyedia ini.",
-    "testModels": "Uji model"
+    "testModels": "Uji model",
+    "monthlyRequestCapLabel": "Batas permintaan bulanan",
+    "monthlyTokenCapLabel": "Batas token bulanan",
+    "capUnlimitedPlaceholder": "Tanpa batas",
+    "capEditHint": "Batas disetel ulang pada tanggal 1 pukul 00:00 UTC. Kosongkan untuk tanpa batas.",
+    "monthlyUsageLine": "{requests} permintaan, {tokens} token bulan ini"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Perkakas lain mana pun yang berbicara API OpenAI, disiapkan manual dengan URL dasar dan kunci.",
       "atomcode": "Agen terminal dari AtomGit, ditulis dalam Rust, yang menerima endpoint apa pun yang kompatibel dengan OpenAI.",
       "openclaw": "Asisten pribadi yang selalu aktif dan menjawab di WhatsApp, Telegram, Discord, dan lainnya dari mesin Anda sendiri.",
-      "hermes": "Agen dari Nous Research yang terus memperbaiki diri, dengan memori persisten dan keterampilan, di terminal atau di aplikasi chat."
+      "hermes": "Agen dari Nous Research yang terus memperbaiki diri, dengan memori persisten dan keterampilan, di terminal atau di aplikasi chat.",
+      "pi": "Agen terminal minimalis yang Anda bentuk dengan ekstensi, keterampilan, dan templat prompt Anda sendiri."
     }
   },
   "update": {

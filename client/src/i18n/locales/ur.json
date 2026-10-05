@@ -224,6 +224,7 @@
     "settingsHint": "کیٹلاگ ماڈلز میں مقامی ترامیم کیٹلاگ کی مطابقت پذیری میں رکھی جاتی ہیں۔ حذف شدہ کیٹلاگ ماڈل اس وقت تک حذف رہتے ہیں جب تک کہ آپ انہیں تشکیل کے ذریعے دوبارہ شامل نہیں کرتے ہیں۔",
     "catalogModel": "کیٹلاگ",
     "customModel": "اپنی مرضی کے مطابق",
+    "discoveredModel": "دریافت شدہ",
     "localOverride": "مقامی اوور رائڈ",
     "displayName": "ڈسپلے کا نام",
     "sizeLabel": "صلاحیت کا درجہ",
@@ -497,11 +498,11 @@
     "platform": "پلیٹ فارم",
     "hideAdded": "شامل کیے گئے فراہم کنندگان چھپائیں",
     "apiToken": "API ٹوکن",
-    "noKeyNeededPlaceholder": "API کلید کی ضرورت نہیں ہے۔",
+    "keyOptionalPlaceholder": "اختیاری",
     "bearerTokenPlaceholder": "بیئرر ٹوکن",
     "pasteKeyPlaceholder": "یہاں کلید چسپاں کریں۔",
     "pasteSeveral": "کئی چسپاں کریں",
-    "keylessHint": "API کلید کی ضرورت نہیں ہے: اس فراہم کنندہ کا مفت درجہ گمنام ہے (فی IP کی شرح محدود)۔",
+    "keyOptionalHint": "اختیاری: گمنام مفت درجے (فی IP شرح محدود) کے لیے خالی چھوڑیں، یا اپنا اکاؤنٹ استعمال کرنے کے لیے اپنی کلید پیسٹ کریں۔",
     "enable": "فعال کریں۔",
     "noProviderKeys": "ابھی تک کوئی فراہم کنندہ کیز نہیں ہیں۔ روٹنگ شروع کرنے کے لیے اوپر ایک شامل کریں۔",
     "filterPlaceholder": "فلٹر فراہم کنندگان یا چابیاں",
@@ -679,7 +680,12 @@
     "testFailed": "ماڈل ٹیسٹ ناکام ہو گیا",
     "testThrottled": "دوبارہ ٹیسٹ کرنے سے پہلے براہ کرم {seconds} سیکنڈ انتظار کریں۔",
     "noModelsForProvider": "اس فراہم کنندہ کے لیے کوئی ماڈل ترتیب نہیں دیا گیا ہے۔",
-    "testModels": "ماڈلز کی جانچ کریں"
+    "testModels": "ماڈلز کی جانچ کریں",
+    "monthlyRequestCapLabel": "ماہانہ درخواستوں کی حد",
+    "monthlyTokenCapLabel": "ماہانہ ٹوکن کی حد",
+    "capUnlimitedPlaceholder": "لامحدود",
+    "capEditHint": "حدیں ہر مہینے کی 1 تاریخ کو 00:00 UTC پر ری سیٹ ہوتی ہیں۔ لامحدود کے لیے خالی چھوڑیں۔",
+    "monthlyUsageLine": "اس مہینے {requests} درخواستیں، {tokens} ٹوکن"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "ایک ہمیشہ فعال ذاتی معاون جو آپ کی اپنی مشین سے WhatsApp، Telegram، Discord اور دیگر پر جواب دیتا ہے۔",
-      "hermes": "Nous Research کا خود کو بہتر بنانے والا ایجنٹ، مستقل میموری اور مہارتوں کے ساتھ، ٹرمینل میں یا چیٹ ایپس پر۔"
+      "hermes": "Nous Research کا خود کو بہتر بنانے والا ایجنٹ، مستقل میموری اور مہارتوں کے ساتھ، ٹرمینل میں یا چیٹ ایپس پر۔",
+      "pi": "ایک سادہ ٹرمینل ایجنٹ، جسے آپ اپنی ایکسٹینشنز، مہارتوں اور پرامپٹ ٹیمپلیٹس سے ڈھالتے ہیں۔"
     }
   },
   "update": {

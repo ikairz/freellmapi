@@ -224,6 +224,7 @@
     "settingsHint": "Локалните редакции на каталожните модели се запазват между синхронизациите на каталога. Изтритите каталожни модели остават изтрити, докато не ги добавиш отново чрез конфигурация.",
     "catalogModel": "Каталог",
     "customModel": "Custom",
+    "discoveredModel": "открит",
     "localOverride": "Местно преодоляване",
     "displayName": "Показно име",
     "sizeLabel": "Клас на способностите",
@@ -497,11 +498,11 @@
     "platform": "Платформа",
     "hideAdded": "Скриване на добавените доставчици",
     "apiToken": "API токен",
-    "noKeyNeededPlaceholder": "Не е нужен API ключ",
+    "keyOptionalPlaceholder": "По избор",
     "bearerTokenPlaceholder": "Жетон на носителя",
     "pasteKeyPlaceholder": "Постави ключа тук",
     "pasteSeveral": "Поставяне на няколко",
-    "keylessHint": "Не е необходим API ключ: безплатният слой на този доставчик е анонимен (с ограничена цена за IP адрес).",
+    "keyOptionalHint": "По избор: оставете празно за анонимното безплатно ниво (ограничение по IP) или поставете собствен ключ, за да използвате акаунта си.",
     "enable": "Включи",
     "noProviderKeys": "Все още няма ключове за доставчика. Добавете една по-горе, за да започнете маршрутизирането.",
     "filterPlaceholder": "Доставчици на филтри или ключове",
@@ -679,7 +680,12 @@
     "testFailed": "Тестът на модела е неуспешен",
     "testThrottled": "Моля, изчакайте {seconds} сек преди повторен тест на този модел.",
     "noModelsForProvider": "Няма конфигурирани модели за този доставчик.",
-    "testModels": "Тествай моделите"
+    "testModels": "Тествай моделите",
+    "monthlyRequestCapLabel": "Месечен лимит на заявки",
+    "monthlyTokenCapLabel": "Месечен лимит на токени",
+    "capUnlimitedPlaceholder": "Неограничен",
+    "capEditHint": "Лимитите се нулират на 1-во число 00:00 UTC. Оставете празно за неограничен.",
+    "monthlyUsageLine": "{requests} заявки, {tokens} токени този месец"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "Винаги активен личен асистент, който отговаря в WhatsApp, Telegram, Discord и други направо от вашата машина.",
-      "hermes": "Самоусъвършенстващият се агент на Nous Research с постоянна памет и умения — в терминала или в чат приложенията."
+      "hermes": "Самоусъвършенстващият се агент на Nous Research с постоянна памет и умения — в терминала или в чат приложенията.",
+      "pi": "Минималистичен агент за терминала, който оформяте със собствени разширения, умения и шаблони за подкани."
     }
   },
   "update": {

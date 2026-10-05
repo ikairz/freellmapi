@@ -8,6 +8,7 @@
 // relative imports in sync with the repo-root default in main.ts.
 import '../../server/src/env.js';
 import crypto from 'node:crypto';
+import tls from 'node:tls';
 import type { Server } from 'node:http';
 import { createApp } from '../../server/src/app.js';
 import { initDb, getDb, getUnifiedApiKey } from '../../server/src/db/index.js';
@@ -16,6 +17,7 @@ import { startHealthChecker, checkAllKeys } from '../../server/src/services/heal
 import { startCatalogSync } from '../../server/src/services/catalog-sync.js';
 import { startCooldownProbe } from '../../server/src/services/cooldown-probe.js';
 import { startCustomModelSync } from '../../server/src/services/custom-model-sync.js';
+import { startBuiltinModelDiscovery } from '../../server/src/services/builtin-model-discovery.js';
 import { startBackupScheduler } from '../../server/src/services/backups.js';
 import { cleanupExpiredCooldowns } from '../../server/src/services/ratelimit.js';
 import { loadCacheFromDb } from '../../server/src/services/cache.js';
@@ -37,6 +39,31 @@ export interface StartOptions {
 export interface ServerHandle {
   server: Server;
   port: number;
+}
+
+/**
+ * Trust the OS certificate store for outbound TLS, on top of Node's bundled
+ * roots (#1373). Antivirus that scans HTTPS (Kaspersky, ESET, Avast, …) and
+ * corporate TLS inspection re-sign traffic with a root they install into the
+ * Windows/macOS store. Browsers trust it; Node's fetch only knows its bundled
+ * list, so every provider call failed with a bare "fetch failed"
+ * (SELF_SIGNED_CERT_IN_CHAIN). Desktop only: the server image keeps Node's
+ * default and can opt in with NODE_USE_SYSTEM_CA=1. Best effort — a runtime
+ * without these APIs (Node < 22.19) keeps the default behaviour.
+ */
+export function trustSystemCertificates(tlsModule: Pick<typeof tls, 'getCACertificates' | 'setDefaultCACertificates'> = tls): number {
+  try {
+    if (typeof tlsModule.getCACertificates !== 'function' || typeof tlsModule.setDefaultCACertificates !== 'function') return 0;
+    const system = tlsModule.getCACertificates('system');
+    if (system.length === 0) return 0;
+    const merged = [...new Set([...tlsModule.getCACertificates('default'), ...system])];
+    tlsModule.setDefaultCACertificates(merged);
+    console.log(`[tls] trusting ${system.length} certificate(s) from the OS store`);
+    return system.length;
+  } catch (err) {
+    console.warn(`[tls] could not load the OS certificate store: ${(err as Error)?.message ?? err}`);
+    return 0;
+  }
 }
 
 // This function mirrors the boot sequence of server/src/index.ts — every
@@ -97,6 +124,7 @@ export async function startServer(opts: StartOptions): Promise<ServerHandle> {
   // the URL saved in the settings table is ignored on every restart and the
   // outbound proxy fields appear empty until re-saved.
   restoreProxySettings();
+  trustSystemCertificates();
   // Rehydrate the persisted response cache, same as server/src/index.ts. The
   // desktop app is restarted far more often than a server (every quit, every
   // update), so without this the cache is effectively never warm here.
@@ -112,6 +140,7 @@ export async function startServer(opts: StartOptions): Promise<ServerHandle> {
   startCooldownProbe(scheduler);
   startBackupScheduler(scheduler);
   startCustomModelSync(getDb(), scheduler);
+  startBuiltinModelDiscovery(getDb(), scheduler);
   // Post-sleep recovery — the menu-bar app on a laptop is the canonical
   // lid-close case: flush pooled sockets and force-re-probe every key so the
   // first request after wake doesn't ride a dead connection or a pre-sleep

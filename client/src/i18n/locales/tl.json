@@ -224,6 +224,7 @@
     "settingsHint": "Ang mga lokal na edit sa mga modelo ng katalogo ay pinananatili sa mga sync ng katalogo. Ang mga tinanggal na catalog model ay mananatiling nabubura hanggang sa idagdag mo ito muli sa pamamagitan ng config.",
     "catalogModel": "katalogo",
     "customModel": "kaugalian",
+    "discoveredModel": "natuklasan",
     "localOverride": "lokal na pag-override",
     "displayName": "Display name",
     "sizeLabel": "Antas ng kakayahan",
@@ -497,11 +498,11 @@
     "platform": "Platform",
     "hideAdded": "Itago ang mga naidagdag na provider",
     "apiToken": "token ng API",
-    "noKeyNeededPlaceholder": "Hindi kailangan ng API key",
+    "keyOptionalPlaceholder": "Opsyonal",
     "bearerTokenPlaceholder": "Token ng tagapagdala",
     "pasteKeyPlaceholder": "I-paste ang key dito",
     "pasteSeveral": "I-paste ang marami",
-    "keylessHint": "Hindi kailangan ng API key: ang libreng tier ng provider na ito ay anonymous (rate-limited kada IP).",
+    "keyOptionalHint": "Opsyonal: iwanang blangko para sa anonymous na libreng tier (may rate limit bawat IP), o i-paste ang sarili mong key para gamitin ang iyong account.",
     "enable": "paganahin",
     "noProviderKeys": "Wala pang provider keys. Magdagdag ng isa sa itaas para simulan ang routing.",
     "filterPlaceholder": "I-filter ang mga provider o key",
@@ -679,7 +680,12 @@
     "testFailed": "Bumagsak ang pagsusuri ng modelo",
     "testThrottled": "Mangyaring maghintay ng {seconds}s bago subukang muli ang modelong ito.",
     "noModelsForProvider": "Walang naka-configure na modelo para sa provider na ito.",
-    "testModels": "Subukan ang mga modelo"
+    "testModels": "Subukan ang mga modelo",
+    "monthlyRequestCapLabel": "Buwanang limit ng kahilingan",
+    "monthlyTokenCapLabel": "Buwanang limit ng token",
+    "capUnlimitedPlaceholder": "Walang limit",
+    "capEditHint": "Nireset ang limit sa ika-1 ng buwan, 00:00 UTC. Iwanang blangko kung walang limit.",
+    "monthlyUsageLine": "{requests} kahilingan, {tokens} token ngayong buwan"
   },
   "backups": {
     "title": "Backups",
@@ -1135,7 +1141,8 @@
       "generic": "Anything else that speaks the OpenAI API, set up by hand from a base URL and key.",
       "atomcode": "AtomGit's terminal agent, written in Rust, that takes any OpenAI-compatible endpoint.",
       "openclaw": "Isang personal assistant na laging naka-on at sumasagot sa WhatsApp, Telegram, Discord at iba pa mula sa sarili mong makina.",
-      "hermes": "Ang self-improving na agent ng Nous Research na may persistent na memorya at mga skill, sa terminal o sa mga chat app."
+      "hermes": "Ang self-improving na agent ng Nous Research na may persistent na memorya at mga skill, sa terminal o sa mga chat app.",
+      "pi": "Isang minimal na terminal agent na hinuhubog mo gamit ang sarili mong mga extension, skill at prompt template."
     }
   },
   "update": {
