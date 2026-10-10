@@ -72,6 +72,13 @@ export type Platform =
   | 'aclide'
   // OpenAI-compatible chat and embeddings; one shared $1 monthly allowance.
   | 'speka'
+  // Ongoing free research API for chat and speech recognition; catalog only.
+  | 'typhoon'
+  // Permanent free chat aliases, shared fair-use quota; signed catalog only.
+  | 'plugsky'
+  // Catalog-only free chat gateways; shared monthly/daily account allowances.
+  | 'inferbase'
+  | 'simplellm'
   // Selected zero-priced routes have daily/rolling quotas without a top-up;
   // signed catalog only. The public roster also includes paid/promotional IDs.
   | 'llmtr'
@@ -316,6 +323,9 @@ export interface ApiKey {
   label: string;
   maskedKey: string;
   baseUrl: string | null;
+  /** Optional custom-endpoint group label (#1176); null = legacy single
+   *  "Custom" group. Only set on platform='custom' rows. */
+  groupLabel?: string | null;
   status: KeyStatus;
   enabled: boolean;
   /** This row is the anonymous sentinel of a key-optional platform: there is

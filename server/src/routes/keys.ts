@@ -13,7 +13,7 @@ import { assessProviderUrl } from '../lib/url-guard.js';
 import { verifyCredentials } from '../services/auth.js';
 import { getActiveCooldownsForKeys, clearCooldownsForKey } from '../services/ratelimit.js';
 import { getMonthlyBudgetCaps, getMonthlyUsage, nextMonthResetAt } from '../services/key-budget.js';
-import { resolveCustomEndpointKey, customEndpointKeyIds, siblingEndpointKeyId, endpointHasCredential } from '../services/custom-endpoint.js';
+import { resolveCustomEndpointKey, customEndpointKeyIds, siblingEndpointKeyId, endpointHasCredential, normalizeGroupLabel, setCustomEndpointGroup } from '../services/custom-endpoint.js';
 import { registerCustomModels, registerCustomChatModels } from '../services/custom-model-register.js';
 import { registerCustomMediaModel } from '../services/custom-media-register.js';
 import { discoverEndpointModels, probeEndpointModel, classifyModelId, ModelDiscoveryError } from '../services/model-discovery.js';
@@ -45,6 +45,10 @@ export const keysRouter = Router();
 const PLATFORMS = [
   'aclide',
   'speka',
+  'typhoon',
+  'plugsky',
+  'inferbase',
+  'simplellm',
   'llmtr',
   'gizmo',
   'blockrun',
@@ -98,10 +102,13 @@ const updateKeySchema = z.object({
   // Monthly budget caps (#1158): 0 clears the cap (unlimited).
   monthlyRequestCap: z.number().int().min(0).max(1_000_000_000).optional(),
   monthlyTokenCap: z.number().int().min(0).max(1_000_000_000_000).optional(),
+  // Custom-endpoint group label (#1176): '' clears it back to the single
+  // "Custom" group; absent leaves it unchanged. Applies to the whole endpoint.
+  groupLabel: z.string().trim().max(80).optional(),
   // An absent credential leaves the encrypted key untouched.
   key: z.string().trim().min(1).optional(),
-}).refine(data => data.enabled !== undefined || data.label !== undefined || data.modelScope !== undefined || data.proxyUrl !== undefined || data.key !== undefined || data.monthlyRequestCap !== undefined || data.monthlyTokenCap !== undefined, {
-  message: 'At least one of enabled, label, modelScope, proxyUrl, key, monthlyRequestCap or monthlyTokenCap must be provided',
+}).refine(data => data.enabled !== undefined || data.label !== undefined || data.modelScope !== undefined || data.proxyUrl !== undefined || data.key !== undefined || data.monthlyRequestCap !== undefined || data.monthlyTokenCap !== undefined || data.groupLabel !== undefined, {
+  message: 'At least one of enabled, label, modelScope, proxyUrl, key, monthlyRequestCap, monthlyTokenCap or groupLabel must be provided',
 });
 
 const importKeySchema = z.object({
@@ -409,6 +416,9 @@ keysRouter.get('/', (_req: Request, res: Response) => {
       label: row.label,
       maskedKey,
       baseUrl: row.base_url ?? null,
+      // Optional custom-endpoint group label (#1176); null = legacy single
+      // "Custom" group.
+      groupLabel: row.group_label ?? null,
       monthlyRequestCap: budgetCaps.requestCap,
       monthlyTokenCap: budgetCaps.tokenCap,
       monthlyUsage: {
@@ -787,6 +797,9 @@ const customProviderSchema = z.object({
   // (object form) overrides them for that one model.
   supportsTools: z.boolean().optional(),
   supportsVision: z.boolean().optional(),
+  // Endpoint group (#1176). Absent keeps the endpoint's current group; '' moves
+  // it back to the single "Custom" group.
+  groupLabel: z.string().trim().max(80).optional(),
 }).refine(
   d => d.baseUrl !== undefined || d.keyId !== undefined,
   { message: 'baseUrl or keyId is required' },
@@ -1320,6 +1333,7 @@ keysRouter.post('/custom', async (req: Request, res: Response) => {
       return;
     }
     const added = resolveCustomEndpointKey(db, baseUrl, providedKey, label, endpoint.keyId);
+    if (parsed.data.groupLabel !== undefined) setCustomEndpointGroup(db, added.keyId, normalizeGroupLabel(parsed.data.groupLabel));
     res.status(added.created ? 201 : 200).json({
       success: true,
       keyId: added.keyId,
@@ -1352,6 +1366,7 @@ keysRouter.post('/custom', async (req: Request, res: Response) => {
   const { keyId, storedKey, registered } = registerCustomModels(
     db, baseUrl, providedKey, label, endpoint.keyId ?? undefined, pureChatEntries,
   );
+  if (parsed.data.groupLabel !== undefined) setCustomEndpointGroup(db, keyId, normalizeGroupLabel(parsed.data.groupLabel));
 
   const mediaRegistered: Array<{ modelDbId: number; model: string; modality: string; created: boolean }> = [];
   const perModelErrors: Array<{ model: string; error: string }> = [];
@@ -1751,8 +1766,22 @@ keysRouter.patch('/platform/:platform', (req: Request, res: Response) => {
     return;
   }
 
+  // #1176: custom endpoints split into named groups, and a group's switch must
+  // reach only that group. `group` narrows the sweep: a label, or null for the
+  // ungrouped "Custom" endpoints. Absent keeps the whole-platform sweep.
+  const { group } = req.body;
+  if (group !== undefined && (platform !== 'custom' || (group !== null && typeof group !== 'string'))) {
+    res.status(400).json({ error: { message: 'group applies only to the custom platform and must be a string or null' } });
+    return;
+  }
+
   const db = getDb();
-  const result = db.prepare('UPDATE api_keys SET enabled = ? WHERE platform = ?').run(enabled ? 1 : 0, platform);
+  const groupLabel = group === undefined ? undefined : normalizeGroupLabel(group);
+  const result = groupLabel === undefined
+    ? db.prepare('UPDATE api_keys SET enabled = ? WHERE platform = ?').run(enabled ? 1 : 0, platform)
+    : groupLabel === null
+      ? db.prepare("UPDATE api_keys SET enabled = ? WHERE platform = 'custom' AND group_label IS NULL").run(enabled ? 1 : 0)
+      : db.prepare("UPDATE api_keys SET enabled = ? WHERE platform = 'custom' AND group_label = ?").run(enabled ? 1 : 0, groupLabel);
 
   res.json({ success: true, enabled, updatedKeys: result.changes });
 });
@@ -1771,7 +1800,7 @@ keysRouter.patch('/:id', (req: Request, res: Response) => {
     return;
   }
 
-  const { enabled, label, modelScope, proxyUrl, key, monthlyRequestCap, monthlyTokenCap } = parsed.data;
+  const { enabled, label, modelScope, proxyUrl, key, monthlyRequestCap, monthlyTokenCap, groupLabel } = parsed.data;
   const updates: string[] = [];
   const values: (string | number | null)[] = [];
   let changedKey: string | undefined;
@@ -1832,6 +1861,20 @@ keysRouter.patch('/:id', (req: Request, res: Response) => {
     updates.push('monthly_token_cap = ?');
     values.push(monthlyTokenCap);
   }
+  // Custom-endpoint group label (#1176) is written below, across the
+  // endpoint's whole key pool rather than this one row.
+  const db = getDb();
+  if (groupLabel !== undefined) {
+    const row = db.prepare('SELECT platform FROM api_keys WHERE id = ?').get(id) as { platform: string } | undefined;
+    if (!row) {
+      res.status(404).json({ error: { message: 'Key not found' } });
+      return;
+    }
+    if (row.platform !== 'custom') {
+      res.status(400).json({ error: { message: 'groupLabel applies only to custom endpoints' } });
+      return;
+    }
+  }
   // Deduped; an empty result stores NULL, which the router reads as "unscoped".
   const scopeIds = modelScope == null ? [] : [...new Set(modelScope)];
   if (modelScope !== undefined) {
@@ -1841,14 +1884,15 @@ keysRouter.patch('/:id', (req: Request, res: Response) => {
 
   values.push(id);
 
-  const db = getDb();
   // Re-submitting the same key satisfies "something changed" but is a no-op;
   // it must not turn into an invalid UPDATE with an empty SET list.
-  const result = updates.length === 0
-    ? { changes: 1 }
-    : db.transaction(() =>
-      db.prepare(`UPDATE api_keys SET ${updates.join(', ')} WHERE id = ?`).run(...values),
-    )();
+  const result = db.transaction(() => {
+    const changes = updates.length === 0
+      ? 1
+      : db.prepare(`UPDATE api_keys SET ${updates.join(', ')} WHERE id = ?`).run(...values).changes;
+    if (changes > 0 && groupLabel !== undefined) setCustomEndpointGroup(db, id, normalizeGroupLabel(groupLabel));
+    return { changes };
+  })();
 
   if (result.changes === 0) {
     res.status(404).json({ error: { message: 'Key not found' } });
@@ -1863,5 +1907,6 @@ keysRouter.patch('/:id', (req: Request, res: Response) => {
   if (proxyUrl !== undefined) response.maskedProxyUrl = maskProxyUrl(proxyUrl);
   if (key !== undefined) response.maskedKey = maskKey(key);
   if (modelScope !== undefined) response.modelScope = scopeIds.length > 0 ? scopeIds : null;
+  if (groupLabel !== undefined) response.groupLabel = normalizeGroupLabel(groupLabel);
   res.json(response);
 });

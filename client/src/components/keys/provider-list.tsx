@@ -23,6 +23,7 @@ import { formatSqliteUtcToLocalTime } from '@/lib/utils'
 import { useI18n } from '@/i18n'
 import { toast } from '@/lib/toast'
 import { keyMatchesQuery } from '@/lib/key-search'
+import { copyText } from '@/lib/clipboard'
 import {
   PLATFORMS,
   CUSTOM_GROUP,
@@ -32,6 +33,7 @@ import {
   statusDot,
   statusLabelKey,
 } from './shared'
+import { balanceByKey } from './quota-balance'
 import type { HealthData } from './shared'
 import { DiscoverModelsDialog } from './discover-models-dialog'
 import { AddEndpointKeyDialog } from './add-endpoint-key-dialog'
@@ -42,17 +44,39 @@ import { ModelScopeDialog } from './model-scope-dialog'
 import { KeyProxyDialog } from './key-proxy-dialog'
 import { TestModelsDialog } from './test-models-dialog'
 import { AddModelDialog } from './add-model-dialog'
+import { groupHandle } from '@/lib/endpoint-groups'
 
 type StatusFilter = 'all' | 'healthy' | 'issues' | 'disabled'
 
+// One collapsible section of the Keys page: a platform, or one named group of
+// custom endpoints (#1176), which is why `value` and `platform` can differ.
+interface ProviderGroup {
+  value: string
+  label: string
+  url: string
+  platform: string
+  /** Custom endpoints only: the group label, or null for the default group. */
+  customGroup?: string | null
+  keys: ApiKey[]
+}
+
 // #787: what the batch bar can do to the selected keys of one group.
 type BulkAction = 'enable' | 'disable' | 'delete'
+
+// #1403 phase 3: the balance badge names its unit with the Free tier page's
+// already-translated metric words.
+const METRIC_LABEL_KEY = {
+  requests: 'freeTier.metricRequests',
+  tokens: 'freeTier.metricTokens',
+  credits: 'freeTier.metricCredits',
+  neurons: 'freeTier.metricNeurons',
+} as const
 
 // The Providers tab body: a filter toolbar over a list of collapsible provider
 // groups. Owns the keys/health/proxy queries and every per-key mutation so
 // KeysPage stays a thin shell. `onAddKey` opens the shared Add key dialog.
 export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const queryClient = useQueryClient()
 
   const [editingKeyId, setEditingKeyId] = useState<number | null>(null)
@@ -171,10 +195,11 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   })
 
   const togglePlatform = useMutation({
-    mutationFn: ({ platform, enabled }: { platform: string; enabled: boolean }) =>
+    // `group` narrows a custom sweep to one endpoint group (#1176).
+    mutationFn: ({ platform, enabled, group }: { platform: string; enabled: boolean; group?: string | null }) =>
       apiFetch(`/api/keys/platform/${platform}`, {
         method: 'PATCH',
-        body: JSON.stringify({ enabled }),
+        body: JSON.stringify(group === undefined ? { enabled } : { enabled, group }),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['keys'] })
@@ -243,6 +268,14 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['proxy-url'] }),
   })
 
+  function copyGroupHandle(label: string) {
+    const handle = `#${groupHandle(label)}`
+    void copyText(handle).then(ok => {
+      if (ok) toast.success(t('keys.groupHandleCopied', { handle }))
+      else toast.error(t('keys.groupHandleCopyFailed'))
+    })
+  }
+
   function startEditing(key: ApiKey) {
     setEditingKeyId(key.id)
   }
@@ -260,10 +293,35 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   for (const k of healthData?.keys ?? []) healthKeyMap.set(k.id, k)
   const statusOf = (k: ApiKey) => healthKeyMap.get(k.id)?.status ?? k.status
 
-  const grouped = [...PLATFORMS, CUSTOM_GROUP].map(p => ({
-    ...p,
-    keys: keys.filter(k => k.platform === p.value),
-  })).filter(p => p.keys.length > 0)
+  // #1403 phase 3: the provider-reported balance for a key, from the same
+  // health poll the row's status already rides on. One badge per key: the
+  // lowest remaining fraction among that key's pools, since that pool is the
+  // one that runs dry first and starts routing around the key.
+  const balanceOf = balanceByKey(healthData?.quotaStates ?? [])
+
+  // #1176: custom endpoints split into one group per operator-set groupLabel;
+  // endpoints without one stay in the default "Custom" group, listed first,
+  // then the named groups A→Z. `value` only keys the expand/collapse state, so
+  // a named group's is prefixed and can never collide with a platform value;
+  // `platform` and `customGroup` are what the group's actions send to the API
+  // (null = the ungrouped endpoints).
+  const customGroups = new Map<string, ProviderGroup>()
+  for (const k of keys) {
+    if (k.platform !== 'custom') continue
+    const named = k.groupLabel?.trim() || null
+    const value = named === null ? CUSTOM_GROUP.value : `custom|${named}`
+    let group = customGroups.get(value)
+    if (!group) {
+      group = { value, label: named ?? CUSTOM_GROUP.label, url: CUSTOM_GROUP.url, platform: 'custom', customGroup: named, keys: [] }
+      customGroups.set(value, group)
+    }
+    group.keys.push(k)
+  }
+  const grouped: ProviderGroup[] = [
+    ...PLATFORMS.map(p => ({ ...p, platform: p.value, keys: keys.filter(k => k.platform === p.value) })),
+    ...[...customGroups.values()].sort((a, b) =>
+      a.customGroup === null ? -1 : b.customGroup === null ? 1 : a.label.localeCompare(b.label)),
+  ].filter(p => p.keys.length > 0)
 
   const totalProviders = grouped.length
   const totalKeys = grouped.reduce((n, g) => n + g.keys.length, 0)
@@ -374,7 +432,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                   <Switch
                     checked={group.keys.some(k => k.enabled)}
                     onCheckedChange={(checked) =>
-                      togglePlatform.mutate({ platform: group.value, enabled: checked })
+                      togglePlatform.mutate({ platform: group.platform, enabled: checked, group: group.customGroup })
                     }
                     disabled={togglePlatform.isPending}
                   />
@@ -386,6 +444,13 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                   >
                     <h3 className="text-sm font-medium">{group.label}</h3>
                     <Badge variant="secondary" className="tabular-nums">{group.keys.length}</Badge>
+                    {group.customGroup && (
+                      <Tooltip text={t('keys.groupHandleHint', { handle: groupHandle(group.customGroup) })}>
+                        <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+                          #{groupHandle(group.customGroup)}
+                        </code>
+                      </Tooltip>
+                    )}
                     <span className="inline-flex items-center gap-2 text-xs text-muted-foreground">
                       {healthyCount > 0 && (
                         <span className="inline-flex items-center gap-1">
@@ -411,13 +476,19 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                       <DropdownMenuContent align="end" className="w-52">
                         {/* Test every model this provider serves, one real ping each
                             (custom endpoints test per key from the row instead). */}
-                        {group.value !== 'custom' && (
-                          <DropdownMenuItem onClick={() => setTestTarget({ platform: group.value, label: group.label })}>
+                        {group.platform !== 'custom' && (
+                          <DropdownMenuItem onClick={() => setTestTarget({ platform: group.platform, label: group.label })}>
                             {t('keys.testModels')}
                             <FlaskConical className="ml-auto size-3.5" />
                           </DropdownMenuItem>
                         )}
-                        <DropdownMenuItem onClick={() => setAddModelTarget({ platform: group.value })}>
+                        {group.customGroup && (
+                          <DropdownMenuItem onClick={() => copyGroupHandle(group.customGroup!)}>
+                            {t('keys.copyGroupHandle')}
+                            <Copy className="ml-auto size-3.5" />
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem onClick={() => setAddModelTarget({ platform: group.platform })}>
                           {t('keys.addCustomModel')}
                           <Sparkles className="ml-auto size-3.5" />
                         </DropdownMenuItem>
@@ -429,8 +500,8 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                         )}
                         {proxyEnabled && (
                           <DropdownMenuCheckboxItem
-                            checked={!bypassPlatforms.includes(group.value)}
-                            onCheckedChange={() => toggleBypass.mutate(group.value)}
+                            checked={!bypassPlatforms.includes(group.platform)}
+                            onCheckedChange={() => toggleBypass.mutate(group.platform)}
                             closeOnClick={false}
                           >
                             {t('keys.routeViaProxy')}
@@ -499,6 +570,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                       const health = healthKeyMap.get(k.id)
                       const lastChecked = health?.lastCheckedAt ?? k.lastCheckedAt
                       const lastHealthError = health?.lastHealthError ?? k.lastHealthError
+                      const balance = balanceOf.get(k.id)
                       const customModels = k.models ?? []
                       const hasCustomModels = customModels.length > 0
                       const isExpanded = expandedKeyIds.has(k.id)
@@ -591,6 +663,29 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
                               >
                                 {t('keys.keyProxyBadge')}
                               </Badge>
+                            )}
+                            {/* #1403 phase 3: the provider-reported balance (#1403).
+                                Amber at ≤20% left — the same low-balance signal the
+                                Quota outlook panel gives, but visible where the operator
+                                actually scans keys instead of on a second tab. */}
+                            {balance && (
+                              <Tooltip
+                                text={balance.limit != null
+                                  ? t('keys.quotaBalanceHint', { remaining: new Intl.NumberFormat(locale).format(balance.remaining), limit: new Intl.NumberFormat(locale).format(balance.limit), metric: t(METRIC_LABEL_KEY[balance.metric]) })
+                                  : t('keys.quotaBalanceLeft', { remaining: new Intl.NumberFormat(locale).format(balance.remaining) })}
+                              >
+                                <Badge
+                                  variant="outline"
+                                  aria-label={t('keys.quotaBalanceLeft', { remaining: new Intl.NumberFormat(locale).format(balance.remaining) })}
+                                  className={`text-[10px] tabular-nums ${balance.fraction != null && balance.fraction <= 0.2
+                                    ? 'border-amber-600/30 text-amber-700 dark:text-amber-300'
+                                    : 'text-muted-foreground'} ${k.enabled ? '' : 'opacity-50'}`}
+                                >
+                                  {balance.limit != null && balance.fraction != null
+                                    ? `${Math.round(balance.fraction * 100)}% ${t(METRIC_LABEL_KEY[balance.metric])}`
+                                    : `${new Intl.NumberFormat(locale).format(balance.remaining)} ${t(METRIC_LABEL_KEY[balance.metric])}`}
+                                </Badge>
+                              </Tooltip>
                             )}
                             <div className="flex-1" />
                             {lastChecked && (

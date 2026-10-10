@@ -1,5 +1,6 @@
 import { getDb } from '../db/index.js';
 import { resolveProvider } from '../providers/index.js';
+import { BaseProvider } from '../providers/base.js';
 import { decrypt } from '../lib/crypto.js';
 import { decryptProxyUrl } from '../lib/key-proxy.js';
 import { withKeyProxy } from '../lib/proxy.js';
@@ -62,6 +63,36 @@ function positiveIntEnv(raw: string | undefined, fallback: number): number {
 // Track consecutive failures per key
 const failureCount = new Map<number, number>();
 
+// A key whose last validation was rate-limited (429) is skipped by the
+// scheduled pass until the skip window passes: re-asking a provider that just
+// told us to slow down is how validation traffic becomes a ban. LLMTR's
+// validator is a POST to /chat/completions with a nonexistent model —
+// shaped exactly like the bot traffic their abuse system hunts — so an
+// unpaced re-ask every 5 minutes per key kept accounts flagged (#1369).
+// Forced passes (dashboard check-all, wake re-probe) still probe: explicit
+// operator intent wins over pacing. A later successful validation clears the
+// mark; validation that never ran leaves no mark.
+const validationRateLimitedAt = new Map<number, number>();
+
+const DEFAULT_VALIDATION_RATE_LIMIT_SKIP_MS = 60 * 60 * 1000;
+
+/** How long a 429ed key stays out of the scheduled pass. Tunable like the
+ *  other pacing knobs; 0 or a bad value falls back to the default. */
+function getValidationRateLimitSkipMs(): number {
+  return positiveIntEnv(process.env.HEALTH_CHECK_RATE_LIMIT_SKIP_MS, DEFAULT_VALIDATION_RATE_LIMIT_SKIP_MS);
+}
+
+/** Record that validating this key was just rate-limited. Exported for tests;
+ *  production calls it from checkKeyHealth's 429 path. */
+export function recordValidationRateLimited(keyId: number, atMs = Date.now()): void {
+  validationRateLimitedAt.set(keyId, atMs);
+}
+
+/** Test seam: drop all validation-429 pacing state. */
+export function clearValidationRateLimitState(): void {
+  validationRateLimitedAt.clear();
+}
+
 function recordInvalidFailure(keyId: number, platform?: string): void {
   const count = (failureCount.get(keyId) ?? 0) + 1;
   failureCount.set(keyId, count);
@@ -78,6 +109,76 @@ function recordInvalidFailure(keyId: number, platform?: string): void {
       `[Health] Auto-disabled key ${keyId} after ${count} consecutive failures`,
       { provider: platform, event: 'key_auto_disabled' },
     );
+  }
+}
+
+/**
+ * Provider-reported quota polling (#1403 phase 1). Providers with a key-info
+ * endpoint (see BaseProvider.fetchQuota) get polled right after a health pass
+ * confirms the key works, so the dashboard shows the provider's own balance
+ * instead of a regex guess over catalog text. Throttled per key: a poll is
+ * only worth taking when the last quota_api observation is older than
+ * QUOTA_POLL_INTERVAL_MS (or none exists). Fire-and-forget and failure-silent:
+ * a quota probe says nothing about key validity and must never bend a health
+ * verdict or the pass budget.
+ */
+export const QUOTA_POLL_INTERVAL_MS = 15 * 60 * 1000;
+
+function quotaPollDue(keyId: number, now = Date.now()): boolean {
+  const row = getDb().prepare(`
+    SELECT created_at AS seenAt FROM provider_quota_observations
+     WHERE key_id = ? AND source = 'quota_api'
+     ORDER BY created_at DESC LIMIT 1
+  `).get(keyId) as { seenAt: string | null } | undefined;
+  if (!row?.seenAt) return true;
+  const seen = Date.parse(row.seenAt.includes('T') ? row.seenAt : row.seenAt.replace(' ', 'T') + 'Z');
+  if (!Number.isFinite(seen)) return true;
+  return now - seen >= QUOTA_POLL_INTERVAL_MS;
+}
+
+export async function pollKeyQuota(
+  keyId: number,
+  // The api_keys row as stored (encrypted key columns + the proxy columns
+  // decryptProxyUrl reads). `any` mirrors how checkKeyHealth carries it.
+  row: any,
+  provider: BaseProvider,
+): Promise<boolean> {
+  try {
+    const apiKey = decrypt(row.encrypted_key, row.iv, row.auth_tag);
+    return await withKeyProxy(decryptProxyUrl(row), () => provider.fetchQuota(apiKey, {
+      platform: row.platform as Platform,
+      keyId,
+      quotaPoolKey: inferQuotaPoolKey(row.platform as Platform, null),
+      endpoint: 'quota_api',
+      origin: 'health',
+    }));
+  } catch {
+    // Inconclusive by construction: never throws into the health pass.
+    return false;
+  }
+}
+
+/** True when this provider actually has a quota endpoint to probe (#1403).
+ *  Uses the provider's own hasQuotaProbe getter: OpenAICompatProvider
+ *  overrides fetchQuota for every instance, spec or not, so a method-identity
+ *  check would claim quota support for specless platforms. */
+export function supportsQuotaPolling(provider: BaseProvider): boolean {
+  return provider.hasQuotaProbe;
+}
+
+/** Throttled, self-contained quota poll for one key — the entry point other
+ *  services (or a future scheduler) can use without duplicating the gate. */
+export async function maybePollKeyQuota(keyId: number): Promise<boolean> {
+  try {
+    const db = getDb();
+    const row = db.prepare('SELECT * FROM api_keys WHERE id = ? AND enabled = 1').get(keyId) as any;
+    if (!row) return false;
+    const provider = resolveProvider(row.platform as Platform, row.base_url);
+    if (!provider || !supportsQuotaPolling(provider)) return false;
+    if (!quotaPollDue(keyId)) return false;
+    return await pollKeyQuota(keyId, row, provider);
+  } catch {
+    return false;
   }
 }
 
@@ -118,10 +219,19 @@ export async function checkKeyHealth(keyId: number): Promise<KeyStatus> {
 
     if (isValid) {
       failureCount.delete(keyId);
+      // The provider answered again: whatever rate-limit told us to back off
+      // is over, so the key rejoins the normal cadence.
+      validationRateLimitedAt.delete(keyId);
       // #1348: a healthy key on a built-in platform the catalog does not carry
       // serves nothing until its models are discovered. Fire-and-forget; the
       // trigger is a no-op for every other platform, and throttled.
       triggerBuiltinModelDiscovery(db, row.platform, 'healthy');
+      // #1403: piggyback provider-reported quota polling on the healthy
+      // verdict — but only for providers with a quota endpoint, and at most
+      // once per QUOTA_POLL_INTERVAL_MS per key. Fire-and-forget, silent.
+      if (supportsQuotaPolling(provider) && quotaPollDue(keyId)) {
+        void pollKeyQuota(keyId, row, provider).catch(() => {});
+      }
     } else {
       providerLog(
         'warn',
@@ -141,6 +251,10 @@ export async function checkKeyHealth(keyId: number): Promise<KeyStatus> {
     // "[Health] Key N (" prefix is preserved so the 12-hourly crash watchdog
     // (cron bff5ae167d28) that scrapes /tmp/freellmapi.log for these lines
     // continues to match unchanged.
+    // A 429 here means the provider rate-limited the validation itself:
+    // remember it so the scheduled pass backs off instead of re-asking every
+    // 5 minutes (#1369). Other transport errors carry no such instruction.
+    if (err?.status === 429) recordValidationRateLimited(keyId);
     const lastError = sanitizeProviderErrorMessage(err?.message ?? err);
     console.error(
       `[Health] Key ${keyId} (${row.platform}, base=${row.base_url ?? 'default'}) ` +
@@ -316,8 +430,17 @@ async function runHealthPass(opts: HealthPassOptions): Promise<HealthPassResult>
   `).all() as HealthKeyRow[];
 
   const skippedKeyIds: number[] = [];
+  const skipMs = opts.force ? 0 : getValidationRateLimitSkipMs();
   const due = rows.filter(row => {
     if (opts.force) return true;
+    // A key the provider just rate-limited stays out until the skip window
+    // passes — even one parked at 'error'. A 429 is fresher, more specific
+    // evidence than the eagerness to re-ask an errored key (#1369).
+    const limitedAt = validationRateLimitedAt.get(row.id);
+    if (limitedAt !== undefined && now() - limitedAt < skipMs) {
+      skippedKeyIds.push(row.id);
+      return false;
+    }
     // A key parked at 'error' is out of rotation until a probe says otherwise
     // (the router writes that status, and last_checked_at with it), so it is
     // never skipped — it is the one key whose verdict is worth re-asking for.
