@@ -15,7 +15,7 @@ Aggregate free tiers from dozens of providers, plus custom OpenAI-compatible cha
 
 **[freellmapi.co](https://freellmapi.co/?utm_source=github&utm_medium=readme&utm_campaign=repository&utm_content=readme_top)** · browse the full catalog: 474 model families, 635 free endpoints
 
-**English** · [简体中文](README.zh-cn.md)
+**English** · [简体中文](README.zh-cn.md) · [Русский](README.ru.md)
 
 <p align="center">
   <a href="https://github.com/tashfeenahmed/freellmapi/releases/latest"><img src="repo-assets/badges/macos.svg" height="48" alt="Download for macOS"></a>
@@ -316,7 +316,7 @@ One request in, the best free model out: the router picks the highest-priority m
 
 ## FAQ
 
-**Do I need a password?** Not for the desktop app — the dashboard signs itself in with a hidden local account, so there is nothing to set up and nothing to forget. Open it from the tray icon → **Open Dashboard**. Server installs (Docker, one-liner, `npm run dev`) do have an email + password account.
+**Do I need a password?** Not for the desktop app — the dashboard signs itself in with a hidden local account, so there is nothing to set up and nothing to forget. Open it from the tray icon → **Open Dashboard**, or in any browser on the same computer (for example http://127.0.0.1:31415); both sign in on their own. Another device reaching the app over LAN access still sees the sign-in form. Server installs (Docker, one-liner, `npm run dev`) do have an email + password account.
 
 **I forgot the password on a server install.** Click **Forgot password?** on the login page. There is no email to send a link to, so the one-time code is printed to the server log — read it with `docker compose logs -f freellmapi` (or in the terminal running the server, or in the desktop log file), then enter it on the reset form. The code lasts 15 minutes.
 
@@ -474,6 +474,10 @@ Contributors very welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the dev lo
 <a href="https://github.com/tripstar6000"><img src="https://images.weserv.nl/?url=github.com/tripstar6000.png&w=40&h=40&fit=cover&mask=circle" width="40" alt="@tripstar6000" /></a>
 <a href="https://github.com/alkank"><img src="https://images.weserv.nl/?url=github.com/alkank.png&w=40&h=40&fit=cover&mask=circle" width="40" alt="@alkank" /></a>
 <a href="https://github.com/Yi-111-a"><img src="https://images.weserv.nl/?url=github.com/Yi-111-a.png&w=40&h=40&fit=cover&mask=circle" width="40" alt="@Yi-111-a" /></a>
+<a href="https://github.com/The88788"><img src="https://images.weserv.nl/?url=github.com/The88788.png&w=40&h=40&fit=cover&mask=circle" width="40" alt="@The88788" /></a>
+<a href="https://github.com/ac1982"><img src="https://images.weserv.nl/?url=github.com/ac1982.png&w=40&h=40&fit=cover&mask=circle" width="40" alt="@ac1982" /></a>
+<a href="https://github.com/agammann"><img src="https://images.weserv.nl/?url=github.com/agammann.png&w=40&h=40&fit=cover&mask=circle" width="40" alt="@agammann" /></a>
+<a href="https://github.com/Claven07"><img src="https://images.weserv.nl/?url=github.com/Claven07.png&w=40&h=40&fit=cover&mask=circle" width="40" alt="@Claven07" /></a>
 
 ## Disclaimer
 

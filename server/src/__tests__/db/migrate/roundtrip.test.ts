@@ -43,6 +43,8 @@ const REQUEST_MODEL_ATTRIBUTION_FILENAME = '20260913_000001_request_model_attrib
 const KEY_MONTHLY_USAGE_FILENAME = '20260914_000001_key_monthly_usage.ts';
 const QUOTA_SNAPSHOT_FRESHNESS_FILENAME = '20260915_000001_quota_snapshot_freshness.ts';
 const CUSTOM_ENDPOINT_GROUP_LABEL_FILENAME = '20260930_000001_custom_endpoint_group_label.ts';
+const SEARCH_ENGINES_FILENAME = '20261013_000001_search_engines.ts';
+const DECISION_REQUESTS_FILENAME = '20261016_000001_decision_requests.ts';
 
 interface SchemaRow {
   type: string;
@@ -132,6 +134,8 @@ describe('migration round trip', () => {
         KEY_MONTHLY_USAGE_FILENAME,
         QUOTA_SNAPSHOT_FRESHNESS_FILENAME,
         CUSTOM_ENDPOINT_GROUP_LABEL_FILENAME,
+        SEARCH_ENGINES_FILENAME,
+        DECISION_REQUESTS_FILENAME,
       ]);
     } finally {
       db.close();

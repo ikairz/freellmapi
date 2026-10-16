@@ -3,7 +3,7 @@ import os from 'node:os';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import { spawn } from 'node:child_process';
+import spawn from 'cross-spawn';
 import { Writable } from 'node:stream';
 import { fileURLToPath } from 'node:url';
 import { applyGeneratedFiles, printDryRunDiff } from './config-files.js';
@@ -49,7 +49,7 @@ function parseTimeout(value: string): number {
 
 export function parseArgs(argv: string[]): { command?: string; options: CliOptions } {
   const options: CliOptions = {
-    url: process.env.FREELLMAPI_URL || 'http://localhost:3000',
+    url: process.env.FREELLMAPI_URL || 'http://localhost:3001',
     apiKey: process.env.FREELLMAPI_API_KEY,
     token: process.env.FREELLMAPI_DASHBOARD_TOKEN,
     profile: 'default',

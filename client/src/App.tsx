@@ -38,6 +38,8 @@ import EmbeddingsPage from '@/pages/EmbeddingsPage'
 import ImagePage from '@/pages/ImagePage'
 import VideoPage from '@/pages/VideoPage'
 import AudioPage from '@/pages/AudioPage'
+import SearchPage from '@/pages/SearchPage'
+import DecisionPage from '@/pages/DecisionPage'
 import MediaDetailPage from '@/pages/MediaDetailPage'
 import EmbeddingDetailPage from '@/pages/EmbeddingDetailPage'
 import AnalyticsPage from '@/pages/AnalyticsPage'
@@ -81,10 +83,12 @@ const navItems = [
 // first landing on the chat table.
 const modelItems = [
   { to: '/models/chat', labelKey: 'models.chatModelsTab' },
-  { to: '/models/embeddings', labelKey: 'models.embeddingsTab' },
   { to: '/models/image', labelKey: 'models.imageTab' },
   { to: '/models/video', labelKey: 'models.videoTab' },
   { to: '/models/audio', labelKey: 'models.audioTab' },
+  { to: '/models/embeddings', labelKey: 'models.embeddingsTab' },
+  { to: '/models/decision', labelKey: 'decision.tab' },
+  { to: '/models/search', labelKey: 'search.tab' },
   { to: '/models/fusion', labelKey: 'models.fusionTab' },
 ]
 
@@ -487,6 +491,8 @@ function App() {
                       <Route path="/models/audio" element={<AudioPage />} />
                       <Route path="/models/audio/:id" element={<MediaDetailPage modality="audio" />} />
                       <Route path="/models/transcription/:id" element={<MediaDetailPage modality="transcription" />} />
+                      <Route path="/models/search" element={<SearchPage />} />
+                      <Route path="/models/decision" element={<DecisionPage />} />
                       <Route path="/playground" element={<PlaygroundPage />} />
                       <Route path="/keys" element={<KeysPage />} />
                       <Route path="/agents" element={<AgentsPage />} />
