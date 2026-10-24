@@ -9,18 +9,19 @@
 // cross-provider redundancy for free.
 import { getDb, getSetting } from '../db/index.js';
 import { secondsUntilNextMonth } from './key-budget.js';
+import { noteBudgetAlerts } from './budget-alerts.js';
 import { parseRetryAfterMs } from '../providers/base.js';
 import { RetryHintTracker, retryAfterSeconds } from '../lib/retry-hint.js';
 import { getClientContext } from '../lib/client-context.js';
 import { reserveProviderCredential } from './provider-credential.js';
 import { proxyFetch } from '../lib/proxy.js';
 import { bearerAuthHeader } from '../lib/credential.js';
+import { markKeyHealthyFromRequest } from './health.js';
 import { customEndpointKeyIds } from './custom-endpoint.js';
 import type { Db } from '../db/types.js';
 import { SPEKA_BASE_URL } from '../providers/speka.js';
 import { ELECTRONHUB_BASE_URL } from '../providers/electronhub.js';
 import { INFERBASE_BASE_URL } from '../providers/inferbase.js';
-import { AURAY_BASE_URL } from '../providers/auray.js';
 import { LLMTR_BASE_URL } from '../providers/llmtr.js';
 
 export interface EmbeddingModelRow {
@@ -113,7 +114,6 @@ export const EMBEDDING_PLATFORMS = new Set([
   'google',
   'nvidia',
   'openrouter',
-  'github',
   'cloudflare',
   'huggingface',
   'cohere',
@@ -121,7 +121,6 @@ export const EMBEDDING_PLATFORMS = new Set([
   'speka',
   'electronhub',
   'inferbase',
-  'auray',
   'llmtr',
 ]);
 
@@ -166,7 +165,7 @@ async function openAiStyleEmbed(
     usage?: { prompt_tokens?: number; total_tokens?: number };
   };
   const data = [...(j.data ?? [])].sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-  if (['electronhub', 'inferbase', 'auray', 'llmtr'].includes(platform) && (
+  if (['electronhub', 'inferbase', 'llmtr'].includes(platform) && (
     j.model !== modelId || data.length !== inputs.length ||
     data.some((d, i) => d.index !== i || !Array.isArray(d.embedding) ||
       d.embedding.length !== (dimensions ?? expectedDimensions) ||
@@ -174,7 +173,7 @@ async function openAiStyleEmbed(
   )) {
     // A successful HTTP response is not enough: wrong model/dimension or
     // malformed vectors would corrupt the caller's embedding family.
-    const provider = platform === 'electronhub' ? 'ElectronHub' : platform === 'auray' ? 'Auray' : platform === 'llmtr' ? 'LLMTR' : 'Inferbase';
+    const provider = platform === 'electronhub' ? 'ElectronHub' : platform === 'llmtr' ? 'LLMTR' : 'Inferbase';
     throw new EmbeddingsError(`${provider} returned mismatched or malformed embeddings`, 502);
   }
   return {
@@ -283,8 +282,6 @@ async function callProvider(row: EmbeddingModelRow, credential: ProviderCredenti
       return openAiStyleEmbed('https://integrate.api.nvidia.com/v1/embeddings', row.platform, key, row.model_id, inputs, { input_type: 'query' }, dimensions);
     case 'openrouter':
       return openAiStyleEmbed('https://openrouter.ai/api/v1/embeddings', row.platform, key, row.model_id, inputs, {}, dimensions);
-    case 'github':
-      return openAiStyleEmbed('https://models.github.ai/inference/embeddings', row.platform, key, row.model_id, inputs, {}, dimensions);
     case 'sealion':
       return openAiStyleEmbed('https://api.sea-lion.ai/v1/embeddings', row.platform, key, row.model_id, inputs, {}, dimensions);
     case 'speka':
@@ -300,13 +297,6 @@ async function callProvider(row: EmbeddingModelRow, credential: ProviderCredenti
         throw new EmbeddingsError('LLMTR does not support an embedding dimension override', 400);
       }
       return openAiStyleEmbed(`${LLMTR_BASE_URL}/embeddings`, row.platform, key, row.model_id, inputs, {}, undefined, row.dimensions);
-    case 'auray':
-      // Auray documents fixed-width vectors, not Matryoshka truncation. A cold
-      // request can take longer than the generic 30-second embedding deadline.
-      if (dimensions !== undefined && dimensions !== row.dimensions) {
-        throw new EmbeddingsError('Auray does not support an embedding dimension override', 400);
-      }
-      return openAiStyleEmbed(`${AURAY_BASE_URL}/embeddings`, row.platform, key, row.model_id, inputs, {}, undefined, row.dimensions, 180_000);
     case 'cloudflare': {
       // Key is stored as "account_id:token".
       const sep = key.indexOf(':');
@@ -370,6 +360,9 @@ function logEmbeddingRequest(
       INSERT INTO requests (platform, model_id, key_id, status, input_tokens, output_tokens, latency_ms, error, request_type, client_ip, client_user_agent, client_agent)
       VALUES (?, ?, ?, ?, ?, 0, ?, ?, 'embedding', ?, ?, ?)
     `).run(row.platform, row.model_id, keyId, status, inputTokens, latencyMs, error, client.ip, client.userAgent, client.agent);
+    // Soft budget alert (#1158 follow-on): the ledger trigger fired with this
+    // row, so compare the caps once. No-op for uncapped keys.
+    if (status === 'success' && keyId != null) noteBudgetAlerts(keyId);
   } catch (e) {
     console.error('Failed to log embedding request:', e);
   }
@@ -420,6 +413,11 @@ export async function runEmbeddings(model: string | undefined, inputs: string[],
       }
       const tokens = out.inputTokens ?? estimateTokens(inputs);
       logEmbeddingRequest(row, credential.id, 'success', tokens, Date.now() - started, null);
+      // A served embedding is evidence the key works, the same as a served
+      // chat request (#1493) or a served search (#1612): stamp last_healthy_at
+      // and lift an 'unknown'/'error' key. Embedding-only keys (and #1459-era
+      // providers that refuse probes) had no success signal at all otherwise.
+      markKeyHealthyFromRequest(credential.id);
       return {
         family,
         platform: row.platform,

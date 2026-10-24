@@ -217,7 +217,7 @@ function routingInfo(): unknown {
   };
 }
 
-const ROUTING_STRATEGIES = ['priority', 'balanced', 'smartest', 'fastest', 'reliable', 'custom'] as const;
+const ROUTING_STRATEGIES = ['priority', 'balanced', 'smartest', 'fastest', 'reliable', 'custom', 'decision'] as const;
 
 function setStrategy(args: Record<string, unknown>): unknown {
   const strategy = args.strategy;
@@ -528,7 +528,7 @@ const TOOLS: Record<string, McpTool> = {
   },
   web_search: {
     title: 'Search the web',
-    description: 'Search the web through the search providers configured in FreeLLMAPI (Parallel, Tavily, Exa, Firecrawl, Linkup, or a custom search endpoint). Returns titles, URLs and short extracts. Spends the search provider\'s free quota, not model tokens.',
+    description: 'Search the web through the search providers configured in FreeLLMAPI (Parallel, Tavily, Exa, Firecrawl, Linkup, Keenable, or a custom search endpoint). Returns titles, URLs and short extracts. Spends the search provider\'s free quota, not model tokens.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,

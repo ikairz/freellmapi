@@ -867,6 +867,27 @@ export async function proxyFetch(
   }
 }
 
+/**
+ * Opt-in no-direct-egress policy for sensitive platforms.
+ *
+ * PROXY_REQUIRED_PLATFORMS=google means that any Google provider request
+ * without a working proxy transport must fail rather than silently go direct.
+ * This is independent of model failover (which the request router controls).
+ */
+function requiresOutboundProxy(platform?: string): boolean {
+  if (!platform) return false;
+  return readEnv('PROXY_REQUIRED_PLATFORMS')
+    .split(',')
+    .some(value => value.trim().toLowerCase() === platform.toLowerCase());
+}
+
+function proxyRequiredError(platform: string | undefined, reason: string): Error {
+  return Object.assign(
+    new Error(`Outbound proxy required for ${platform ?? 'unknown'}: ${reason}`),
+    { code: 'PROXY_REQUIRED_UNAVAILABLE' },
+  );
+}
+
 /** Route the request through the configured proxy (or straight to fetch). */
 async function dispatchFetch(
   url: string,
@@ -888,6 +909,7 @@ async function dispatchFetch(
   // operator who turned proxying off globally has unambiguously disabled
   // proxying, full stop, and per-key overrides must respect that.
   const perKeyUrl = perKeyProxyStore.getStore() ?? '';
+  const proxyRequired = requiresOutboundProxy(platform);
   if (perKeyUrl && _proxyEnabled) {
     const resolved = await resolvePerKeyDispatcher(perKeyUrl);
     if (resolved) {
@@ -896,13 +918,24 @@ async function dispatchFetch(
       }
       return fetch(url, { ...init, dispatcher: resolved.dispatcher } as unknown as RequestInit);
     }
-    // Per-key proxy failed to build → fall through to the global/direct path.
+    // Local patch A: a per-key override is an EXPLICIT operator declaration
+    // that this key exits through this proxy, so the ambient bypass rules
+    // (platform list / NO_PROXY / local destination) stay out of the way.
+    // The global on/off switch above still wins. A missing agent must not
+    // silently go direct when the platform forbids direct egress.
+    if (proxyRequired) {
+      throw proxyRequiredError(platform, 'per-key proxy agent unavailable');
+    }
+    // Non-required platforms keep their historical global/direct fallback.
   }
 
   // Bypass check: disabled globally, this platform is exempt, the upstream
   // host is listed in NO_PROXY, or it is a local/LAN destination no proxy can
   // reach (#951).
   if (shouldBypassProxy(url, platform)) {
+    if (proxyRequired) {
+      throw proxyRequiredError(platform, 'proxy routing disabled or bypassed');
+    }
     return fetch(url, init);
   }
 
@@ -912,8 +945,12 @@ async function dispatchFetch(
 
   const resolved = await resolveDispatcher();
 
-  // No dispatcher (no proxy URL configured, or it failed to build) → direct
+  // For required platforms, a missing/failed proxy agent is never a
+  // reason to attempt direct egress (including cached constructor failures).
   if (!resolved) {
+    if (proxyRequired) {
+      throw proxyRequiredError(platform, 'proxy not configured or proxy agent unavailable');
+    }
     return fetch(url, init);
   }
 
