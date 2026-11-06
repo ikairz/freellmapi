@@ -10,7 +10,8 @@ import type {
   ChatContentBlock,
 } from '@freellmapi/shared/types.js';
 import { routeRequest, resolveModelGroupCandidates, resolveRoutingChain, resolveStickyPreference, routingReserveTokens, failureAttributionFor, type RouteResult, type ResolvedChain, type ChainRow } from '../services/router.js';
-import { getSetting, getUnifiedApiKey } from '../db/index.js';
+import { getSetting } from '../db/index.js';
+import { resolveAuth, prependSystemPrompt, type ResolvedAuth } from '../lib/system-prompt.js';
 import { contentToString, estimateInputTokens } from '../lib/content.js';
 import { routeOutputBudget } from '../lib/output-cap.js';
 import { resolveTaskType } from '../lib/task-type.js';
@@ -21,7 +22,7 @@ import { sanitizeProviderErrorMessage } from '../lib/error-redaction.js';
 import { convertDocumentBlock, documentRejectionMessage } from '../lib/anthropic-documents.js';
 import { isClientAbortError, newClientAbortError, newHedgeAbortError, isUpstreamClassificationOutput } from '../lib/error-classify.js';
 import { logRequest } from '../lib/request-log.js';
-import { extractApiToken, timingSafeStringEqual, getStickyModel, setStickyModel } from './proxy.js';
+import { extractApiToken, getStickyModel, setStickyModel, providerSafeStop } from './proxy.js';
 import { runFallbackLoop, newFallbackState, fallbackRoutingTokens, recordUpstreamSuccess, type ExhaustionBody, setFallbackHeaders, setExhaustionHeaders, type AttemptRecord, type FallbackState, REASONING_HOLD_MAX_MS } from '../lib/fallback-loop.js';
 import { routedViaValue } from '../lib/header-value.js';
 import { startStreamKeepalive, streamKeepaliveMs } from '../lib/stream-keepalive.js';
@@ -89,6 +90,7 @@ const anthropicToolSchema = z.object({
 const anthropicToolChoiceSchema = z.object({
   type: z.enum(['auto', 'any', 'tool', 'none']),
   name: z.string().optional(),
+  disable_parallel_tool_use: z.boolean().optional(),
 }).passthrough();
 
 const messagesSchema = z.object({
@@ -205,14 +207,17 @@ function newMessageId(): string {
 }
 
 // ── Auth (shared with the OpenAI route) ─────────────────────────────────────
-function authenticate(req: Request, res: Response): boolean {
-  const token = extractApiToken(req);
-  const unifiedKey = getUnifiedApiKey();
-  if (!token || !timingSafeStringEqual(token, unifiedKey)) {
+// Resolves both credential kinds (#411): the unified key behaves exactly as
+// before; a client-profile key (sk-cp-*) authenticates inference only and
+// carries its server-enforced system prompt. A disabled/unknown profile fails
+// like a bad key so a revoked client learns nothing extra.
+function authenticate(req: Request, res: Response): ResolvedAuth | null {
+  const auth = resolveAuth(extractApiToken(req));
+  if (!auth) {
     sendError(res, 401, 'authentication_error', 'Invalid API key');
-    return false;
+    return null;
   }
-  return true;
+  return auth;
 }
 
 // ── Request translation: Anthropic → internal (OpenAI-shaped) ───────────────
@@ -461,7 +466,8 @@ anthropicRouter.post('/messages', async (req: Request, res: Response) => {
 
 export async function handleMessages(req: Request, res: Response): Promise<void> {
   const start = Date.now();
-  if (!authenticate(req, res)) return;
+  const auth = authenticate(req, res);
+  if (!auth) return;
 
   const parsed = messagesSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -520,6 +526,12 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
   messages = compressionResult.messages;
   res.setHeader('X-FreeLLM-Compress', formatCompressionHeader(compressionResult));
 
+  // Server-enforced system prompt (#411): injected AFTER compression so it is
+  // never compressed away, and FIRST in the list so a caller-supplied system
+  // turn follows it and cannot override it. Neutral no-op for the unified key
+  // and for profiles without a prompt.
+  messages = prependSystemPrompt(messages, auth.systemPrompt);
+
   const estimatedInputTokens = estimateInputTokens(messages, tools);
   const imageCount = messages.reduce((n, m) =>
     n + (Array.isArray(m.content) ? m.content.filter(b => (b as any)?.type === 'image_url').length : 0), 0);
@@ -537,6 +549,10 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
 
   const completionOptions = {
     temperature, max_tokens, top_p, top_k: body.top_k ?? undefined, tools, tool_choice,
+    // tool_choice.disable_parallel_tool_use is OpenAI's parallel_tool_calls: false.
+    parallel_tool_calls: body.tool_choice?.disable_parallel_tool_use ? false : undefined,
+    // OpenAI's `stop`, capped the same way /v1/chat/completions caps it.
+    stop: body.stop_sequences?.length ? providerSafeStop(body.stop_sequences) : undefined,
     // Native `thinking: {type, budget_tokens}` → the same internal knob the
     // OpenAI surface's reasoning_effort feeds; absent when the client sent none.
     reasoning_effort: effortFromAnthropicThinking(body.thinking),
@@ -651,6 +667,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
   const state = newFallbackState();
   // Lets the failover loop learn which models reject tool calls (#1230).
   state.wantsTools = wantsTools;
+  state.estimatedTotalTokens = estimatedTotal;
   const attemptLog: AttemptRecord[] = [];
   // Client-disconnect fan-out: the flag stops the loop before the NEXT
   // attempt; the AbortController (threaded to the provider as
@@ -676,7 +693,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
   // model picks which preset (Smartest / Fastest / Balanced / Most reliable)
   // this turn routes with. Skipped when the client pinned a model or the
   // conversation is sticky to one. Any doubt routes as Balanced.
-  const routingPick = await applyDecisionRouting(messages, { pinned: pinnedModelId != null || preferredModel != null, signal: clientAbort.signal });
+  const routingPick = await applyDecisionRouting(messages, { pinned: pinnedModelId != null || preferredModel != null, preset: resolvedChain?.strategyOverride, signal: clientAbort.signal });
   if (routingPick && !res.headersSent) res.setHeader('X-FreeLLM-Routing-Strategy', routingStrategyHeader(routingPick));
 
   await runFallbackLoop({
@@ -693,7 +710,7 @@ export async function handleMessages(req: Request, res: Response): Promise<void>
       // size latched onto state so the existing size gates in router.ts skip
       // low-TPM / small-context models on retry.
       const routingTotal = fallbackRoutingTokens(state, estimatedTotal, outputReserve);
-      return routeRequest(routingTotal, state.skipKeys.size > 0 ? state.skipKeys : undefined, preferredModel, hasImage, wantsTools, state.skipModels.size > 0 ? state.skipModels : undefined, groupChain ?? resolvedChain?.chain, false, state.skipPlatforms.size > 0 ? state.skipPlatforms : undefined, outputReserve, taskType);
+      return routeRequest(routingTotal, state.skipKeys.size > 0 ? state.skipKeys : undefined, preferredModel, hasImage, wantsTools, state.skipModels.size > 0 ? state.skipModels : undefined, groupChain ?? resolvedChain?.chain, false, state.skipPlatforms.size > 0 ? state.skipPlatforms : undefined, outputReserve, taskType, resolvedChain?.strategyOverride);
     },
     dispatch: async (route, attempt, dispatchCtx) => {
       const contextBudget = routeOutputBudget(route, estimatedInputTokens);
@@ -867,6 +884,7 @@ async function streamCompletion(
   let nextIndex = 0;
   let outputChars = 0;
   let upstreamFinish: string | null = null;
+  let upstreamUsage: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } | undefined;
   const toolAcc = new Map<number, { id?: string; name: string; args: string; thought_signature?: string }>();
 
   // Inline-dialect hold window (#231): the first text is held until it either
@@ -976,6 +994,10 @@ async function streamCompletion(
         logRequest(route.platform, route.modelId, route.keyId, 'error', ctx.estimatedInputTokens, outputChars, Date.now() - ctx.start, `in-band error frame: ${sanitizeProviderErrorMessage(String(msg))}`, null, ctx.pinnedModelId, null, 'http', failureAttributionFor({ message: String(msg) }));
         throw new StreamAlreadyStarted();
       }
+
+      // Usage comes on its own choice-less frame or on the last choice frame,
+      // as on /chat/completions: keep it for message_delta and the logs.
+      if (anyChunk.usage) upstreamUsage = anyChunk.usage;
 
       const choice = anyChunk.choices?.[0];
       if (!choice) continue;
@@ -1128,14 +1150,20 @@ async function streamCompletion(
     }
 
     const stopReason = mapStopReason(upstreamFinish, completedCalls.length > 0);
-    const outputTokens = Math.ceil(outputChars / 4);
-    writeSse(res, 'message_delta', { type: 'message_delta', delta: { stop_reason: stopReason, stop_sequence: null }, usage: { output_tokens: outputTokens } });
+    // message_start went out with the estimate; message_delta's usage is
+    // cumulative, so the provider's real input count can still replace it.
+    const inputTokens = upstreamUsage?.prompt_tokens ?? ctx.estimatedInputTokens;
+    const outputTokens = upstreamUsage?.completion_tokens ?? Math.ceil(outputChars / 4);
+    const deltaUsage = upstreamUsage?.prompt_tokens != null
+      ? { input_tokens: inputTokens, output_tokens: outputTokens }
+      : { output_tokens: outputTokens };
+    writeSse(res, 'message_delta', { type: 'message_delta', delta: { stop_reason: stopReason, stop_sequence: null }, usage: deltaUsage });
     writeSse(res, 'message_stop', { type: 'message_stop' });
     res.end();
 
-    recordUpstreamSuccess(route, ctx.estimatedInputTokens + outputTokens, ctx.state);
+    recordUpstreamSuccess(route, upstreamUsage?.total_tokens ?? inputTokens + outputTokens, ctx.state);
     if (!ctx.pinned || ctx.stickyScope) setStickyModel(messages, route.modelDbId, ctx.sessionId, ctx.stickyScope ?? ctx.strategyKey);
-    logRequest(route.platform, route.modelId, route.keyId, 'success', ctx.estimatedInputTokens, outputTokens, Date.now() - ctx.start, null, null, ctx.pinnedModelId, null, 'http');
+    logRequest(route.platform, route.modelId, route.keyId, 'success', inputTokens, outputTokens, Date.now() - ctx.start, null, null, ctx.pinnedModelId, null, 'http');
   } catch (err: any) {
     if (err instanceof StreamAlreadyStarted) throw err;
     // Client abort mid-stream: the pump's own `if (ctx.clientGone()) break`

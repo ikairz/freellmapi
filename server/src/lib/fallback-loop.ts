@@ -1,4 +1,5 @@
 import { nextMonthResetAt } from '../services/key-budget.js';
+import { benchCloudflareAccount } from '../services/cloudflare-daily-quota.js';
 // One shared provider retry/fallback loop for every OpenAI-, Responses- and
 // Anthropic-shaped chat surface (routes/proxy.ts legacy /completions and
 // /chat/completions, routes/responses.ts, routes/anthropic.ts). Each surface
@@ -224,6 +225,10 @@ export interface FallbackState {
   // reading is the same request, not a smaller one.
   observedTotalTokens?: number;
   observedInputTokens?: number;
+  // The surface's own size estimate for this request (input + output reserve).
+  // Set right after newFallbackState(); lets a size rejection that names no
+  // window still teach the model's ceiling (#1717).
+  estimatedTotalTokens?: number;
   // The request carries `tools` (#1230). Set by the surface right after
   // newFallbackState(); lets the failure/success paths learn which models
   // reject tool calls in practice. Unset means "not a tool request".
@@ -525,7 +530,8 @@ export function recordRetryableFailure(route: RouteResult, err: any, state: Fall
   // model it touched, so later ordinary requests found the pool rate limited.
   if (isContextTooLargeError(err)) {
     learnLimitFromError(route.modelDbId, err);
-    learnContextWindowFromError(route.modelDbId, err);
+    const refusedTokens = Math.max(state.estimatedTotalTokens ?? 0, state.observedTotalTokens ?? 0, state.observedInputTokens ?? 0);
+    learnContextWindowFromError(route.modelDbId, err, refusedTokens > 0 ? refusedTokens : undefined);
     return false;
   }
   // A max_tokens above this model's output ceiling (Claude Code asks for
@@ -548,6 +554,9 @@ export function recordRetryableFailure(route: RouteResult, err: any, state: Fall
   if (consumeSkipBenchExemption(route, err)) return true;
   const decision = cooldownDecisionForError(route, err);
   setCooldown(route.platform, route.modelId, route.keyId, decision.durationMs, decision.source);
+  // Workers AI's daily neurons pool is per ACCOUNT: bench every model on every
+  // token of the same account with this route's own duration and provenance.
+  if (route.platform === 'cloudflare') benchCloudflareAccount(route.apiKey, err, decision.durationMs, decision.source);
   // A truncated stream (200 + partial SSE, no [DONE]/finish_reason) on the
   // SAME route repeatedly is a sick edge, not bad luck — but a single one is
   // common enough on flaky free gateways that benching on first sight would
